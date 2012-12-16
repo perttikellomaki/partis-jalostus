@@ -3,10 +3,17 @@
 /* Controllers */
 
 
-function MyCtrl1() {}
-MyCtrl1.$inject = [];
-
-
-function MyCtrl2() {
+function KoiratCtrl($scope, KoiraService) {
+    $scope.koirat = KoiraService.query({key: ''});
 }
-MyCtrl2.$inject = [];
+KoiratCtrl.$inject = ['$scope', 'KoiraService'];
+
+function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
+    if ($routeParams.key == undefined) {
+	$scope.koira = KoiraService.makeNew();
+    }
+    $scope.save = function () {
+	$scope.koira.$save({key: ''});
+    }
+}
+KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', 'KoiraService'];

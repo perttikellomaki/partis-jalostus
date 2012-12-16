@@ -1,0 +1,50 @@
+application: partis-jalostus
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+inbound_services:
+- channel_presence
+
+handlers:
+- url: /
+  static_files: web-client/app/index.html
+  upload: web-client/app/index.html
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+  login: required
+  auth_fail_action: unauthorized
+- url: /css
+  static_dir: web-client/app/css
+  login: required
+  auth_fail_action: unauthorized
+- url: /js
+  static_dir: web-client/app/js
+  login: required
+  auth_fail_action: unauthorized
+- url: /lib
+  static_dir: web-client/app/lib
+  login: required
+  auth_fail_action: unauthorized
+- url: /partials
+  static_dir: web-client/app/partials
+  login: required
+  auth_fail_action: unauthorized
+- url: /img
+  static_dir: web-client/app/img
+  login: required
+  auth_fail_action: unauthorized
+- url: /ckeditor
+  static_dir: web-client/app/ckeditor
+  login: required
+  auth_fail_action: unauthorized
+- url: .*
+  script: main.app
+
+libraries:
+- name: webapp2
+  version: "2.5.1"
+- name: jinja2
+  version: latest
