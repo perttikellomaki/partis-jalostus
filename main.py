@@ -77,6 +77,7 @@ class KoiraCollectionHandler(HardenedHandler):
 
 class KoiraHandler(HardenedHandler):
     def get_(self, key):
+        logging.info("KoiraHandler")
         dog = db.get(key)
         self.jsonReply(dog.hashify())
 

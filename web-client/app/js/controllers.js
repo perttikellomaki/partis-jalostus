@@ -9,24 +9,31 @@ function KoiratCtrl($scope, KoiraService) {
 					   var tmp = [];
 					   for (var n in nodes) {
 					       var node = nodes[n];
-					       console.log("NODE");
-					       console.log(node);
-					       tmp.push({virallinen_nimi: node.virallinen_nimi, 
-							 kutsumanimi: node.kutsumanimi});
+					       tmp.push(node);
 					   }
 					   $scope.myData = tmp;
-					   console.log($scope.myData);
 				       });
 
     $scope.myData = [];
 
-    $scope.gridOptions = {data: 'myData'};
+    $scope.gridOptions = {data: 'myData',
+			  displaySelectionCheckbox: false,
+			  columnDefs: [{field: 'virallinen_nimi',
+					displayName: 'Virallinen nimi',
+					cellTemplate: '<div><a href="/#/koira{{row.entity.uri}}">{{row.entity[col.field]}}</a></div>'
+				       },
+				       {field: 'kutsumanimi',
+					displayName: 'Kutsumanimi'}
+				       ]
+			 };
 }
 KoiratCtrl.$inject = ['$scope', 'KoiraService'];
 
 function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
     if ($routeParams.key == undefined) {
 	$scope.koira = KoiraService.makeNew();
+    } else {
+	$scope.koira = KoiraService.get({key: $routeParams.key});
     }
     $scope.save = function () {
 	$scope.koira.$save({key: ''});
