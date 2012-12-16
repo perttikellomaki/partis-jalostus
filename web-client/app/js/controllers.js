@@ -4,7 +4,23 @@
 
 
 function KoiratCtrl($scope, KoiraService) {
-    $scope.koirat = KoiraService.query({key: ''});
+    $scope.koirat = KoiraService.query({key: ''},
+				       function (nodes) {
+					   var tmp = [];
+					   for (var n in nodes) {
+					       var node = nodes[n];
+					       console.log("NODE");
+					       console.log(node);
+					       tmp.push({virallinen_nimi: node.virallinen_nimi, 
+							 kutsumanimi: node.kutsumanimi});
+					   }
+					   $scope.myData = tmp;
+					   console.log($scope.myData);
+				       });
+
+    $scope.myData = [];
+
+    $scope.gridOptions = {data: 'myData'};
 }
 KoiratCtrl.$inject = ['$scope', 'KoiraService'];
 
