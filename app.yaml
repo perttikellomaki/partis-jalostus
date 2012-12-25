@@ -14,31 +14,24 @@ handlers:
 - url: /favicon\.ico
   static_files: favicon.ico
   upload: favicon\.ico
-  login: required
   auth_fail_action: unauthorized
 - url: /css
   static_dir: web-client/app/css
-  login: required
   auth_fail_action: unauthorized
 - url: /js
   static_dir: web-client/app/js
-  login: required
   auth_fail_action: unauthorized
 - url: /lib
   static_dir: web-client/app/lib
-  login: required
   auth_fail_action: unauthorized
 - url: /partials
   static_dir: web-client/app/partials
-  login: required
   auth_fail_action: unauthorized
 - url: /img
   static_dir: web-client/app/img
-  login: required
   auth_fail_action: unauthorized
 - url: /ckeditor
   static_dir: web-client/app/ckeditor
-  login: required
   auth_fail_action: unauthorized
 - url: .*
   script: main.app
