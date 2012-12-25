@@ -1,5 +1,9 @@
 <form>
-Virallinen nimi:  <input ng-model="koira.virallinen_nimi"/><br>
+Virallinen nimi:
+<input ng-show="editing" ng-model="koira.virallinen_nimi"/>
+<span ng-show="!editing">{{koira.virallinen_nimi}}</span>
+<button ng-show="editing" ng-click="save()">Tallenna</button>
+<button ng-show="!editing" ng-click="toggleEdit()">Edit</button><br>
+<br>
 
-  <button ng-click="save()">Tallenna</button>
 </form>

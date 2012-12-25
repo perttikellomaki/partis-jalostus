@@ -33,8 +33,20 @@ function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
     } else {
 	$scope.koira = KoiraService.get({key: $routeParams.key});
     }
+
     $scope.save = function () {
-	$scope.koira.$save({key: ''});
+	if ($routeParams.key == undefined) {
+	    $scope.koira.$save({key: ''});
+	} else {
+	    $scope.koira.$save({key: $routeParams.key});
+	}
+	$scope.editing = false;
+    }
+
+    $scope.editing = false;
+
+    $scope.toggleEdit = function () {
+	$scope.editing = !$scope.editing;
     }
 }
 KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', 'KoiraService'];
