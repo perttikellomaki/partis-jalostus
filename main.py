@@ -44,7 +44,6 @@ class SignedResource(polymodel.PolyModel):
 
 class Koira(SignedResource):
     virallinen_nimi = db.StringProperty()
-    kutsumanimi = db.StringProperty()
     
     def uri(self):
         return "/Koira/%s" % str(self.key())
@@ -55,7 +54,6 @@ class Koira(SignedResource):
         super(Koira, self).hashify(base=base)
         base['uri'] = self.uri()
         base['virallinen_nimi'] = self.virallinen_nimi
-        base['kutsumanimi'] = self.kutsumanimi
         return base
 
 class KoiraCollectionHandler(HardenedHandler):
@@ -70,8 +68,7 @@ class KoiraCollectionHandler(HardenedHandler):
         self.jsonReply(data)
 
     def post_(self):
-        dog = Koira(virallinen_nimi = self.request.params['virallinen_nimi'],
-                    kutsumanimi = self.request.params['kutsumanimi'])
+        dog = Koira(virallinen_nimi = self.request.params['virallinen_nimi'])
         dog.put()
         self.jsonReply(dog.hashify())
 

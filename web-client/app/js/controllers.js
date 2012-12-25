@@ -21,9 +21,7 @@ function KoiratCtrl($scope, KoiraService) {
 			  columnDefs: [{field: 'virallinen_nimi',
 					displayName: 'Virallinen nimi',
 					cellTemplate: '<div><a href="/#/koira{{row.entity.uri}}">{{row.entity[col.field]}}</a></div>'
-				       },
-				       {field: 'kutsumanimi',
-					displayName: 'Kutsumanimi'}
+				       }
 				       ]
 			 };
 }
