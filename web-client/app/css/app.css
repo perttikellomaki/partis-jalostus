@@ -34,3 +34,7 @@
     width: 100%; 
     height: 500px;
 }
+
+.author_nick {
+    color: LightGray;
+}

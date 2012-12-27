@@ -2,6 +2,7 @@
 Virallinen nimi:
 <input ng-show="editing" ng-model="koira.virallinen_nimi"/>
 <span ng-show="!editing">{{koira.virallinen_nimi}}</span>
+<span class="author_nick">{{koira.author_nick}}</span>
 <button ng-show="editing" ng-click="save()">Tallenna</button>
 <button ng-show="!editing" ng-click="toggleEdit()">Edit</button><br>
 <br>
