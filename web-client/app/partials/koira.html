@@ -1,10 +1,17 @@
 <form>
-Virallinen nimi:
+Virallinen nimi / muu tunniste:
 <input ng-show="editing" ng-model="koira.virallinen_nimi"/>
 <span ng-show="!editing">{{koira.virallinen_nimi}}</span>
 <span class="author_nick">{{koira.author_nick}}</span>
 <button ng-show="editing" ng-click="save()">Tallenna</button>
-<button ng-show="!editing" ng-click="toggleEdit()">Edit</button><br>
-<br>
-
+<button ng-show="!editing" ng-click="toggleEdit()">Edit</button>
+<span ng-show="koira_history.length > 0">
+  <input type="checkbox" ng-model="koira_show_history">Historia</input>
+  <br>
+  <span ng-show="koira_show_history" class="history" ng-repeat="h in koira_history">
+    {{h.virallinen_nimi}}
+    {{h.author_nick}}
+    {{h.timestamp}}
+  </span>
+</span>
 </form>

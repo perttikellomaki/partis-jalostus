@@ -29,9 +29,13 @@ KoiratCtrl.$inject = ['$scope', 'KoiraService'];
 
 function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
     if ($routeParams.key == undefined) {
+	$scope.koira_history = []
 	$scope.koira = KoiraService.makeNew();
     } else {
+	var history_resource = $resource("/History/:key");
+	$scope.koira_history = history_resource.query({key: $routeParams.key})
 	$scope.koira = KoiraService.get({key: $routeParams.key});
+	$scope.koira_show_history = false;
     }
 
     $scope.save = function () {

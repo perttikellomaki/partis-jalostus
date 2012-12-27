@@ -36,5 +36,9 @@
 }
 
 .author_nick {
-    color: LightGray;
+    color: Gray;
+}
+
+.history {
+    color: Gray;
 }

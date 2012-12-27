@@ -34,6 +34,8 @@ class SignedResource(polymodel.PolyModel):
 
     def archive_fields(self, copy):
         copy.author = self.author
+        copy.author_nick = self.author_nick
+        copy.author_email = self.author_email
         copy.timestamp = self.timestamp
         copy.archive_copy_of = self.key()
 
@@ -66,7 +68,8 @@ class KoiraCollectionHandler(HardenedHandler):
         dogs = Koira.all()
         data = []
         for d in dogs:
-            data.append(d.hashify())
+            if d.archive_copy_of == None:
+                data.append(d.hashify())
         self.jsonReply(data)
 
     def post_(self, user):
@@ -96,11 +99,20 @@ class LoginHandler(HardenedHandler):
                   <a href="%s">Login</a>
                   </body> </html>"""
                 % users.create_login_url("/"))
-  
+
+class HistoryHandler(HardenedHandler):
+    def get_(self, user, key):
+        resources = SignedResource.gql("WHERE archive_copy_of = KEY(:1)",
+                                       key)
+        data = []
+        for res in resources:
+            data.append(res.hashify())
+        self.jsonReply(data)
 
 app = webapp2.WSGIApplication(
     [("/Koira", KoiraCollectionHandler),
      ("/Koira/([^/]+)", KoiraHandler),
+     ("/History/([^/]+)", HistoryHandler),
      ("/Login", LoginHandler),
      ],
     debug=True)
