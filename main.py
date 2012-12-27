@@ -78,8 +78,19 @@ class KoiraHandler(HardenedHandler):
         dog = db.get(key)
         self.jsonReply(dog.hashify())
 
+class LoginHandler(HardenedHandler):
+    def get_(self, user):
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.out.write("""
+                  <html><head><title>Login</title></head><body>
+                  <a href="%s">Login</a>
+                  </body> </html>"""
+                % users.create_login_url("/"))
+  
+
 app = webapp2.WSGIApplication(
     [("/Koira", KoiraCollectionHandler),
      ("/Koira/([^/]+)", KoiraHandler),
+     ("/Login", LoginHandler),
      ],
     debug=True)
