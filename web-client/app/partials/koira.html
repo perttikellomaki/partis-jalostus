@@ -1,3 +1,18 @@
+<script type="text/ng-template" id="paimennus_details">
+  <hr>
+  Päivä {{entry.paiva}}, 
+  Paikka {{entry.paikka}},
+  Tuomari {{entry.tuomari}}
+  <br>
+  Kiinnostus / taipumus / henkinen kestävyys / ohjattavuus:
+  {{entry.kiinnostus}} / 
+  {{entry.taipumus}} /
+  {{entry.henkinen_kestavyys}} /
+  {{entry.ohjattavuus}}<br>
+  <span class="author_nick">{{entry.author_nick}}</span>
+  <hr>
+</script>
+
 <form>
   Virallinen nimi / muu tunniste:
   <input ng-show="editing" ng-model="koira.virallinen_nimi"/>
@@ -17,35 +32,24 @@
 </form>
 <span ng-show="existing_koira">
   <form ng-controller="PaimennusCtrl">
-    Paimennustaipumuskoe 
+    Paimennustaipumuskoe: {{summary}}
     <a href ng-click="toggleExpand()">lisää...</a>
     <br>
     <span ng-show="expanded">
-      <span ng-repeat="test in tests">
-	<hr>
-	Päivä {{test.paiva}}, 
-	Paikka {{test.paikka}},
-	Tuomari {{test.tuomari}}
-	<br>
-	Kiinnostus / taipumus / henkinen kestävyys / ohjattavuus:
-	{{test.kiinnostus}} / 
-	{{test.taipumus}} /
-	{{test.henkinen_kestavyys}} /
-	{{test.ohjattavuus}}<br>
-	<span class="author_nick">{{test.author_nick}}</span>
-	<hr>
+      <span ng-repeat="entry in entries">
+	<span ng-include="'paimennus_details'"></span>
       </span>
-      <span ng-show="new_test">
-	Kiinnostus <input ng-model="new_test.kiinnostus"/><br>
-	Luontainen taipumus <input ng-model="new_test.taipumus"/><br>
-	Henkinen kestävyys <input ng-model="new_test.henkinen_kestavyys"/><br>
-	Ohjattavuus <input ng-model="new_test.ohjattavuus"/><br>
-	Tuomari <input ng-model="new_test.tuomari"/><br>
-	Paikka <input ng-model="new_test.paikka"/><br>
-	Päivä <input ng-model="new_test.paiva"/><br>
+      <span ng-show="entry">
+	Kiinnostus <input ng-model="entry.kiinnostus"/><br>
+	Luontainen taipumus <input ng-model="entry.taipumus"/><br>
+	Henkinen kestävyys <input ng-model="entry.henkinen_kestavyys"/><br>
+	Ohjattavuus <input ng-model="entry.ohjattavuus"/><br>
+	Tuomari <input ng-model="entry.tuomari"/><br>
+	Paikka <input ng-model="entry.paikka"/><br>
+	Päivä <input ng-model="entry.paiva"/><br>
       </span>
-      <button ng-show="new_test" ng-click="saveTest()">Tallenna</button>
-      <button ng-show="!new_test" ng-click="newTest()">Uusi</button>
+      <button ng-show="entry" ng-click="saveTest()">Tallenna</button>
+      <button ng-show="!entry" ng-click="newTest()">Uusi</button>
     </span>
   </form>
 </span>

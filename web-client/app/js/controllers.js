@@ -67,14 +67,31 @@ function PaimennusCtrl ($scope, $resource, $routeParams) {
 					tuomari: '@tuomari',
 					paikka: '@paikka',
 					paiva: '@paiva'});
-    $scope.tests = paimennus_resource.query({koira: $routeParams.key});
-    $scope.new_test = false;
+    $scope.summary = "Ei testattu.";
+    $scope.summarise = function () {
+	var res = [];
+	for (var e in $scope.entries) {
+	    var entry = $scope.entries[e];
+	    res.push(entry.paiva
+		     + " "
+		     + entry.kiinnostus + "/"
+		     + entry.taipumus + "/"
+		     + entry.henkinen_kestavyys + "/"
+		     + entry.ohjattavuus);
+	}
+	if (res.length > 0) {
+	    $scope.summary = res.join(", ");
+	}
+    }
+    $scope.entries = paimennus_resource.query({koira: $routeParams.key},
+					      $scope.summarise);
+    $scope.entry = false;
     $scope.newTest = function () {
-	$scope.new_test = new paimennus_resource();
+	$scope.entry = new paimennus_resource();
     }
 
     $scope.saveTest = function () {
-	$scope.new_test.$save({koira: $routeParams.key});
+	$scope.entry.$save({koira: $routeParams.key});
     }
     $scope.expanded = false;
     $scope.toggleExpand = function () {
