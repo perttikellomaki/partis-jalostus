@@ -2,6 +2,10 @@
 
 /* Controllers */
 
+function uri2key (uri) {
+    return uri.split("/")[2];
+}
+
 
 function KoiratCtrl($scope, KoiraService) {
     $scope.koirat = KoiraService.query({key: ''},
@@ -58,7 +62,8 @@ function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
 KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', 'KoiraService'];
 
 function PaimennusCtrl ($scope, $resource, $routeParams) {
-    var paimennus_resource = $resource("/Paimennustaipumus",
+    $scope.category_name = "paimennus";
+    var paimennus_resource = $resource("/Paimennustaipumus/:key",
 				       {koira: '@koira',
 					kiinnostus: '@kiinnostus',
 					taipumus: '@taipumus',
@@ -69,33 +74,48 @@ function PaimennusCtrl ($scope, $resource, $routeParams) {
 					paiva: '@paiva'});
     $scope.summary = "Ei testattu.";
     $scope.summarise = function () {
-	var res = [];
+	var result = [];
 	for (var e in $scope.entries) {
-	    var entry = $scope.entries[e];
-	    res.push(entry.paiva
-		     + " "
-		     + entry.kiinnostus + "/"
-		     + entry.taipumus + "/"
-		     + entry.henkinen_kestavyys + "/"
-		     + entry.ohjattavuus);
+	    var res = $scope.entries[e].resource;
+	    result.push(res.paiva
+			+ " "
+			+ res.kiinnostus + "/"
+			+ res.taipumus + "/"
+			+ res.henkinen_kestavyys + "/"
+			+ res.ohjattavuus);
 	}
-	if (res.length > 0) {
-	    $scope.summary = res.join(", ");
+	if (result.length > 0) {
+	    $scope.summary = result.join(", ");
 	}
     }
-    $scope.entries = paimennus_resource.query({koira: $routeParams.key},
-					      $scope.summarise);
+    $scope.entries = [];
+    $scope.resources 
+	= paimennus_resource.query(
+	    {koira: $routeParams.key},
+	    function () {
+		for (var r in $scope.resources) {
+		    $scope.entries.push({editing: false,
+					 resource: $scope.resources[r]});
+		    $scope.summarise();
+		}
+	    }
+	);
     $scope.entry = false;
     $scope.newTest = function () {
-	$scope.entry = new paimennus_resource();
+	$scope.entry.resource = new paimennus_resource();
+	$scope.entry.resource.koira = $routeParams.key;
     }
 
-    $scope.saveTest = function () {
-	$scope.entry.$save({koira: $routeParams.key});
+    $scope.save = function (entry) {
+	entry.resource.$save({key: uri2key(entry.resource.uri)});
+	entry.editing = false;
     }
     $scope.expanded = false;
     $scope.toggleExpand = function () {
 	$scope.expanded = !$scope.expanded;
+    }
+    $scope.toggleEdit = function (entry) {
+	entry.editing = !entry.editing;
     }
 }
 PaimennusCtrl.$inject = ['$scope', '$resource', '$routeParams'];

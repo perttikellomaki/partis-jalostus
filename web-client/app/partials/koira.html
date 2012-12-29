@@ -1,16 +1,27 @@
 <script type="text/ng-template" id="paimennus_details">
-  <hr>
-  Päivä {{entry.paiva}}, 
-  Paikka {{entry.paikka}},
-  Tuomari {{entry.tuomari}}
+  Päivä {{entry.resource.paiva}}, 
+  Paikka {{entry.resource.paikka}},
+  Tuomari {{entry.resource.tuomari}}
   <br>
   Kiinnostus / taipumus / henkinen kestävyys / ohjattavuus:
-  {{entry.kiinnostus}} / 
-  {{entry.taipumus}} /
-  {{entry.henkinen_kestavyys}} /
-  {{entry.ohjattavuus}}<br>
-  <span class="author_nick">{{entry.author_nick}}</span>
-  <hr>
+  {{entry.resource.kiinnostus}} / 
+  {{entry.resource.taipumus}} /
+  {{entry.resource.henkinen_kestavyys}} /
+  {{entry.resource.ohjattavuus}}<br>
+  <span class="author_nick">{{entry.resource.author_nick}}</span>
+</script>
+
+<script type="text/ng-template" id="paimennus_input">
+  <span ng-show="entry">
+    Kiinnostus <input ng-model="entry.resource.kiinnostus"/><br>
+    Luontainen taipumus <input ng-model="entry.resource.taipumus"/><br>
+    Henkinen kestävyys <input ng-model="entry.resource.henkinen_kestavyys"/><br>
+    Ohjattavuus <input ng-model="entry.resource.ohjattavuus"/><br>
+    Tuomari <input ng-model="entry.resource.tuomari"/><br>
+    Paikka <input ng-model="entry.resource.paikka"/><br>
+    Päivä <input ng-model="entry.resource.paiva"/><br>
+  </span>
+  <button ng-show="!entry" ng-click="newTest()">Uusi</button>
 </script>
 
 <form>
@@ -37,19 +48,19 @@
     <br>
     <span ng-show="expanded">
       <span ng-repeat="entry in entries">
-	<span ng-include="'paimennus_details'"></span>
+	<hr>
+	<span ng-show="!entry.editing">
+	  <span ng-include="category_name + '_details'"></span>
+	</span>
+	<span ng-show="entry.editing">
+	  <span ng-include="category_name + '_input'"></span>
+	</span>
+	<button ng-show="!entry.editing" ng-click="toggleEdit(entry)">Edit</button>
+	<button ng-show="entry.editing" ng-click="save(entry)">Tallenna</button>
+	<hr>
       </span>
-      <span ng-show="entry">
-	Kiinnostus <input ng-model="entry.kiinnostus"/><br>
-	Luontainen taipumus <input ng-model="entry.taipumus"/><br>
-	Henkinen kestävyys <input ng-model="entry.henkinen_kestavyys"/><br>
-	Ohjattavuus <input ng-model="entry.ohjattavuus"/><br>
-	Tuomari <input ng-model="entry.tuomari"/><br>
-	Paikka <input ng-model="entry.paikka"/><br>
-	Päivä <input ng-model="entry.paiva"/><br>
+      <span ng-include="category_name + '_input'">
       </span>
-      <button ng-show="entry" ng-click="saveTest()">Tallenna</button>
-      <button ng-show="!entry" ng-click="newTest()">Uusi</button>
     </span>
   </form>
 </span>
