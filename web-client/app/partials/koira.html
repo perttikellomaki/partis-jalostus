@@ -1,17 +1,51 @@
 <form>
-Virallinen nimi / muu tunniste:
-<input ng-show="editing" ng-model="koira.virallinen_nimi"/>
-<span ng-show="!editing">{{koira.virallinen_nimi}}</span>
-<span class="author_nick">{{koira.author_nick}}</span>
-<button ng-show="editing" ng-click="save()">Tallenna</button>
-<button ng-show="!editing" ng-click="toggleEdit()">Edit</button>
-<span ng-show="koira_history.length > 0">
-  <input type="checkbox" ng-model="koira_show_history">Historia</input>
-  <br>
-  <span ng-show="koira_show_history" class="history" ng-repeat="h in koira_history">
-    {{h.virallinen_nimi}}
-    {{h.author_nick}}
-    {{h.timestamp}}
+  Virallinen nimi / muu tunniste:
+  <input ng-show="editing" ng-model="koira.virallinen_nimi"/>
+  <span ng-show="!editing">{{koira.virallinen_nimi}}</span>
+  <span class="author_nick">{{koira.author_nick}}</span>
+  <button ng-show="editing" ng-click="save()">Tallenna</button>
+  <button ng-show="!editing" ng-click="toggleEdit()">Edit</button>
+  <span ng-show="koira_history.length > 0">
+    <input type="checkbox" ng-model="koira_show_history">Historia</input>
+    <br>
+    <span ng-show="koira_show_history" class="history" ng-repeat="h in koira_history">
+      {{h.virallinen_nimi}}
+      {{h.author_nick}}
+      {{h.timestamp}}
+    </span>
   </span>
-</span>
 </form>
+<span ng-show="existing_koira">
+  <form ng-controller="PaimennusCtrl">
+    Paimennustaipumuskoe 
+    <a href ng-click="toggleExpand()">lisää...</a>
+    <br>
+    <span ng-show="expanded">
+      <span ng-repeat="test in tests">
+	<hr>
+	Päivä {{test.paiva}}, 
+	Paikka {{test.paikka}},
+	Tuomari {{test.tuomari}}
+	<br>
+	Kiinnostus / taipumus / henkinen kestävyys / ohjattavuus:
+	{{test.kiinnostus}} / 
+	{{test.taipumus}} /
+	{{test.henkinen_kestavyys}} /
+	{{test.ohjattavuus}}<br>
+	<span class="author_nick">{{test.author_nick}}</span>
+	<hr>
+      </span>
+      <span ng-show="new_test">
+	Kiinnostus <input ng-model="new_test.kiinnostus"/><br>
+	Luontainen taipumus <input ng-model="new_test.taipumus"/><br>
+	Henkinen kestävyys <input ng-model="new_test.henkinen_kestavyys"/><br>
+	Ohjattavuus <input ng-model="new_test.ohjattavuus"/><br>
+	Tuomari <input ng-model="new_test.tuomari"/><br>
+	Paikka <input ng-model="new_test.paikka"/><br>
+	Päivä <input ng-model="new_test.paiva"/><br>
+      </span>
+      <button ng-show="new_test" ng-click="saveTest()">Tallenna</button>
+      <button ng-show="!new_test" ng-click="newTest()">Uusi</button>
+    </span>
+  </form>
+</span>

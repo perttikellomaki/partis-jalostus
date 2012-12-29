@@ -6,6 +6,7 @@ from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 import json
 import os
+import datetime
 import logging
 from HardenedHandler import HardenedHandler
 
@@ -46,7 +47,7 @@ class Koira(SignedResource):
         return "/Koira/%s" % str(self.key())
 
     def hashify(self, base=None):
-        if not base:
+        if base is None:
             base = {}
         super(Koira, self).hashify(base=base)
         base['uri'] = self.uri()
@@ -60,6 +61,51 @@ class Koira(SignedResource):
     def archive(self):
         """Create archival copy"""
         copy = Koira()
+        self.archive_fields(copy)
+        return copy
+
+class Paimennustaipumus(SignedResource):
+    koira = db.ReferenceProperty()
+    kiinnostus = db.IntegerProperty()
+    taipumus = db.IntegerProperty()
+    henkinen_kestavyys =  db.IntegerProperty()
+    ohjattavuus = db.IntegerProperty()
+    tuomari = db.StringProperty()
+    paikka = db.StringProperty()
+    paiva = db.DateProperty()
+
+    def uri(self):
+        return "/Paimennustaipumus/%s" % str(self.key())
+
+    def hashify(self, base=None):
+        if base is None:
+            base = {}
+        super(Paimennustaipumus, self).hashify(base=base)
+        base['koira'] = self.koira.uri()
+        base['uri'] = self.uri()
+        base['kiinnostus'] = self.kiinnostus
+        base['taipumus'] = self.taipumus
+        base['henkinen_kestavyys'] = self.henkinen_kestavyys
+        base['ohjattavuus'] = self.ohjattavuus
+        base['tuomari'] = self.tuomari
+        base['paikka'] = self.paikka
+        base['paiva'] = self.paiva.strftime("%d.%m.%Y")
+        return base
+
+    def archive_fields(self, copy):
+        copy.koira = self.koira
+        copy.kiinnostus = self.kiinnostus
+        copy.taipumus = self.taipumus
+        copy.henkinen_kestavyys = self.henkinen_kestavyys
+        copy.ohjattavuus = self.ohjattavuus
+        copy.tuomari = self.tuomari
+        copy.paikka = self.paikka
+        copy.paiva = self.paiva
+        super(Paimennustaipumus, self).archive_fields(copy)
+
+    def archive(self):
+        """Create archival copy"""
+        copy = Paimennustaipumus()
         self.archive_fields(copy)
         return copy
 
@@ -80,7 +126,6 @@ class KoiraCollectionHandler(HardenedHandler):
 
 class KoiraHandler(HardenedHandler):
     def get_(self, user, key):
-        logging.info("KoiraHandler")
         dog = db.get(key)
         self.jsonReply(dog.hashify())
 
@@ -109,10 +154,37 @@ class HistoryHandler(HardenedHandler):
             data.append(res.hashify())
         self.jsonReply(data)
 
+class PaimennustaipumusCollectionHandler(HardenedHandler):
+    def get_(self, user):
+        tests = Paimennustaipumus.gql("WHERE koira = KEY(:1)",
+                                      self.request.params['koira'])
+        data = []
+        for t in tests:
+            data.append(t.hashify())
+        self.jsonReply(data)
+
+    def post_(self, user):
+        koira = db.get(self.request.params['koira'])
+        day, month, year = self.request.params['paiva'].split(".")
+        paiva = datetime.date(int(year), int(month), int(day))
+        test = Paimennustaipumus(
+            koira = koira,
+            kiinnostus = int(self.request.params['kiinnostus']),
+            taipumus = int(self.request.params['taipumus']),
+            henkinen_kestavyys = int(self.request.params['henkinen_kestavyys']),
+            ohjattavuus = int(self.request.params['ohjattavuus']),
+            tuomari = self.request.params['tuomari'],
+            paikka = self.request.params['paikka'],
+            paiva = paiva)
+        test.sign(user)
+        test.put()
+        self.jsonReply(test.hashify())
+
 app = webapp2.WSGIApplication(
     [("/Koira", KoiraCollectionHandler),
      ("/Koira/([^/]+)", KoiraHandler),
      ("/History/([^/]+)", HistoryHandler),
+     ("/Paimennustaipumus", PaimennustaipumusCollectionHandler),
      ("/Login", LoginHandler),
      ],
     debug=True)
