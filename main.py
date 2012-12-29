@@ -180,11 +180,29 @@ class PaimennustaipumusCollectionHandler(HardenedHandler):
         test.put()
         self.jsonReply(test.hashify())
 
+class PaimennustaipumusHandler(HardenedHandler):
+    def post_(self, user, key):
+        test = db.get(key)
+        day, month, year = self.request.params['paiva'].split(".")
+        paiva = datetime.date(int(year), int(month), int(day))
+        test.kiinnostus = int(self.request.params['kiinnostus'])
+        test.taipumus = int(self.request.params['taipumus'])
+        test.henkinen_kestavyys = int(self.request.params['henkinen_kestavyys'])
+        test.ohjattavuus = int(self.request.params['ohjattavuus'])
+        test.tuomari = self.request.params['tuomari']
+        test.paikka = self.request.params['paikka']
+        test.paiva = paiva
+        test.sign(user)
+        test.put()
+        self.jsonReply(test.hashify())
+
+
 app = webapp2.WSGIApplication(
     [("/Koira", KoiraCollectionHandler),
      ("/Koira/([^/]+)", KoiraHandler),
      ("/History/([^/]+)", HistoryHandler),
      ("/Paimennustaipumus", PaimennustaipumusCollectionHandler),
+     ("/Paimennustaipumus/([^/]+)", PaimennustaipumusHandler),
      ("/Login", LoginHandler),
      ],
     debug=True)
