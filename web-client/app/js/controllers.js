@@ -102,13 +102,20 @@ function PaimennusCtrl ($scope, $resource, $routeParams) {
 	);
     $scope.entry = false;
     $scope.newTest = function () {
-	$scope.entry.resource = new paimennus_resource();
+	$scope.entry = {resource: new paimennus_resource(),
+			editing: true};
 	$scope.entry.resource.koira = $routeParams.key;
     }
 
     $scope.save = function (entry) {
-	entry.resource.$save({key: uri2key(entry.resource.uri)});
+	if (entry.resource.uri == undefined) {
+	    entry.resource.$save({key: ''});
+	} else {
+	    entry.resource.$save({key: uri2key(entry.resource.uri)});
+	}
 	entry.editing = false;
+	$scope.entries.push(entry);
+	$scope.entry = false;
     }
     $scope.expanded = false;
     $scope.toggleExpand = function () {

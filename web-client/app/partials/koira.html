@@ -1,3 +1,27 @@
+<script type="text/ng-template" id="category_renderer">
+  {{summary}}
+  <a href ng-click="toggleExpand()">lisää...</a>
+  <br>
+  <span ng-show="expanded">
+    <span ng-repeat="entry in entries">
+      <hr>
+      <span ng-show="!entry.editing">
+	<span ng-include="category_name + '_details'"></span>
+      </span>
+      <span ng-show="entry.editing">
+	<span ng-include="category_name + '_input'"></span>
+      </span>
+      <button ng-show="!entry.editing" ng-click="toggleEdit(entry)">Edit</button>
+      <button ng-show="entry.editing" ng-click="save(entry)">Tallenna</button>
+      <hr>
+    </span>
+    <button ng-show="!entry" ng-click="newTest()">Uusi</button>
+    <button ng-show="entry" ng-click="save(entry)">Tallenna</button>
+    <span ng-include="category_name + '_input'">
+    </span>
+  </span>
+</script>
+
 <script type="text/ng-template" id="paimennus_details">
   Päivä {{entry.resource.paiva}}, 
   Paikka {{entry.resource.paikka}},
@@ -21,7 +45,6 @@
     Paikka <input ng-model="entry.resource.paikka"/><br>
     Päivä <input ng-model="entry.resource.paiva"/><br>
   </span>
-  <button ng-show="!entry" ng-click="newTest()">Uusi</button>
 </script>
 
 <form>
@@ -43,24 +66,7 @@
 </form>
 <span ng-show="existing_koira">
   <form ng-controller="PaimennusCtrl">
-    Paimennustaipumuskoe: {{summary}}
-    <a href ng-click="toggleExpand()">lisää...</a>
-    <br>
-    <span ng-show="expanded">
-      <span ng-repeat="entry in entries">
-	<hr>
-	<span ng-show="!entry.editing">
-	  <span ng-include="category_name + '_details'"></span>
-	</span>
-	<span ng-show="entry.editing">
-	  <span ng-include="category_name + '_input'"></span>
-	</span>
-	<button ng-show="!entry.editing" ng-click="toggleEdit(entry)">Edit</button>
-	<button ng-show="entry.editing" ng-click="save(entry)">Tallenna</button>
-	<hr>
-      </span>
-      <span ng-include="category_name + '_input'">
-      </span>
-    </span>
+    Paimennustaipumuskoe: 
+    <span ng-include="'category_renderer'"></span>
   </form>
 </span>
