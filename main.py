@@ -138,12 +138,22 @@ class KoiraHandler(HardenedHandler):
 
 class LoginHandler(HardenedHandler):
     def get_(self, user):
+
+        providers = {
+            'Google'   : 'https://www.google.com/accounts/o8/id',
+            'Yahoo'    : 'yahoo.com',
+            'MySpace'  : 'myspace.com'}
+
+        logging.info("provides.items() => %s" % (providers.items(),))
+
         self.response.headers['Content-Type'] = 'text/html'
         self.response.out.write("""
-                  <html><head><title>Login</title></head><body>
-                  <a href="%s">Login</a>
-                  </body> </html>"""
-                % users.create_login_url("/"))
+                  <html><head><title>Login</title></head><body>""")
+        for name, uri in providers.items():
+            self.response.out.write('[<a href="%s">%s</a>]'
+                                    % (users.create_login_url(federated_identity=uri),
+                                       name))
+        self.response.out.write("""</body> </html>""")
 
 class HistoryHandler(HardenedHandler):
     def get_(self, user, key):
