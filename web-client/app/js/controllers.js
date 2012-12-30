@@ -31,7 +31,7 @@ function KoiratCtrl($scope, KoiraService) {
 }
 KoiratCtrl.$inject = ['$scope', 'KoiraService'];
 
-function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
+function KoiraCtrl($scope, $resource, $routeParams, $location, KoiraService) {
     if ($routeParams.key == undefined) {
 	$scope.koira_history = []
 	$scope.koira = KoiraService.makeNew();
@@ -46,7 +46,10 @@ function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
 
     $scope.save = function () {
 	if ($routeParams.key == undefined) {
-	    $scope.koira.$save({key: ''});
+	    $scope.koira.$save({key: ''},
+			       function (data) {
+				   $location.path("/koira" + data.uri);
+			       });
 	} else {
 	    $scope.koira.$save({key: $routeParams.key});
 	    $scope.koira_history = history_resource.query({key: $routeParams.key})
@@ -60,7 +63,7 @@ function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
 	$scope.editing = !$scope.editing;
     }
 }
-KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', 'KoiraService'];
+KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', 'KoiraService'];
 
 function setupScope($scope, $routeParams, $resource, resource) {
     $scope.category_name = "paimennus";
