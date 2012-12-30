@@ -61,36 +61,11 @@ function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
 }
 KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', 'KoiraService'];
 
-function PaimennusCtrl ($scope, $resource, $routeParams) {
+function setupScope($scope, $routeParams, resource) {
     $scope.category_name = "paimennus";
-    var paimennus_resource = $resource("/Paimennustaipumus/:key",
-				       {koira: '@koira',
-					kiinnostus: '@kiinnostus',
-					taipumus: '@taipumus',
-					henkinen_kestavyys: '@henkinen_kestavyys',
-					ohjattavuus: '@ohjattavuus',
-					tuomari: '@tuomari',
-					paikka: '@paikka',
-					paiva: '@paiva'});
-    $scope.summary = "Ei testattu.";
-    $scope.summarise = function () {
-	var result = [];
-	for (var e in $scope.entries) {
-	    var res = $scope.entries[e].resource;
-	    result.push(res.paiva
-			+ " "
-			+ res.kiinnostus + "/"
-			+ res.taipumus + "/"
-			+ res.henkinen_kestavyys + "/"
-			+ res.ohjattavuus);
-	}
-	if (result.length > 0) {
-	    $scope.summary = result.join(", ");
-	}
-    }
     $scope.entries = [];
     $scope.resources 
-	= paimennus_resource.query(
+	= resource.query(
 	    {koira: $routeParams.key},
 	    function () {
 		for (var r in $scope.resources) {
@@ -101,12 +76,11 @@ function PaimennusCtrl ($scope, $resource, $routeParams) {
 	    }
 	);
     $scope.entry = false;
-    $scope.newTest = function () {
-	$scope.entry = {resource: new paimennus_resource(),
+    $scope.newEntry = function () {
+	$scope.entry = {resource: new resource(),
 			editing: true};
 	$scope.entry.resource.koira = $routeParams.key;
     }
-
     $scope.save = function (entry) {
 	if (entry.resource.uri == undefined) {
 	    entry.resource.$save({key: ''});
@@ -123,6 +97,35 @@ function PaimennusCtrl ($scope, $resource, $routeParams) {
     }
     $scope.toggleEdit = function (entry) {
 	entry.editing = !entry.editing;
+    }
+}
+
+function PaimennusCtrl ($scope, $resource, $routeParams) {
+    setupScope($scope, $routeParams, 
+	       $resource("/Paimennustaipumus/:key",
+			 {koira: '@koira',
+			  kiinnostus: '@kiinnostus',
+			  taipumus: '@taipumus',
+			  henkinen_kestavyys: '@henkinen_kestavyys',
+			  ohjattavuus: '@ohjattavuus',
+			  tuomari: '@tuomari',
+			  paikka: '@paikka',
+			  paiva: '@paiva'}));
+    $scope.summary = "Ei testattu.";
+    $scope.summarise = function () {
+	var result = [];
+	for (var e in $scope.entries) {
+	    var res = $scope.entries[e].resource;
+	    result.push(res.paiva
+			+ " "
+			+ res.kiinnostus + "/"
+			+ res.taipumus + "/"
+			+ res.henkinen_kestavyys + "/"
+			+ res.ohjattavuus);
+	}
+	if (result.length > 0) {
+	    $scope.summary = result.join(", ");
+	}
     }
 }
 PaimennusCtrl.$inject = ['$scope', '$resource', '$routeParams'];
