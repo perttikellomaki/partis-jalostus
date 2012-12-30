@@ -10,7 +10,13 @@
 
   TÄMÄ TIETOKANTA ON KOEKÄYTÖSSÄ JA SAATETAAN TYHJENTÄÄ ILMAN VAROITUKSIA.
   <br>
-  <a href="/Login">Login</a>
+  <span ng-controller="LoginStatusCtrl">
+    <span ng-show="login_status.logged_in">
+      Olet kirjautunut käyttäjänä {{login_status.nick}}
+    </span>
+    <span ng-show="!login_status.logged_in">
+      <a href="/Login">Kirjaudu sisään</a>
+    </span>
   <ul class="menu">
     <li><a href="#/koirat">Koirat</a></li>
     <li><a href="#/koira">Uusi koira</a></li>

@@ -139,3 +139,11 @@ function PaimennusCtrl ($scope, $resource, $routeParams) {
     }
 }
 PaimennusCtrl.$inject = ['$scope', '$resource', '$routeParams'];
+
+function LoginStatusCtrl ($scope, $rootScope, $resource) {
+    var resource = $resource("/LoginStatus");
+    var status = resource.get();
+    $scope.login_status = status;
+    $rootScope.login_status = status;
+}
+LoginStatusCtrl.$inject = ['$scope', '$rootScope', '$resource']

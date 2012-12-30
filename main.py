@@ -148,7 +148,8 @@ class LoginHandler(HardenedHandler):
 
         self.response.headers['Content-Type'] = 'text/html'
         self.response.out.write("""
-                  <html><head><title>Login</title></head><body>""")
+                  <html><head><title>Login</title></head><body>
+                  Kirjaudu sisään jollain seuraavista tunnuksista:<br>""")
         for name, uri in providers.items():
             self.response.out.write('[<a href="%s">%s</a>]'
                                     % (users.create_login_url(federated_identity=uri),
@@ -206,6 +207,18 @@ class PaimennustaipumusHandler(HardenedHandler):
         test.put()
         self.jsonReply(test.hashify())
 
+class LoginStatusHandler(HardenedHandler):
+    def get_(self, user):
+        if user:
+            self.jsonReply({
+                    'logged_in': True,
+                    'nick': user.nickname(),
+                    'email': str(user.email())})
+        else:
+            self.jsonReply({
+                    'logged_in': False,
+                    'nick': None,
+                    'email': None})
 
 app = webapp2.WSGIApplication(
     [("/Koira", KoiraCollectionHandler),
@@ -214,5 +227,6 @@ app = webapp2.WSGIApplication(
      ("/Paimennustaipumus", PaimennustaipumusCollectionHandler),
      ("/Paimennustaipumus/([^/]+)", PaimennustaipumusHandler),
      ("/Login", LoginHandler),
+     ("/LoginStatus", LoginStatusHandler),
      ],
     debug=True)
