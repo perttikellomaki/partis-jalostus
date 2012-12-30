@@ -49,6 +49,7 @@ function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
 	    $scope.koira.$save({key: ''});
 	} else {
 	    $scope.koira.$save({key: $routeParams.key});
+	    $scope.koira_history = history_resource.query({key: $routeParams.key})
 	}
 	$scope.editing = false;
     }
@@ -61,16 +62,21 @@ function KoiraCtrl($scope, $resource, $routeParams, KoiraService) {
 }
 KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', 'KoiraService'];
 
-function setupScope($scope, $routeParams, resource) {
+function setupScope($scope, $routeParams, $resource, resource) {
     $scope.category_name = "paimennus";
     $scope.entries = [];
     $scope.resources 
 	= resource.query(
 	    {koira: $routeParams.key},
 	    function () {
+		var history = $resource("/History/:key");
 		for (var r in $scope.resources) {
-		    $scope.entries.push({editing: false,
-					 resource: $scope.resources[r]});
+		    var entry = {editing: false,
+				 show_history: false,
+				 resource: $scope.resources[r]};
+		    entry.history =
+			history.query({key: uri2key(entry.resource.uri)});
+		    $scope.entries.push(entry);
 		    $scope.summarise();
 		}
 	    }
@@ -78,7 +84,8 @@ function setupScope($scope, $routeParams, resource) {
     $scope.entry = false;
     $scope.newEntry = function () {
 	$scope.entry = {resource: new resource(),
-			editing: true};
+			editing: true,
+			show_history: false};
 	$scope.entry.resource.koira = $routeParams.key;
     }
     $scope.save = function (entry) {
@@ -101,7 +108,7 @@ function setupScope($scope, $routeParams, resource) {
 }
 
 function PaimennusCtrl ($scope, $resource, $routeParams) {
-    setupScope($scope, $routeParams, 
+    setupScope($scope, $routeParams, $resource,
 	       $resource("/Paimennustaipumus/:key",
 			 {koira: '@koira',
 			  kiinnostus: '@kiinnostus',

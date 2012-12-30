@@ -1,24 +1,31 @@
 <script type="text/ng-template" id="category_renderer">
   {{summary}}
-  <a href ng-click="toggleExpand()">lisää...</a>
+  <a href ng-show="!expanded" ng-click="toggleExpand()">lisää...</a>
+  <a href ng-show="expanded" ng-click="toggleExpand()">vähemmän...</a>
   <br>
   <span ng-show="expanded">
+    <hr>
     <span ng-repeat="entry in entries">
-      <hr>
       <span ng-show="!entry.editing">
 	<span ng-include="category_name + '_details'"></span>
       </span>
       <span ng-show="entry.editing">
 	<span ng-include="category_name + '_input'"></span>
       </span>
-      <button ng-show="!entry.editing" ng-click="toggleEdit(entry)">Edit</button>
+      <button ng-show="!entry.editing" ng-click="toggleEdit(entry)">Muuta</button>
       <button ng-show="entry.editing" ng-click="save(entry)">Tallenna</button>
+      <span ng-show="entry.history.length > 0">
+	<input type="checkbox" ng-model="entry.show_history">Historia</input>
+      </span>
+      <br>
+      <span ng-show="entry.show_history" ng-repeat="history in entry.history">
+	<span class="history" ng-include="category_name + '_history'"></span>
+      </span>
       <hr>
     </span>
     <button ng-show="!entry" ng-click="newEntry()">Uusi</button>
+    <span ng-include="category_name + '_input'"></span>
     <button ng-show="entry" ng-click="save(entry)">Tallenna</button>
-    <span ng-include="category_name + '_input'">
-    </span>
   </span>
 </script>
 
@@ -33,6 +40,19 @@
   {{entry.resource.henkinen_kestavyys}} /
   {{entry.resource.ohjattavuus}}<br>
   <span class="author_nick">{{entry.resource.author_nick}}</span>
+</script>
+
+<script type="text/ng-template" id="paimennus_history">
+  {{history.paiva}}, 
+  {{history.paikka}},
+  {{history.tuomari}}:
+  {{history.kiinnostus}} / 
+  {{history.taipumus}} /
+  {{history.henkinen_kestavyys}} /
+  {{history.ohjattavuus}}
+  <span class="author_nick">{{history.author_nick}}</span>
+  {{history.timestamp}}
+  <br>
 </script>
 
 <script type="text/ng-template" id="paimennus_input">
@@ -60,13 +80,15 @@
     <span ng-show="koira_show_history" class="history" ng-repeat="h in koira_history">
       {{h.virallinen_nimi}}
       {{h.author_nick}}
-      {{h.timestamp}}
+      {{h.timestamp}}<br>
     </span>
   </span>
 </form>
-<span ng-show="existing_koira">
-  <form ng-controller="PaimennusCtrl">
-    Paimennustaipumuskoe: 
-    <span ng-include="'category_renderer'"></span>
-  </form>
+<span ng-switch="existing_koira">
+  <span ng-switch-when="true">
+    <form style="background: AliceBlue;" ng-controller="PaimennusCtrl">
+      Paimennustaipumuskoe: 
+      <span ng-include="'category_renderer'"></span>
+    </form>
+  </span>
 </span>
