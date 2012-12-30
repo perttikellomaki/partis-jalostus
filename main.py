@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: latin-1 -*-
 #
 import webapp2
 from google.appengine.api import users
@@ -149,7 +150,7 @@ class LoginHandler(HardenedHandler):
         self.response.headers['Content-Type'] = 'text/html'
         self.response.out.write("""
                   <html><head><title>Login</title></head><body>
-                  Kirjaudu sis√§√§n jollain seuraavista tunnuksista:<br>""")
+                  Kirjaudu sis‰‰n jollain seuraavista tunnuksista:<br>""")
         for name, uri in providers.items():
             self.response.out.write('[<a href="%s">%s</a>]'
                                     % (users.create_login_url(federated_identity=uri),
