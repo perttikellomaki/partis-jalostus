@@ -12,7 +12,7 @@
   <br>
   <span ng-controller="LoginStatusCtrl">
     <span ng-show="login_status.logged_in">
-      Olet kirjautunut käyttäjänä {{login_status.nick}}
+      Olet kirjautunut käyttäjänä {{login_status.nick}} <a href="/Logout">Kirjaudu ulos</a>
     </span>
     <span ng-show="!login_status.logged_in">
       <a href="/Login">Kirjaudu sisään</a>

@@ -11,10 +11,6 @@ import datetime
 import logging
 from HardenedHandler import HardenedHandler
 
-whitelist = ["114665306391201355583"    #pertti.kellomaki@gmail.com
-             ]
-PRODUCTION = not os.environ['SERVER_SOFTWARE'].startswith('Development')
-
 class SignedResource(polymodel.PolyModel):
     author = db.StringProperty()
     author_nick = db.StringProperty()
@@ -157,6 +153,14 @@ class LoginHandler(HardenedHandler):
                                        name))
         self.response.out.write("""</body> </html>""")
 
+class LogoutHandler(HardenedHandler):
+    def get_(self, user):
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.out.write("""
+                  <html><head><title>Logout</title></head>
+                  <body><a href="%s">Logout</a></body></html>"""
+                                % users.create_logout_url("/"))
+
 class HistoryHandler(HardenedHandler):
     def get_(self, user, key):
         resources = SignedResource.gql("WHERE archive_copy_of = KEY(:1)",
@@ -228,6 +232,7 @@ app = webapp2.WSGIApplication(
      ("/Paimennustaipumus", PaimennustaipumusCollectionHandler),
      ("/Paimennustaipumus/([^/]+)", PaimennustaipumusHandler),
      ("/Login", LoginHandler),
-     ("/LoginStatus", LoginStatusHandler),
+     ("/Logout", LogoutHandler), 
+    ("/LoginStatus", LoginStatusHandler),
      ],
     debug=True)
