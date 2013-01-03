@@ -15,11 +15,12 @@
       Olet kirjautunut käyttäjänä {{login_status.nick}} <a href="/Logout">Kirjaudu ulos</a>
     </span>
     <span ng-show="!login_status.logged_in">
-      <a href="/Login">Kirjaudu sisään</a>
+      Et ole kirjautunut
     </span>
   <ul class="menu">
     <li><a href="#/koirat">Koirat</a></li>
     <li><a href="#/koira">Uusi koira</a></li>
+    <li><a href="#/login">Kirjaudu</a></li>
   </ul>
 
   <div ng-view></div>

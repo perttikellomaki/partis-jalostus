@@ -1,0 +1,30 @@
+Kirjaudu jollain seuraavista tunnuksista<br>
+<span ng-repeat="provider in providers">
+  <a ng-href="{{provider.uri}}">{{provider.name}}</a><br>
+</span>
+<hr>
+Kirjaudu sähköpostiosoitteella<br>
+<form>
+<table>
+<tr><td>Sähköposti</td><td><input ng-model="user.email"/></td></tr>
+<tr><td>Salasana</td><td><input ng-model="user.pass"/></td></tr>
+<tr><td><button ng-click="login()">Kirjaudu</button></td></tr>
+</table>
+<hr>
+Tilaa salasana sähköpostiin
+<table>
+<tr><td>Sähköposti</td><td> <input ng-model="request.email"/></td></tr>
+<tr><td>Nimimerkki</td><td> <input ng-model="request.nick"/></td></tr>
+<tr><td>Roskapostisuoja</td><td> <input ng-model="request.secret"/></td>
+    <td>Anna tähän rotuyhdistyksen täydellinen nimi isoine kirjaimineen ja välimerkkeineen (voit katsoa sen <a href="http://www.suomenpartacolliet.info">yhdistyksen sivuilta</a>).</td>
+    </tr>
+<tr><td>
+    <span ng-show="request.status_message.length > 0">
+      <b>{{request.status_message}}</b>
+    </span>
+    <span ng-show="request.status_message.length == 0">
+      <button ng-click="askPassword()">Tilaa salasana</button>
+    </span>
+</td></tr>
+</table>
+</form>

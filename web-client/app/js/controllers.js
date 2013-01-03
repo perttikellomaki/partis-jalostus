@@ -147,3 +147,20 @@ function LoginStatusCtrl ($scope, $rootScope, $resource) {
     $rootScope.login_status = status;
 }
 LoginStatusCtrl.$inject = ['$scope', '$rootScope', '$resource']
+
+function LoginCtrl ($scope, $resource) {
+    var federated_resource = $resource("/FederatedLogin")
+    $scope.providers = federated_resource.query();
+
+    var password_request_resource = $resource("/PasswordRequest",
+					      {email: '@email',
+					       nick: '@nick',
+					       status_message: '@status_message',
+					       secret: '@secret'})
+    $scope.request = new password_request_resource();
+    $scope.request.status_message = '';
+    $scope.askPassword = function () {
+	$scope.request.$save()
+    }
+}
+LoginCtrl.$inject = ['$scope', '$resource']

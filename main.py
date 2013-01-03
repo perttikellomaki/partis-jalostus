@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: latin-1 -*-
 #
+import uuid
 import webapp2
+from webapp2_extras import sessions
+from google.appengine.api import app_identity
+from google.appengine.api import mail
 from google.appengine.api import users
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
@@ -9,7 +13,7 @@ import json
 import os
 import datetime
 import logging
-from HardenedHandler import HardenedHandler
+from HardenedHandler import HardenedHandler, LocalUser
 
 class SignedResource(polymodel.PolyModel):
     author = db.StringProperty()
@@ -133,7 +137,7 @@ class KoiraHandler(HardenedHandler):
         dog.put()
         self.jsonReply(dog.hashify())
 
-class LoginHandler(HardenedHandler):
+class FederatedLoginHandler(HardenedHandler):
     def get_(self, user):
 
         providers = {
@@ -141,17 +145,12 @@ class LoginHandler(HardenedHandler):
             'Yahoo'    : 'yahoo.com',
             'MySpace'  : 'myspace.com'}
 
-        logging.info("provides.items() => %s" % (providers.items(),))
-
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.out.write("""
-                  <html><head><title>Login</title></head><body>
-                  Kirjaudu sis‰‰n jollain seuraavista tunnuksista:<br>""")
+        data = []
         for name, uri in providers.items():
-            self.response.out.write('[<a href="%s">%s</a>]'
-                                    % (users.create_login_url(federated_identity=uri),
-                                       name))
-        self.response.out.write("""</body> </html>""")
+            data.append(
+                {'name': name,
+                 'uri': users.create_login_url(federated_identity=uri)})
+        self.jsonReply(data)
 
 class LogoutHandler(HardenedHandler):
     def get_(self, user):
@@ -225,14 +224,49 @@ class LoginStatusHandler(HardenedHandler):
                     'nick': None,
                     'email': None})
 
+class PasswordRequestHandler(HardenedHandler):
+    def post_unauthenticated_(self):
+        if self.request.params['secret'] == "Suomen Partacolliet ry.":
+            email = self.request.params['email']
+            entries = LocalUser.gql("WHERE email_ = :1", email)
+            if entries.count() == 0:
+                entry = LocalUser(userid_ = "userid",
+                                  email_ = email,
+                                  nick_ = self.request.params['nick'],
+                                  password_ = uuid.uuid4().hex)
+                entry.put()
+            else:
+                entry = entries.get()
+            message = mail.EmailMessage()
+            #message.sender = "noreply@%s.appspot.com" % app_identity.get_application_id()
+            message.sender = "pertti.kellomaki@gmail.com"
+            message.to = email
+            message.subject = "Uusi salasana"
+            message.body = ("""Hei!
+
+Pyysit salasanaa Suomen Partacolliet ry:n jalostustietokantaan. 
+Voit kirjautua osoitteellasi %s ja salasanalla %s
+""" % (entry.email_, entry.password_))
+            message.send()
+            self.jsonReply({'email': '', 'nick': '', 'secret': '',
+                            'status_message': 'Viesti matkalla'})
+        
+
+config = {}
+config['webapp2_extras.sessions'] = {
+    'secret_key': 'topsecretkey',
+    }
+
 app = webapp2.WSGIApplication(
     [("/Koira", KoiraCollectionHandler),
      ("/Koira/([^/]+)", KoiraHandler),
      ("/History/([^/]+)", HistoryHandler),
      ("/Paimennustaipumus", PaimennustaipumusCollectionHandler),
      ("/Paimennustaipumus/([^/]+)", PaimennustaipumusHandler),
-     ("/Login", LoginHandler),
+     ("/FederatedLogin", FederatedLoginHandler),
      ("/Logout", LogoutHandler), 
-    ("/LoginStatus", LoginStatusHandler),
+     ("/LoginStatus", LoginStatusHandler),
+     ("/PasswordRequest", PasswordRequestHandler)
      ],
+    config=config,
     debug=True)

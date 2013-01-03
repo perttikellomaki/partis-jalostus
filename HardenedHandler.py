@@ -1,4 +1,5 @@
 import webapp2
+from webapp2_extras import sessions
 from google.appengine.api import users
 from google.appengine.api import oauth
 import os
@@ -8,7 +9,40 @@ from google.appengine.ext import db
 
 PRODUCTION = not os.environ['SERVER_SOFTWARE'].startswith('Development')
 
-class HardenedHandler(webapp2.RequestHandler):
+#Session Handling class, gets the store, dispatches the request
+class BaseSessionHandler(webapp2.RequestHandler):
+    def dispatch(self):
+        # Get a session store for this request.
+        self.session_store = sessions.get_store(request=self.request)
+
+        try:
+            # Dispatch the request.
+            webapp2.RequestHandler.dispatch(self)
+        finally:
+            # Save all sessions.
+            self.session_store.save_sessions(self.response)
+
+    @webapp2.cached_property
+    def session(self):
+        # Returns a session using the default cookie key.
+        return self.session_store.get_session()
+
+class LocalUser(db.Model):
+    userid_ = db.StringProperty()
+    email_ = db.StringProperty()
+    nick_ = db.StringProperty()
+    password_ = db.StringProperty()
+
+    def user_id(self):
+        return self.userid_
+
+    def email(self):
+        return self.email_
+
+    def nickname(self):
+        return self.nick_    
+
+class HardenedHandler(BaseSessionHandler):
     """Factors out common preconditions for get() and post() methods."""
 
     def get(self, *args, **kwargs):
@@ -17,8 +51,8 @@ class HardenedHandler(webapp2.RequestHandler):
 
     def post(self, *args, **kwargs):
 
-        # Only authenticated users can post
         if users.get_current_user():
+            # authenticated users can post
             path = self.request.path.split("/")
             if len(path) == 3:
 
@@ -32,6 +66,11 @@ class HardenedHandler(webapp2.RequestHandler):
 
             self.post_(users.get_current_user(),
                        *args, **kwargs)
+
+        else:
+            # there may be a handler for unauthenticated users
+            self.post_unauthenticated_(*args, **kwargs)
+            
 
     def delete(self, *args, **kwargs):
 
