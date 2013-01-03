@@ -28,30 +28,49 @@ class BaseSessionHandler(webapp2.RequestHandler):
         return self.session_store.get_session()
 
 class LocalUser(db.Model):
-    userid_ = db.StringProperty()
-    email_ = db.StringProperty()
-    nick_ = db.StringProperty()
-    password_ = db.StringProperty()
+    email = db.StringProperty()
+    nickname = db.StringProperty()
+    password = db.StringProperty()
+
+class UserProxy:
+    """If the user is authenticated in the session using a local user entry,
+a UserProxy is passed to the handlers instead of a Google users.user object."""
+    
+    def __init__(self, user_id, email, nickname):
+        self.user_id_ = user_id
+        self.email_ = email
+        self.nickname_ = nickname
 
     def user_id(self):
-        return self.userid_
+        return self.user_id_
 
     def email(self):
         return self.email_
 
     def nickname(self):
-        return self.nick_    
+        return self.nickname_
 
 class HardenedHandler(BaseSessionHandler):
     """Factors out common preconditions for get() and post() methods."""
 
+    def currentUser(self):
+        user = users.get_current_user()
+        if user:
+            return user
+        elif self.session.has_key('email') and self.session['email'] != '':
+            return UserProxy(self.session['user_id'],
+                             self.session['email'],
+                             self.session['nickname'])
+        else:
+            return None
+
     def get(self, *args, **kwargs):
-        self.get_(users.get_current_user(),
+        self.get_(self.currentUser(),
                   *args, **kwargs)
 
     def post(self, *args, **kwargs):
 
-        if users.get_current_user():
+        if self.currentUser():
             # authenticated users can post
             path = self.request.path.split("/")
             if len(path) == 3:
@@ -64,7 +83,7 @@ class HardenedHandler(BaseSessionHandler):
                 logging.info("Created archive copy %s" % self.archive_copy)
                 logging.info("archive_copy_of %s" % self.archive_copy.archive_copy_of)
 
-            self.post_(users.get_current_user(),
+            self.post_(self.currentUser(),
                        *args, **kwargs)
 
         else:

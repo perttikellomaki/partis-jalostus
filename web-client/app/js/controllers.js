@@ -140,21 +140,23 @@ function PaimennusCtrl ($scope, $resource, $routeParams) {
 }
 PaimennusCtrl.$inject = ['$scope', '$resource', '$routeParams'];
 
-function LoginStatusCtrl ($scope, $rootScope, $resource) {
+function LoginStatusCtrl ($scope, $resource) {
     var resource = $resource("/LoginStatus");
     var status = resource.get();
     $scope.login_status = status;
-    $rootScope.login_status = status;
+    $scope.$on('LoginStatusChanged', function (event, path) {
+	$scope.login_status = resource.get();
+    })
 }
-LoginStatusCtrl.$inject = ['$scope', '$rootScope', '$resource']
+LoginStatusCtrl.$inject = ['$scope', '$resource']
 
-function LoginCtrl ($scope, $resource) {
+function LoginCtrl ($scope, $rootScope, $resource) {
     var federated_resource = $resource("/FederatedLogin")
     $scope.providers = federated_resource.query();
 
     var password_request_resource = $resource("/PasswordRequest",
 					      {email: '@email',
-					       nick: '@nick',
+					       nickname: '@nickname',
 					       status_message: '@status_message',
 					       secret: '@secret'})
     $scope.request = new password_request_resource();
@@ -162,5 +164,16 @@ function LoginCtrl ($scope, $resource) {
     $scope.askPassword = function () {
 	$scope.request.$save()
     }
+
+    var local_login_resource = $resource("/LocalLogin",
+					 {email: '@email',
+					  password: '@password',
+					  status_message : '@status_message'});
+    $scope.local_login = new local_login_resource();
+    $scope.login = function () {
+	$scope.local_login.$save(function () {
+	    $rootScope.$broadcast('LoginStatusChanged', '');
+	});
+    }
 }
-LoginCtrl.$inject = ['$scope', '$resource']
+LoginCtrl.$inject = ['$scope', '$rootScope', '$resource']

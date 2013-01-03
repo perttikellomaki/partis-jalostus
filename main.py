@@ -23,7 +23,7 @@ class SignedResource(polymodel.PolyModel):
     archive_copy_of = db.ReferenceProperty()
 
     def sign(self, user):
-        self.author = user.user_id()
+        self.author = str(user.user_id())
         self.author_nick = user.nickname()
         self.author_email = user.email()
 
@@ -152,8 +152,34 @@ class FederatedLoginHandler(HardenedHandler):
                  'uri': users.create_login_url(federated_identity=uri)})
         self.jsonReply(data)
 
+class LocalLoginHandler(HardenedHandler):
+    def post_unauthenticated_(self):
+        entries = LocalUser.gql("WHERE email = :1 and password = :2",
+                                self.request.params['email'],
+                                self.request.params['password'])
+        if entries.count() == 1:
+            self.jsonReply({'email': '',
+                            'password': '',
+                            'status_message': 'Kirjautuminen onnistui'})
+            user = entries.get()
+
+            # record user data in session
+            self.session['email'] = user.email
+            self.session['user_id'] = "local-%s" % user.key().id()
+            self.session['nickname'] = user.nickname
+        else:
+            self.jsonReply({'email': '',
+                            'password': '',
+                            'status_message': 'Kirjautuminen ei onnistunut'})
+            
+
 class LogoutHandler(HardenedHandler):
     def get_(self, user):
+        # clear possible user information from session
+        self.session['email'] = ''
+        self.session['user_id'] = ''
+        self.session['nickname'] = ''
+
         self.response.headers['Content-Type'] = 'text/html'
         self.response.out.write("""
                   <html><head><title>Logout</title></head>
@@ -228,12 +254,11 @@ class PasswordRequestHandler(HardenedHandler):
     def post_unauthenticated_(self):
         if self.request.params['secret'] == "Suomen Partacolliet ry.":
             email = self.request.params['email']
-            entries = LocalUser.gql("WHERE email_ = :1", email)
+            entries = LocalUser.gql("WHERE email = :1", email)
             if entries.count() == 0:
-                entry = LocalUser(userid_ = "userid",
-                                  email_ = email,
-                                  nick_ = self.request.params['nick'],
-                                  password_ = uuid.uuid4().hex)
+                entry = LocalUser(email = email,
+                                  nickname = self.request.params['nickname'],
+                                  password = uuid.uuid4().hex)
                 entry.put()
             else:
                 entry = entries.get()
@@ -246,7 +271,7 @@ class PasswordRequestHandler(HardenedHandler):
 
 Pyysit salasanaa Suomen Partacolliet ry:n jalostustietokantaan. 
 Voit kirjautua osoitteellasi %s ja salasanalla %s
-""" % (entry.email_, entry.password_))
+""" % (entry.email, entry.password))
             message.send()
             self.jsonReply({'email': '', 'nick': '', 'secret': '',
                             'status_message': 'Viesti matkalla'})
@@ -264,6 +289,7 @@ app = webapp2.WSGIApplication(
      ("/Paimennustaipumus", PaimennustaipumusCollectionHandler),
      ("/Paimennustaipumus/([^/]+)", PaimennustaipumusHandler),
      ("/FederatedLogin", FederatedLoginHandler),
+     ("/LocalLogin", LocalLoginHandler),
      ("/Logout", LogoutHandler), 
      ("/LoginStatus", LoginStatusHandler),
      ("/PasswordRequest", PasswordRequestHandler)
