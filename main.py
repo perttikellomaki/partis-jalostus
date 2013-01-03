@@ -171,7 +171,7 @@ class HistoryHandler(HardenedHandler):
 
 class PaimennustaipumusCollectionHandler(HardenedHandler):
     def get_(self, user):
-        tests = Paimennustaipumus.gql("WHERE koira = KEY(:1)",
+        tests = Paimennustaipumus.gql("WHERE koira = KEY(:1) AND archive_copy_of = NULL",
                                       self.request.params['koira'])
         data = []
         for t in tests:
