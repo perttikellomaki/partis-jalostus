@@ -62,6 +62,21 @@ function KoiraCtrl($scope, $resource, $routeParams, $location, KoiraService) {
     $scope.toggleEdit = function () {
 	$scope.editing = !$scope.editing;
     }
+    $scope.items = KoiraService.query({key: ''});
+    $scope.isa = {};
+    $scope.$watch('koira.isa', 
+		  function (new_val, old_val) {
+		      if (new_val != undefined && new_val != "") {
+			  $scope.isa = KoiraService.get({uri: new_val});
+		      }
+		  })
+    $scope.ema = {};
+    $scope.$watch('koira.ema', 
+		  function (new_val, old_val) {
+		      if (new_val != undefined && new_val != "") {
+			  $scope.ema = KoiraService.get({uri: new_val});
+		      }
+		  })
 }
 KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', 'KoiraService'];
 

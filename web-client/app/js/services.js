@@ -11,7 +11,6 @@ function makeCachedResource (resource) {
 	    return resource.query.apply(this, arguments);
 	},
 	get: function() {
-
 	    // If the resource is addressed with an uri, replace the
 	    // uri with a corresponding key. This assumes that the
 	    // path given to $resource is of the form '/ResourceName/:key'
@@ -37,6 +36,8 @@ angular.module('myApp.services', [])
 		     $resource('/Koira/:key',
 			       {key: 'INVALID_KEY',
 				virallinen_nimi: '@virallinen_nimi',
-				kutsumanimi: '@kutsumanimi'}))
+				kutsumanimi: '@kutsumanimi',
+				isa: '@isa',
+				ema: '@ema'}))
 	     })
 ;
