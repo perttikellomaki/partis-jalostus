@@ -93,9 +93,11 @@
     <input type="checkbox" ng-model="koira_show_history">Historia</input>
     <br>
     <span ng-show="koira_show_history" class="history" ng-repeat="h in koira_history">
-      {{h.virallinen_nimi}}
-      {{h.author_nick}}
-      {{h.timestamp}}<br>
+      <span ng-controller="KoiraHistoryCtrl">
+	{{h.virallinen_nimi}}, isä {{isa.virallinen_nimi}}, emä {{ema.virallinen_nimi}},
+	({{h.author_nick}}
+	{{h.timestamp}})<br>
+      </span>
     </span>
   </span>
 </form>

@@ -80,6 +80,25 @@ function KoiraCtrl($scope, $resource, $routeParams, $location, KoiraService) {
 }
 KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', 'KoiraService'];
 
+function KoiraHistoryCtrl ($scope, KoiraService) {
+    $scope.isa = '';
+    $scope.ema = '';
+    $scope.$watch('h',
+		  function (new_val, old_val) {
+		      if (new_val != undefined) {
+			  if (new_val.isa != undefined 
+			      && new_val.isa != '') {
+			      $scope.isa = KoiraService.get({uri: new_val.isa});
+			  }
+			  if (new_val.ema != undefined 
+			      && new_val.ema != '') {
+			      $scope.ema = KoiraService.get({uri: new_val.ema});
+			  }
+		      }
+		  });
+}
+KoiraHistoryCtrl.$inject = ['$scope', 'KoiraService'];
+
 function setupScope($scope, $routeParams, $resource, resource) {
     $scope.category_name = "paimennus";
     $scope.entries = [];

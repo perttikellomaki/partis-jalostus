@@ -61,6 +61,8 @@ class Koira(SignedResource):
 
     def archive_fields(self, copy):
         copy.virallinen_nimi = self.virallinen_nimi
+        copy.isa = self.isa
+        copy.ema = self.ema
         super(Koira, self).archive_fields(copy)
 
     def archive(self):
