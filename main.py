@@ -22,17 +22,34 @@ class SignedResource(polymodel.PolyModel):
     timestamp = db.DateTimeProperty(auto_now=True)
     archive_copy_of = db.ReferenceProperty()
 
+    def fields(self):
+        return {
+            'author': SignedResource.author,
+            'author_nick': SignedResource.author_nick,
+            'author_email': SignedResource.author_email,
+            'timestamp': (SignedResource.timestamp, str, lambda x: x)
+            # archive_copy_of is omitted intentionally
+            }
+
+    def hashify(self):
+        def tuplify(val):
+            if isinstance(val, tuple):
+                return val
+            else:
+                return (val, lambda x: x, lambda x: x)
+            
+        res = {'uri': self.uri()}
+        fields = self.fields()
+        for f in fields.keys():
+            field, toConversion, fromConversion = tuplify(fields[f])
+            res[f] = toConversion(field.__get__(self, type(self)))
+        return res
+            
+
     def sign(self, user):
         self.author = str(user.user_id())
         self.author_nick = user.nickname()
         self.author_email = user.email()
-
-    def hashify(self, base=None):
-        if base is None:
-            base = {}
-        base['author_nick'] = self.author_nick
-        base['timestamp'] = str(self.timestamp)
-        return base
 
     def archive_fields(self, copy):
         copy.author = self.author
@@ -45,19 +62,17 @@ class Koira(SignedResource):
     virallinen_nimi = db.StringProperty()
     isa = db.StringProperty()
     ema = db.StringProperty()
-    
+
+    def fields(self):
+        base = super(Koira, self).fields()
+        delta = {
+            'virallinen_nimi': Koira.virallinen_nimi,
+            'isa': Koira.isa,
+            'ema': Koira.ema}
+        return dict(base.items() + delta.items())
+
     def uri(self):
         return "/Koira/%s" % str(self.key())
-
-    def hashify(self, base=None):
-        if base is None:
-            base = {}
-        super(Koira, self).hashify(base=base)
-        base['uri'] = self.uri()
-        base['virallinen_nimi'] = self.virallinen_nimi
-        base['isa'] = self.isa
-        base['ema'] = self.ema
-        return base
 
     def archive_fields(self, copy):
         copy.virallinen_nimi = self.virallinen_nimi
@@ -81,23 +96,21 @@ class Paimennustaipumus(SignedResource):
     paikka = db.StringProperty()
     paiva = db.DateProperty()
 
+    def fields(self):
+        base = super(Paimennustaipumus, self).fields()
+        delta = {
+            'koira': Paimennustaipumus.koira,
+            'kiinnostus': (Paimennustaipumus.kiinnostus, str, int),
+            'taipumus': (Paimennustaipumus.taipumus, str, int),
+            'henkinen_kestavyys': (Paimennustaipumus.henkinen_kestavyys, str, irent),
+            'ohjattavuus': (Paimennustaipumus.ohjattavuus, str, int),
+            'tuomari': Paimennustaipumus.tuomari,
+            'paikka': Paimennustaipumus.paikka,
+            'paiva': Paimennustaipumus.paiva}
+        return dict(base.items() + delta.items())
+        
     def uri(self):
         return "/Paimennustaipumus/%s" % str(self.key())
-
-    def hashify(self, base=None):
-        if base is None:
-            base = {}
-        super(Paimennustaipumus, self).hashify(base=base)
-        base['koira'] = self.koira.uri()
-        base['uri'] = self.uri()
-        base['kiinnostus'] = self.kiinnostus
-        base['taipumus'] = self.taipumus
-        base['henkinen_kestavyys'] = self.henkinen_kestavyys
-        base['ohjattavuus'] = self.ohjattavuus
-        base['tuomari'] = self.tuomari
-        base['paikka'] = self.paikka
-        base['paiva'] = self.paiva.strftime("%d.%m.%Y")
-        return base
 
     def archive_fields(self, copy):
         copy.koira = self.koira
