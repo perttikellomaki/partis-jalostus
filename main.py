@@ -49,11 +49,9 @@ class SignedResource(polymodel.PolyModel):
         self.author_email = user.email()
 
     def archive_fields(self, copy):
-        copy.author = self.author
-        copy.author_nick = self.author_nick
-        copy.author_email = self.author_email
-        copy.timestamp = self.timestamp
-        copy.archive_copy_of = self.key()
+        for name, field in self.fields().items():
+            field.__set__(copy, field.__get__(self, type(self)))
+        copy.archive_copy_of = self
 
 class Koira(SignedResource):
     d = dict(SignedResource.d.items())
@@ -63,12 +61,6 @@ class Koira(SignedResource):
 
     def uri(self):
         return "/Koira/%s" % str(self.key())
-
-    def archive_fields(self, copy):
-        copy.virallinen_nimi = self.virallinen_nimi
-        copy.isa = self.isa
-        copy.ema = self.ema
-        super(Koira, self).archive_fields(copy)
 
     def archive(self):
         """Create archival copy"""
@@ -89,17 +81,6 @@ class Paimennustaipumus(SignedResource):
 
     def uri(self):
         return "/Paimennustaipumus/%s" % str(self.key())
-
-    def archive_fields(self, copy):
-        copy.koira = self.koira
-        copy.kiinnostus = self.kiinnostus
-        copy.taipumus = self.taipumus
-        copy.henkinen_kestavyys = self.henkinen_kestavyys
-        copy.ohjattavuus = self.ohjattavuus
-        copy.tuomari = self.tuomari
-        copy.paikka = self.paikka
-        copy.paiva = self.paiva
-        super(Paimennustaipumus, self).archive_fields(copy)
 
     def archive(self):
         """Create archival copy"""
@@ -207,7 +188,7 @@ class PaimennustaipumusCollectionHandler(HardenedHandler):
 
     def post_(self, user):
         koira = db.get(self.request.params['koira'])
-        day, month, year = self.request.params['paiva'].split(".")
+        year, month, day = self.request.params['paiva'].split("-")
         paiva = datetime.date(int(year), int(month), int(day))
         test = Paimennustaipumus(
             koira = koira,
@@ -225,7 +206,7 @@ class PaimennustaipumusCollectionHandler(HardenedHandler):
 class PaimennustaipumusHandler(HardenedHandler):
     def post_(self, user, key):
         test = db.get(key)
-        day, month, year = self.request.params['paiva'].split(".")
+        year, month, day = self.request.params['paiva'].split("-")
         paiva = datetime.date(int(year), int(month), int(day))
         test.kiinnostus = int(self.request.params['kiinnostus'])
         test.taipumus = int(self.request.params['taipumus'])
