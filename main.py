@@ -15,34 +15,31 @@ import datetime
 import logging
 from HardenedHandler import HardenedHandler, LocalUser
 
+def field(d, name, prop):
+    d[name] = prop
+    return prop
+
 class SignedResource(polymodel.PolyModel):
-    author = db.StringProperty()
-    author_nick = db.StringProperty()
-    author_email = db.EmailProperty()
-    timestamp = db.DateTimeProperty(auto_now=True)
+    d = {}    # dictonary for collecting fields
+    author =       field(d, 'author', db.StringProperty())
+    author_nick =  field(d, 'author_nick', db.StringProperty())
+    author_email = field(d, 'author_email', db.EmailProperty())
+    timestamp =    field(d, 'timestamp', db.DateTimeProperty(auto_now=True))
+
+    # archive_copy_of is intentionally not defined using field()
     archive_copy_of = db.ReferenceProperty()
 
     def fields(self):
-        return {
-            'author': SignedResource.author,
-            'author_nick': SignedResource.author_nick,
-            'author_email': SignedResource.author_email,
-            'timestamp': (SignedResource.timestamp, str, lambda x: x)
-            # archive_copy_of is omitted intentionally
-            }
+        return self.__class__.d
 
     def hashify(self):
-        def tuplify(val):
-            if isinstance(val, tuple):
-                return val
-            else:
-                return (val, lambda x: x, lambda x: x)
-            
         res = {'uri': self.uri()}
-        fields = self.fields()
-        for f in fields.keys():
-            field, toConversion, fromConversion = tuplify(fields[f])
-            res[f] = toConversion(field.__get__(self, type(self)))
+        for name, field in self.fields().items():
+            val = field.__get__(self, type(self))
+            if isinstance(field, db.StringProperty):
+                res[name] = val
+            else:
+                res[name] = str(val)
         return res
             
 
@@ -59,17 +56,10 @@ class SignedResource(polymodel.PolyModel):
         copy.archive_copy_of = self.key()
 
 class Koira(SignedResource):
-    virallinen_nimi = db.StringProperty()
-    isa = db.StringProperty()
-    ema = db.StringProperty()
-
-    def fields(self):
-        base = super(Koira, self).fields()
-        delta = {
-            'virallinen_nimi': Koira.virallinen_nimi,
-            'isa': Koira.isa,
-            'ema': Koira.ema}
-        return dict(base.items() + delta.items())
+    d = dict(SignedResource.d.items())
+    virallinen_nimi = field(d, 'virallinen_nimi', db.StringProperty())
+    isa =             field(d, 'isa', db.StringProperty())
+    ema =             field(d, 'ema', db.StringProperty())
 
     def uri(self):
         return "/Koira/%s" % str(self.key())
@@ -87,28 +77,16 @@ class Koira(SignedResource):
         return copy
 
 class Paimennustaipumus(SignedResource):
-    koira = db.ReferenceProperty()
-    kiinnostus = db.IntegerProperty()
-    taipumus = db.IntegerProperty()
-    henkinen_kestavyys =  db.IntegerProperty()
-    ohjattavuus = db.IntegerProperty()
-    tuomari = db.StringProperty()
-    paikka = db.StringProperty()
-    paiva = db.DateProperty()
+    d = dict(SignedResource.d.items())
+    koira =              field(d, 'koira', db.ReferenceProperty())
+    kiinnostus =         field(d, 'kiinnostus', db.IntegerProperty())
+    taipumus =           field(d, 'taipumus', db.IntegerProperty())
+    henkinen_kestavyys = field(d, 'henkinen_kestavyys',  db.IntegerProperty())
+    ohjattavuus =        field(d, 'ohjattavuus', db.IntegerProperty())
+    tuomari =            field(d, 'tuomari', db.StringProperty())
+    paikka =             field(d, 'paikka', db.StringProperty())
+    paiva =              field(d, 'paiva', db.DateProperty())
 
-    def fields(self):
-        base = super(Paimennustaipumus, self).fields()
-        delta = {
-            'koira': Paimennustaipumus.koira,
-            'kiinnostus': (Paimennustaipumus.kiinnostus, str, int),
-            'taipumus': (Paimennustaipumus.taipumus, str, int),
-            'henkinen_kestavyys': (Paimennustaipumus.henkinen_kestavyys, str, irent),
-            'ohjattavuus': (Paimennustaipumus.ohjattavuus, str, int),
-            'tuomari': Paimennustaipumus.tuomari,
-            'paikka': Paimennustaipumus.paikka,
-            'paiva': Paimennustaipumus.paiva}
-        return dict(base.items() + delta.items())
-        
     def uri(self):
         return "/Paimennustaipumus/%s" % str(self.key())
 
