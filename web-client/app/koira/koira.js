@@ -1,18 +1,10 @@
 function KoiraCtrl($scope, $resource, $routeParams, $location, KoiraService) {
-    if ($routeParams.key == undefined) {
-	$scope.koira_history = []
-	$scope.koira = KoiraService.makeNew();
-	$scope.existing_koira = false;
-	$scope.editing = true;
-    } else {
-	var history_resource = $resource("/History/:key");
-	$scope.koira_history = history_resource.query({key: $routeParams.key})
-	$scope.koira = KoiraService.get({key: $routeParams.key});
-	$scope.koira_show_history = false;
-	$scope.existing_koira = true;
-	$scope.editing = false;
-    }
-
+    var history_resource = $resource("/History/:key");
+    $scope.koira_history = history_resource.query({key: $routeParams.key})
+    $scope.koira = KoiraService.get({key: $routeParams.key});
+    $scope.koira_show_history = false;
+    $scope.editing = false;
+    
     $scope.save = function () {
 	if ($routeParams.key == undefined) {
 	    $scope.koira.$save({key: ''},
@@ -141,3 +133,13 @@ function PaimennusCtrl ($scope, $resource, $routeParams) {
 }
 PaimennusCtrl.$inject = ['$scope', '$resource', '$routeParams'];
 
+function UusiKoiraCtrl ($scope, $location, KoiraService) {
+    $scope.koira = KoiraService.makeNew();
+    $scope.save = function () { 
+	$scope.koira.$save({key: ''},
+			   function (koira) {
+			       $location.path("/koira" + koira.uri);
+			   });
+    }
+}
+UusiKoiraCtrl.$inject = ['$scope', '$location', 'KoiraService'];

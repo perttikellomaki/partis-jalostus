@@ -1,0 +1,29 @@
+<form ng-controller="UusiKoiraCtrl">
+  <table>
+    <tr>
+      <td>Virallinen nimi / muu tunniste</td>
+      <td>
+	<input ng-model="koira.virallinen_nimi"/>
+      </td>
+    </tr>
+    <tr>
+      <td>Isä</td>
+      <td>
+	<select ui-select2 ng-model="koira.isa" data-placeholder="-- Isä --" style="width:200px">
+	  <option value=""></option>
+	  <option ng-repeat="item in items" value="{{item.uri}}">{{item.virallinen_nimi}}</option>
+	</select>
+      </td>
+    </tr>
+    <tr>
+      <td>Emä</td>
+      <td>
+	<select ui-select2 ng-model="koira.ema" data-placeholder="-- Isä --" style="width:200px">
+	  <option value=""></option>
+	  <option ng-repeat="item in items" value="{{item.uri}}">{{item.virallinen_nimi}}</option>
+	</select>
+      </td>
+    </tr>
+  </table>
+  <button ng-click="save()">Tallenna</button>
+</form>
