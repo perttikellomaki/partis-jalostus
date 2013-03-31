@@ -5,7 +5,7 @@ from google.appengine.api import oauth
 import os
 import json
 import logging
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 
 PRODUCTION = not os.environ['SERVER_SOFTWARE'].startswith('Development')
 
@@ -27,10 +27,10 @@ class BaseSessionHandler(webapp2.RequestHandler):
         # Returns a session using the default cookie key.
         return self.session_store.get_session()
 
-class LocalUser(db.Model):
-    email = db.StringProperty()
-    nickname = db.StringProperty()
-    password = db.StringProperty()
+class LocalUser(ndb.Model):
+    email = ndb.StringProperty()
+    nickname = ndb.StringProperty()
+    password = ndb.StringProperty()
 
 class UserProxy:
     """If the user is authenticated in the session using a local user entry,
@@ -78,7 +78,7 @@ class HardenedHandler(BaseSessionHandler):
                 # This is a post with a key, e.g. ['', 'Koira', '1234']
                 # Make a archive copy, which will be committed to datastore
                 # in jsonReply() if the modification is successful.
-                entity = db.get(path[2])
+                entity = ndb.Key(urlsafe=path[2]).get()
                 self.archive_copy = entity.archive()
                 logging.info("Created archive copy %s" % self.archive_copy)
                 logging.info("archive_copy_of %s" % self.archive_copy.archive_copy_of)
@@ -98,8 +98,9 @@ class HardenedHandler(BaseSessionHandler):
             self.delete_(users.get_current_user(),
                          *args, **kwargs)
 
-    def jsonReply(self, data):
-        logging.info("jsonReply => %s" % data)
+    def jsonReply(self, data, debug_fmt=None):
+        if debug_fmt:
+            logging.info(debug_fmt % data)
         self.response.headers['Content-Type'] = 'text/json'
         self.response.out.write(json.dumps(data))
         try:
@@ -108,3 +109,20 @@ class HardenedHandler(BaseSessionHandler):
             self.archive_copy = None
         except:
             pass
+
+    def genericGetCollection(self, collection, debug_fmt = None):
+        data = []
+        for entity in collection:
+            data.append(entity.hashify())
+        self.jsonReply(data, debug_fmt)
+
+
+    def lookupKey(self, urlsafe=None, param=None):
+        if urlsafe:
+            key = ndb.Key(urlsafe=urlsafe)
+        else:
+            try:
+                key = ndb.Key(urlsafe=self.request.params[param].split("/")[-1])
+            except:
+                key = None
+        return key

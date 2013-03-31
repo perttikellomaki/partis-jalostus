@@ -7,37 +7,44 @@ from webapp2_extras import sessions
 from google.appengine.api import app_identity
 from google.appengine.api import mail
 from google.appengine.api import users
-from google.appengine.ext import db
-from google.appengine.ext.db import polymodel
+from google.appengine.ext import ndb
+from google.appengine.ext.ndb import polymodel
 import json
 import os
 import datetime
 import logging
 from HardenedHandler import HardenedHandler, LocalUser
 
-def field(d, name, prop):
-    d[name] = prop
+def field(d, name, prop, uri_prefix=None):
+    d[name] = (prop, uri_prefix)
     return prop
 
 class SignedResource(polymodel.PolyModel):
     d = {}    # dictonary for collecting fields
-    author =       field(d, 'author', db.StringProperty())
-    author_nick =  field(d, 'author_nick', db.StringProperty())
-    author_email = field(d, 'author_email', db.EmailProperty())
-    timestamp =    field(d, 'timestamp', db.DateTimeProperty(auto_now=True))
+    author =       field(d, 'author', ndb.StringProperty())
+    author_nick =  field(d, 'author_nick', ndb.StringProperty())
+    author_email = field(d, 'author_email', ndb.StringProperty())
+    timestamp =    field(d, 'timestamp', ndb.DateTimeProperty(auto_now=True))
+
+    def uri(self):
+        return "/%s/%s" % (self.__class__.__name__, self.key.urlsafe())
 
     # archive_copy_of is intentionally not defined using field()
-    archive_copy_of = db.ReferenceProperty()
+    archive_copy_of = ndb.KeyProperty()
 
     def fields(self):
         return self.__class__.d
 
     def hashify(self):
         res = {'uri': self.uri()}
-        for name, field in self.fields().items():
+        for name, info in self.fields().items():
+            field, uri_prefix = info
             val = field.__get__(self, type(self))
-            if isinstance(field, db.StringProperty):
+            if isinstance(field, ndb.StringProperty):
                 res[name] = val
+            elif isinstance(field, ndb.KeyProperty):
+                if val:
+                    res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
             else:
                 res[name] = str(val)
         return res
@@ -49,72 +56,62 @@ class SignedResource(polymodel.PolyModel):
         self.author_email = user.email()
 
     def archive_fields(self, copy):
-        for name, field in self.fields().items():
+        for name, info in self.fields().items():
+            field, _ = info
             field.__set__(copy, field.__get__(self, type(self)))
-        copy.archive_copy_of = self
+        copy.archive_copy_of = self.key
+        return copy
 
 class Koira(SignedResource):
     d = dict(SignedResource.d.items())
-    virallinen_nimi = field(d, 'virallinen_nimi', db.StringProperty())
-    isa =             field(d, 'isa', db.StringProperty())
-    ema =             field(d, 'ema', db.StringProperty())
-
-    def uri(self):
-        return "/Koira/%s" % str(self.key())
+    virallinen_nimi = field(d, 'virallinen_nimi', ndb.StringProperty())
+    isa =             field(d, 'isa', ndb.KeyProperty(), uri_prefix="/Koira")
+    ema =             field(d, 'ema', ndb.KeyProperty(), uri_prefix="/Koira")
 
     def archive(self):
         """Create archival copy"""
         copy = Koira()
-        self.archive_fields(copy)
-        return copy
+        return self.archive_fields(copy)
 
 class Paimennustaipumus(SignedResource):
     d = dict(SignedResource.d.items())
-    koira =              field(d, 'koira', db.ReferenceProperty())
-    kiinnostus =         field(d, 'kiinnostus', db.IntegerProperty())
-    taipumus =           field(d, 'taipumus', db.IntegerProperty())
-    henkinen_kestavyys = field(d, 'henkinen_kestavyys',  db.IntegerProperty())
-    ohjattavuus =        field(d, 'ohjattavuus', db.IntegerProperty())
-    tuomari =            field(d, 'tuomari', db.StringProperty())
-    paikka =             field(d, 'paikka', db.StringProperty())
-    paiva =              field(d, 'paiva', db.DateProperty())
-
-    def uri(self):
-        return "/Paimennustaipumus/%s" % str(self.key())
+    koira =              field(d, 'koira', ndb.KeyProperty(), uri_prefix="/Koira")
+    kiinnostus =         field(d, 'kiinnostus', ndb.IntegerProperty())
+    taipumus =           field(d, 'taipumus', ndb.IntegerProperty())
+    henkinen_kestavyys = field(d, 'henkinen_kestavyys',  ndb.IntegerProperty())
+    ohjattavuus =        field(d, 'ohjattavuus', ndb.IntegerProperty())
+    tuomari =            field(d, 'tuomari', ndb.StringProperty())
+    paikka =             field(d, 'paikka', ndb.StringProperty())
+    paiva =              field(d, 'paiva', ndb.DateProperty())
 
     def archive(self):
         """Create archival copy"""
         copy = Paimennustaipumus()
-        self.archive_fields(copy)
-        return copy
+        return self.archive_fields(copy)
 
 class KoiraCollectionHandler(HardenedHandler):
     def get_(self, user):
-        dogs = Koira.all()
-        data = []
-        for d in dogs:
-            if d.archive_copy_of == None:
-                data.append(d.hashify())
-        self.jsonReply(data)
+        self.genericGetCollection(
+            Koira.gql("WHERE archive_copy_of = NULL"))
 
     def post_(self, user):
         dog = Koira(virallinen_nimi = self.request.params['virallinen_nimi'],
-                    isa = self.request.params['isa'],
-                    ema = self.request.params['ema'])
+                    isa = self.lookupKey(param='isa'),
+                    ema = self.lookupKey(param='ema'))
         dog.sign(user)
         dog.put()
         self.jsonReply(dog.hashify())
 
 class KoiraHandler(HardenedHandler):
     def get_(self, user, key):
-        dog = db.get(key)
+        dog = self.lookupKey(urlsafe=key).get()
         self.jsonReply(dog.hashify())
 
     def post_(self, user, key):
-        dog = db.get(key)
+        dog = ndb.Key(urlsafe=key).get()
         dog.virallinen_nimi = self.request.params['virallinen_nimi']
-        dog.isa = self.request.params['isa']
-        dog.ema = self.request.params['ema']
+        dog.isa = self.lookupKey(param='isa')
+        dog.ema = self.lookupKey(param='ema')
         dog.sign(user)
         dog.put()
         self.jsonReply(dog.hashify())
@@ -170,24 +167,18 @@ class LogoutHandler(HardenedHandler):
 
 class HistoryHandler(HardenedHandler):
     def get_(self, user, key):
-        resources = SignedResource.gql("WHERE archive_copy_of = KEY(:1)",
-                                       key)
-        data = []
-        for res in resources:
-            data.append(res.hashify())
-        self.jsonReply(data)
+        self.genericGetCollection(
+            SignedResource.gql("WHERE archive_copy_of = KEY(:1)",
+                               key))
 
 class PaimennustaipumusCollectionHandler(HardenedHandler):
     def get_(self, user):
-        tests = Paimennustaipumus.gql("WHERE koira = KEY(:1) AND archive_copy_of = NULL",
-                                      self.request.params['koira'])
-        data = []
-        for t in tests:
-            data.append(t.hashify())
-        self.jsonReply(data)
+        self.genericGetCollection(
+            Paimennustaipumus.gql("WHERE koira = KEY(:1) AND archive_copy_of = NULL",
+                                  self.request.params['koira']))
 
     def post_(self, user):
-        koira = db.get(self.request.params['koira'])
+        koira = self.lookupKey(param='koira')
         year, month, day = self.request.params['paiva'].split("-")
         paiva = datetime.date(int(year), int(month), int(day))
         test = Paimennustaipumus(
@@ -205,7 +196,7 @@ class PaimennustaipumusCollectionHandler(HardenedHandler):
 
 class PaimennustaipumusHandler(HardenedHandler):
     def post_(self, user, key):
-        test = db.get(key)
+        test = self.lookupKey(urlsafe=key).get()
         year, month, day = self.request.params['paiva'].split("-")
         paiva = datetime.date(int(year), int(month), int(day))
         test.kiinnostus = int(self.request.params['kiinnostus'])
