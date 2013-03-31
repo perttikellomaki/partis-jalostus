@@ -68,23 +68,39 @@
 </script>
 
 <form>
-  Virallinen nimi / muu tunniste:
-  <input ng-show="editing" ng-model="koira.virallinen_nimi"/>
-  <span ng-show="!editing">{{koira.virallinen_nimi}}</span>
-  <br>
-  <span ng-show="editing">
-    Isä: <select ui-select2 ng-model="koira.isa" data-placeholder="-- Isä --" style="width:200px">
-      <option value=""></option>
-      <option ng-repeat="item in items" value="{{item.uri}}">{{item.virallinen_nimi}}</option>
-    </select>
-    <br>
-  Emä: <select ui-select2 ng-model="koira.ema" data-placeholder="-- Emä --" style="width:200px">
-    <option value=""></option>
-    <option ng-repeat="item in items" value="{{item.uri}}">{{item.virallinen_nimi}}</option>
-  </select>
-  </span>
-  <span ng-show="!editing">Isä: {{isa.virallinen_nimi}}<br>Emä: {{ema.virallinen_nimi}}</span>
-  <br>
+  <table>
+    <tr>
+      <td>Virallinen nimi / muu tunniste</td>
+      <td>
+	<input ng-show="editing" ng-model="koira.virallinen_nimi"/>
+	<span ng-show="!editing">{{koira.virallinen_nimi}}</span>
+      </td>
+    </tr>
+    <tr>
+      <td>Isä</td>
+      <td>
+	<span ng-show="editing">
+	  <select ui-select2 ng-model="koira.isa" data-placeholder="-- Isä --" style="width:200px">
+	    <option value=""></option>
+	    <option ng-repeat="item in items" value="{{item.uri}}">{{item.virallinen_nimi}}</option>
+	  </select>
+	</span>
+	<span ng-show="!editing">{{isa.virallinen_nimi}}</span>
+      </td>
+    </tr>
+    <tr>
+      <td>Emä</td>
+      <td>
+	<span ng-show="editing">
+	  <select ui-select2 ng-model="koira.ema" data-placeholder="-- Isä --" style="width:200px">
+	    <option value=""></option>
+	    <option ng-repeat="item in items" value="{{item.uri}}">{{item.virallinen_nimi}}</option>
+	  </select>
+	</span>
+	<span ng-show="!editing">{{ema.virallinen_nimi}}</span>
+      </td>
+    </tr>
+  </table>
   <span class="author_nick">{{koira.author_nick}}</span>
   <br>
   <button ng-show="editing" ng-click="save()">Tallenna</button>
