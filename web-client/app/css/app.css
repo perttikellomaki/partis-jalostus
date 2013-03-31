@@ -42,3 +42,48 @@
 .history {
     color: Gray;
 }
+
+/* Two column layout */
+
+#wrapper {
+	position:relative;
+	text-align:left;
+	width:100%;
+	background:url("../img/leftcolor_bg.gif") repeat-y top left;
+	}
+#header {
+	background:#BB62AB;
+	padding:10px;
+	margin:0;
+	text-align:center;
+	color:#FFF;
+	}
+#maincol {
+	position:relative;
+	margin:0;
+	padding:10px;
+	}
+#leftcol { 
+	position:relative;
+	top:-10px;
+	left:-10px;
+	float:left;
+	width:200px;
+	margin:0 0 -10px 0;
+	padding:10px;
+	z-index:100;
+	}
+#centercol {
+	position:relative;
+	padding-left: 240px;
+	}
+#footer {
+	position:relative;
+	top:1px;
+	width:100%;
+	clear:both;
+	margin:0;
+	padding:1% 0;
+	text-align:center;
+	}
+

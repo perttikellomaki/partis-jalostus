@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
+<div id="header"><!-- begin header -->
   <h1>PROTOTYYPPI Jalostustietokanta -- Suomen Partacolliet ry.</h1>
 
   TÄMÄ TIETOKANTA ON KOEKÄYTÖSSÄ JA SAATETAAN TYHJENTÄÄ ILMAN VAROITUKSIA.
@@ -22,8 +23,41 @@
     <li><a href="#/koira">Uusi koira</a></li>
     <li><a href="#/login">Kirjaudu</a></li>
   </ul>
+</div><!-- end header -->
 
-  <div ng-view></div>
+
+	<div id="wrapper"><!-- sets background to white and creates full length leftcol -->
+	
+		<div id="maincol"><!-- begin main content area -->
+				
+			<div id="leftcol" ng-controller="LeftcolCtrl"><!-- begin leftcol -->
+                        <span ng-include="path_start + '_sidepanel.html'"></span>
+			</div><!-- end leftcol -->
+				
+			<div id="centercol"><!-- begin centercol -->
+				  <div ng-view></div>
+			</div><!-- end centercol -->
+				
+		</div><!-- end main content area -->
+				
+		<div id="footer"><!-- begin footer -->
+			Suomen Partacolliet ry.
+		</div><!-- end footer -->
+	
+	</div><!-- end wrapper -->
+
+<script type="text/ng-template" id="koirat_sidepanel.html">
+</script>
+
+<script type="text/ng-template" id="koira_sidepanel.html">
+  <h2>Koira</h2>
+  <button class="sidepanel-button" ng-click="setSelection('')">Perustiedot</button>
+  <br>
+  <button class="sidepanel-button" ng-click="setSelection('paimennustaipumus')">Paimennustaipumus</button>
+  <br>
+</script>
+
+
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>

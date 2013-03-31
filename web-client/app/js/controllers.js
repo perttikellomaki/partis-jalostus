@@ -211,3 +211,19 @@ function LoginCtrl ($scope, $rootScope, $resource) {
     }
 }
 LoginCtrl.$inject = ['$scope', '$rootScope', '$resource']
+
+function LeftcolCtrl ($scope, $location, SidepanelService) {
+    $scope.sidepanel = SidepanelService.get();
+
+    $scope.path_start = $location.path().split("/")[1];
+
+    $scope.$on('$locationChangeSuccess',
+	       function (event, new_path) {
+		   $scope.path_start = $location.path().split("/")[1];
+		  });
+
+    $scope.setSelection = function (selection) {
+	$scope.sidepanel.selection = selection;
+    }
+}
+LeftcolCtrl.$inject = ['$scope', '$location', 'SidepanelService'];

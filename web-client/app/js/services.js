@@ -40,4 +40,11 @@ angular.module('myApp.services', [])
 				isa: '@isa',
 				ema: '@ema'}))
 	     })
+    .factory('SidepanelService',
+	     function () {
+		 var state = {};
+		 return {
+		     get: function () { return state; },
+		 };
+	     })
 ;
