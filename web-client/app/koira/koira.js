@@ -8,7 +8,10 @@ function KoiraCtrl($scope, $resource, $routeParams, $location, KoiraService, Sid
     $scope.koira = KoiraService.get(
 	{key: $routeParams.key},
 	function (koira) {
-	    $scope.birthday.date = new Date(koira.syntymapaiva);
+	    if (koira.syntymapaiva != undefined 
+		&& koira.syntymapaiva.length > 0) {
+		$scope.birthday.date = new Date(koira.syntymapaiva);
+	    }
 	});
 
     $scope.koira_show_history = false;
