@@ -12,6 +12,7 @@ function KoiraCtrl($scope, $resource, $routeParams, $location, KoiraService, Sid
 		&& koira.syntymapaiva.length > 0) {
 		$scope.birthday.date = new Date(koira.syntymapaiva);
 	    }
+	    $scope.timestamp = new Date(koira.timestamp);
 	});
 
     $scope.koira_show_history = false;

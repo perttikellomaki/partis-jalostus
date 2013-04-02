@@ -88,7 +88,7 @@
 	<span ng-show="!editing">{{ema.virallinen_nimi}}</span>
       </td>
     </tr>
-    <tr><td>Tallentaja</td><td>{{koira.author_nick}} {{koira.timestamp}}</td></tr>
+    <tr><td>Tallentaja</td><td>{{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</td></tr>
   </table>
   <span ng-show="koira_history.length > 0">
     <input type="checkbox" ng-model="koira_show_history">Historia</input>

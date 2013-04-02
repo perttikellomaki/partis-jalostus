@@ -46,8 +46,9 @@ class SignedResource(polymodel.PolyModel):
                 if isinstance(field, ndb.StringProperty):
                     res[name] = val
                 elif isinstance(field, ndb.KeyProperty):
-                    if val:
-                        res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
+                    res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
+                elif isinstance(field, ndb.DateTimeProperty):
+                    res[name] = val.isoformat()
                 else:
                     res[name] = str(val)
         return res
