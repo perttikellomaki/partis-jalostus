@@ -149,7 +149,7 @@ class YhdistysPaimennustaipumus(SignedResource):
 class KoiraCollectionHandler(HardenedHandler):
     def get_(self, user):
         self.genericGetCollection(
-            Koira.gql("WHERE archive_copy_of = NULL"))
+            Koira.gql("WHERE archive_copy_of = NULL ORDER BY virallinen_nimi ASC"))
 
     def post_(self, user):
         dog = Koira()
