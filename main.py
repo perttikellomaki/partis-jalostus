@@ -42,13 +42,14 @@ class SignedResource(polymodel.PolyModel):
         for name, info in self.fields().items():
             field, uri_prefix = info
             val = field.__get__(self, type(self))
-            if isinstance(field, ndb.StringProperty):
-                res[name] = val
-            elif isinstance(field, ndb.KeyProperty):
-                if val:
-                    res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
-            else:
-                res[name] = str(val)
+            if val:
+                if isinstance(field, ndb.StringProperty):
+                    res[name] = val
+                elif isinstance(field, ndb.KeyProperty):
+                    if val:
+                        res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
+                else:
+                    res[name] = str(val)
         return res
             
 
@@ -69,8 +70,11 @@ class SignedResource(polymodel.PolyModel):
                     except:
                         pass
                 elif isinstance(field, ndb.KeyProperty):
-                    key = params[name].split("/")[2]
-                    field.__set__(self, ndb.Key(urlsafe=key))
+                    try:
+                        key = params[name].split("/")[2]
+                        field.__set__(self, ndb.Key(urlsafe=key))
+                    except:
+                        pass
                         
                     
 
