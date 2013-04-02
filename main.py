@@ -77,6 +77,29 @@ class SignedResource(polymodel.PolyModel):
                         pass
                         
                     
+    def subsumes(self, item):
+        """Return true if self is signed by the same user, and
+        the information contained in self is a superset of the
+        information in item."""
+
+        for name, info in self.fields().items():
+            if name != 'timestamp':
+                field, uri_prefix = info
+                my_val = field.__get__(self, type(self))
+                item_val = field.__get__(item, type(item))
+                if my_val == item_val:
+                    # value not touched
+                    pass
+                elif my_val != None and item_val == None:
+                    # my_val was set
+                    pass
+                else:
+                    logging.info("subsumes: conflicting values found %s and %s" % (my_val, item_val))
+                    # there were conflicting values
+                    return False
+
+        # no conflicting values found    
+        return True
 
     def sign(self, user):
         self.author = str(user.user_id())
@@ -279,7 +302,21 @@ Voit kirjautua osoitteellasi %s ja salasanalla %s
             message.send()
             self.jsonReply({'email': '', 'nick': '', 'secret': '',
                             'status_message': 'Viesti matkalla'})
-        
+
+class CompactHistoryHandler(webapp2.RequestHandler):
+    def post(self, key):
+        history = SignedResource.gql("WHERE archive_copy_of = KEY(:1) ORDER BY timestamp DESC",
+                                     key)
+        top = ndb.Key(urlsafe=key).get()
+        to_delete = []
+        for item in history:
+            if top.subsumes(item):
+                to_delete.append(item.key)
+            else:
+                # only compact top of history
+                break
+        logging.info("CompactHistory : delete %s" % to_delete)
+        ndb.delete_multi(to_delete)
 
 config = {}
 config['webapp2_extras.sessions'] = {
@@ -296,7 +333,8 @@ app = webapp2.WSGIApplication(
      ("/LocalLogin", LocalLoginHandler),
      ("/Logout", LogoutHandler), 
      ("/LoginStatus", LoginStatusHandler),
-     ("/PasswordRequest", PasswordRequestHandler)
+     ("/PasswordRequest", PasswordRequestHandler),
+     ("/CompactHistory/([^/]+)", CompactHistoryHandler),
      ],
     config=config,
     debug=True)

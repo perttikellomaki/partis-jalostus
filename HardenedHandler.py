@@ -2,6 +2,7 @@ import webapp2
 from webapp2_extras import sessions
 from google.appengine.api import users
 from google.appengine.api import oauth
+from google.appengine.api import taskqueue
 import os
 import json
 import logging
@@ -107,6 +108,9 @@ class HardenedHandler(BaseSessionHandler):
         try:
             # Possibly commit the archive copy created in self.post()
             self.archive_copy.put()
+            taskqueue.add(
+                url=("/CompactHistory/%s" 
+                     % self.archive_copy.archive_copy_of.urlsafe()))
             self.archive_copy = None
         except:
             pass

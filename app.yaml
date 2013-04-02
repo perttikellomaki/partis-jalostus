@@ -36,6 +36,10 @@ handlers:
 - url: /ckeditor
   static_dir: web-client/app/ckeditor
   auth_fail_action: unauthorized
+- url: /CompactHistory
+  script: main.app
+  login: admin
+  auth_fail_action: unauthorized
 - url: .*
   script: main.app
 
