@@ -148,8 +148,14 @@ class YhdistysPaimennustaipumus(SignedResource):
 
 class KoiraCollectionHandler(HardenedHandler):
     def get_(self, user):
-        self.genericGetCollection(
-            Koira.gql("WHERE archive_copy_of = NULL ORDER BY virallinen_nimi ASC"))
+        if (self.request.params['sukupuoli'] != ''
+            and self.request.params['sukupuoli'] != 'undefined'):
+            self.genericGetCollection(
+                Koira.gql("WHERE archive_copy_of = NULL AND sukupuoli = :1 ORDER BY virallinen_nimi ASC",
+                          self.request.params['sukupuoli']))
+        else:
+            self.genericGetCollection(
+                Koira.gql("WHERE archive_copy_of = NULL ORDER BY virallinen_nimi ASC"))
 
     def post_(self, user):
         dog = Koira()
