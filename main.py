@@ -12,6 +12,8 @@ from google.appengine.ext.ndb import polymodel
 import json
 import os
 import datetime
+import dateutil
+import dateutil.parser
 import logging
 from HardenedHandler import HardenedHandler, LocalUser
 
@@ -50,6 +52,28 @@ class SignedResource(polymodel.PolyModel):
         return res
             
 
+    def populateFromRequest(self, params):
+        for name, info in self.fields().items():
+            field, _ = info
+            if params.has_key(name) and params[name] != 'undefined':
+                if isinstance(field, ndb.StringProperty):
+                    field.__set__(self, params[name])
+                elif isinstance(field, ndb.IntegerProperty):
+                    try:
+                        field.__set__(self, int(params[name]))
+                    except:
+                        pass
+                elif isinstance(field, ndb.DateProperty):
+                    try:
+                        field.__set__(self, dateutil.parser.parse(params[name]))
+                    except:
+                        pass
+                elif isinstance(field, ndb.KeyProperty):
+                    key = params[name].split("/")[2]
+                    field.__set__(self, ndb.Key(urlsafe=key))
+                        
+                    
+
     def sign(self, user):
         self.author = str(user.user_id())
         self.author_nick = user.nickname()
@@ -65,6 +89,11 @@ class SignedResource(polymodel.PolyModel):
 class Koira(SignedResource):
     d = dict(SignedResource.d.items())
     virallinen_nimi = field(d, 'virallinen_nimi', ndb.StringProperty())
+    kutsumanimi =     field(d, 'kutsumanimi', ndb.StringProperty())
+    kennel =          field(d, 'kennel', ndb.StringProperty())
+    sukupuoli =       field(d, 'sukupuoli', ndb.StringProperty())
+    syntymapaiva =    field(d, 'syntymapaiva', ndb.DateProperty())
+    syntymavuosi =    field(d, 'syntymavuosi', ndb.IntegerProperty())
     isa =             field(d, 'isa', ndb.KeyProperty(), uri_prefix="/Koira")
     ema =             field(d, 'ema', ndb.KeyProperty(), uri_prefix="/Koira")
 
@@ -73,7 +102,7 @@ class Koira(SignedResource):
         copy = Koira()
         return self.archive_fields(copy)
 
-class Paimennustaipumus(SignedResource):
+class YhdistysPaimennustaipumus(SignedResource):
     d = dict(SignedResource.d.items())
     koira =              field(d, 'koira', ndb.KeyProperty(), uri_prefix="/Koira")
     kiinnostus =         field(d, 'kiinnostus', ndb.IntegerProperty())
@@ -86,7 +115,7 @@ class Paimennustaipumus(SignedResource):
 
     def archive(self):
         """Create archival copy"""
-        copy = Paimennustaipumus()
+        copy = YhdistysPaimennustaipumus()
         return self.archive_fields(copy)
 
 class KoiraCollectionHandler(HardenedHandler):
@@ -95,9 +124,8 @@ class KoiraCollectionHandler(HardenedHandler):
             Koira.gql("WHERE archive_copy_of = NULL"))
 
     def post_(self, user):
-        dog = Koira(virallinen_nimi = self.request.params['virallinen_nimi'],
-                    isa = self.lookupKey(param='isa'),
-                    ema = self.lookupKey(param='ema'))
+        dog = Koira()
+        dog.populateFromRequest(self.request.params)
         dog.sign(user)
         dog.put()
         self.jsonReply(dog.hashify())
@@ -109,9 +137,7 @@ class KoiraHandler(HardenedHandler):
 
     def post_(self, user, key):
         dog = ndb.Key(urlsafe=key).get()
-        dog.virallinen_nimi = self.request.params['virallinen_nimi']
-        dog.isa = self.lookupKey(param='isa')
-        dog.ema = self.lookupKey(param='ema')
+        dog.populateFromRequest(self.request.params)
         dog.sign(user)
         dog.put()
         self.jsonReply(dog.hashify())
@@ -168,20 +194,21 @@ class LogoutHandler(HardenedHandler):
 class HistoryHandler(HardenedHandler):
     def get_(self, user, key):
         self.genericGetCollection(
-            SignedResource.gql("WHERE archive_copy_of = KEY(:1)",
+            SignedResource.gql("WHERE archive_copy_of = KEY(:1) ORDER BY timestamp DESC",
                                key))
 
-class PaimennustaipumusCollectionHandler(HardenedHandler):
+class YhdistysPaimennustaipumusCollectionHandler(HardenedHandler):
     def get_(self, user):
+        koira = self.lookupKey(param='koira')
         self.genericGetCollection(
-            Paimennustaipumus.gql("WHERE koira = KEY(:1) AND archive_copy_of = NULL",
-                                  self.request.params['koira']))
+            YhdistysPaimennustaipumus.gql("WHERE koira = :1 AND archive_copy_of = NULL",
+                                  koira))
 
     def post_(self, user):
         koira = self.lookupKey(param='koira')
         year, month, day = self.request.params['paiva'].split("-")
         paiva = datetime.date(int(year), int(month), int(day))
-        test = Paimennustaipumus(
+        test = YhdistysPaimennustaipumus(
             koira = koira,
             kiinnostus = int(self.request.params['kiinnostus']),
             taipumus = int(self.request.params['taipumus']),
@@ -194,7 +221,7 @@ class PaimennustaipumusCollectionHandler(HardenedHandler):
         test.put()
         self.jsonReply(test.hashify())
 
-class PaimennustaipumusHandler(HardenedHandler):
+class YhdistysPaimennustaipumusHandler(HardenedHandler):
     def post_(self, user, key):
         test = self.lookupKey(urlsafe=key).get()
         year, month, day = self.request.params['paiva'].split("-")
@@ -259,8 +286,8 @@ app = webapp2.WSGIApplication(
     [("/Koira", KoiraCollectionHandler),
      ("/Koira/([^/]+)", KoiraHandler),
      ("/History/([^/]+)", HistoryHandler),
-     ("/Paimennustaipumus", PaimennustaipumusCollectionHandler),
-     ("/Paimennustaipumus/([^/]+)", PaimennustaipumusHandler),
+     ("/YhdistysPaimennustaipumus", YhdistysPaimennustaipumusCollectionHandler),
+     ("/YhdistysPaimennustaipumus/([^/]+)", YhdistysPaimennustaipumusHandler),
      ("/FederatedLogin", FederatedLoginHandler),
      ("/LocalLogin", LocalLoginHandler),
      ("/Logout", LogoutHandler), 

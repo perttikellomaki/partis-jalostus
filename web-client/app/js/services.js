@@ -34,11 +34,27 @@ angular.module('myApp.services', [])
 	     function ($resource) {
 		 return makeCachedResource(
 		     $resource('/Koira/:key',
-			       {key: 'INVALID_KEY',
-				virallinen_nimi: '@virallinen_nimi',
-				kutsumanimi: '@kutsumanimi',
+			       {virallinen_nimi: '@virallinen_nimi',
+				kutsumanimi: '@kutsumanimi',				
+				kennel: '@kennel',
+				sukupuoli: '@sukupuoli',
+				syntymapaiva: '@syntymapaiva',
+				syntymavuosi: '@syntymavuosi',
 				isa: '@isa',
 				ema: '@ema'}))
+	     })
+    .factory('YhdistysPaimennustaipumusService', 
+	     function ($resource) {
+		 return makeCachedResource(
+		     $resource("/YhdistysPaimennustaipumus/:key",
+			       {koira: '@koira',
+				kiinnostus: '@kiinnostus',
+				taipumus: '@taipumus',
+				henkinen_kestavyys: '@henkinen_kestavyys',
+				ohjattavuus: '@ohjattavuus',
+				tuomari: '@tuomari',
+				paikka: '@paikka',
+				paiva: '@paiva'}));
 	     })
     .factory('SidepanelService',
 	     function () {

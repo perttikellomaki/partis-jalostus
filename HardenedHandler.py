@@ -101,6 +101,7 @@ class HardenedHandler(BaseSessionHandler):
     def jsonReply(self, data, debug_fmt=None):
         if debug_fmt:
             logging.info(debug_fmt % data)
+        logging.info("jsonReply => %s" % data)
         self.response.headers['Content-Type'] = 'text/json'
         self.response.out.write(json.dumps(data))
         try:
