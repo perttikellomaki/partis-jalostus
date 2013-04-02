@@ -28,11 +28,11 @@ class SignedResource(polymodel.PolyModel):
     author_email = field(d, 'author_email', ndb.StringProperty())
     timestamp =    field(d, 'timestamp', ndb.DateTimeProperty(auto_now=True))
 
-    def uri(self):
-        return "/%s/%s" % (self.__class__.__name__, self.key.urlsafe())
-
     # archive_copy_of is intentionally not defined using field()
     archive_copy_of = ndb.KeyProperty()
+
+    def uri(self):
+        return "/%s/%s" % (self.__class__.__name__, self.key.urlsafe())
 
     def fields(self):
         return self.__class__.d
