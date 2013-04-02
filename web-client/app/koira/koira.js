@@ -66,6 +66,7 @@ function KoiraHistoryCtrl ($scope, KoiraService) {
     if ($scope.h.ema != undefined && $scope.h.ema.length > 0) {
 	$scope.h_ema = KoiraService.get({uri: $scope.h.ema});
     }
+    $scope.h_timestamp = new Date($scope.h.timestamp);
 }
 KoiraHistoryCtrl.$inject = ['$scope', 'KoiraService'];
 

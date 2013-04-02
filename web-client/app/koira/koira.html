@@ -97,7 +97,7 @@
       <span ng-controller="KoiraHistoryCtrl">
 	{{h.virallinen_nimi}}, {{h.kutsumanimi}}, {{h.kennel}}, {{h.sukupuoli}}, {{h.syntymavuosi}}, {{h.syntymapaiva}}, isä {{h_isa.virallinen_nimi}}, emä {{h_ema.virallinen_nimi}},
 	({{h.author_nick}}
-	{{h.timestamp}})<br>
+	{{h_timestamp | date:'d.M.yyyy H:mm'}})<br>
       </span>
     </span>
   </span>
