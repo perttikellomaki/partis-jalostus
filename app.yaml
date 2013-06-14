@@ -4,9 +4,6 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 
-inbound_services:
-- channel_presence
-
 handlers:
 - url: /
   static_files: web-client/app/index.html
@@ -46,5 +43,3 @@ handlers:
 libraries:
 - name: webapp2
   version: "2.5.1"
-- name: jinja2
-  version: latest
