@@ -202,6 +202,9 @@ class KoiraHandler(HardenedHandler):
         dog.populateFromRequest(self.request.params)
         dog.sign(user)
         dog.put()
+
+        ndb.Key('ModTime', 'modtime', parent=self.key).get().put()
+
         self.jsonReply(dog.hashify())
 
 class FederatedLoginHandler(HardenedHandler):
