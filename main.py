@@ -12,6 +12,7 @@ from google.appengine.ext.ndb import polymodel
 import json
 import os
 import datetime
+import time
 import dateutil
 import dateutil.parser
 import logging
@@ -20,6 +21,16 @@ from HardenedHandler import HardenedHandler, LocalUser
 def field(d, name, prop, uri_prefix=None):
     d[name] = (prop, uri_prefix)
     return prop
+
+class ModTime(ndb.Model):
+    modtime = ndb.DateTimeProperty(auto_now=True)
+    parent_uri = ndb.StringProperty()
+
+    def hashify(self):
+        if self.parent_uri is None:
+            self.parent_uri = self.key.parent().get().uri()
+        return {'modtime': time.mktime(self.modtime.timetuple()),
+                'uri': self.parent_uri}
 
 class SignedResource(polymodel.PolyModel):
     d = {}    # dictonary for collecting fields
@@ -163,12 +174,23 @@ class KoiraCollectionHandler(HardenedHandler):
         dog.populateFromRequest(self.request.params)
         dog.sign(user)
         dog.put()
+
+        modtime = ModTime(id="modtime", parent=dog.key)
+        modtime.put()
         self.jsonReply(dog.hashify())
 
 class KoiraHandler(HardenedHandler):
-    def get_(self, user, key):
-        dog = self.lookupKey(urlsafe=key).get()
-        self.jsonReply(dog.hashify())
+    def get_(self, user, urlsafe):
+        key = self.lookupKey(urlsafe=urlsafe)
+        logging.info("key: %s" % key)
+        if self.request.params.has_key('modtime'):
+            entry_key = ndb.Key('ModTime', 'modtime', parent=key)
+            logging.info("entry_key: %s" % entry_key)
+            entry = entry_key.get()
+            self.jsonReply(entry.hashify())
+        else:
+            dog = key.get()
+            self.jsonReply(dog.hashify())
 
     def post_(self, user, key):
         dog = ndb.Key(urlsafe=key).get()
