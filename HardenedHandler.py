@@ -115,9 +115,15 @@ class HardenedHandler(BaseSessionHandler):
         except:
             pass
 
-    def genericGetCollection(self, collection, debug_fmt = None):
+    def genericGetCollection(self, collection, debug_fmt=None):
         data = []
-        for entity in collection:
+        if self.request.params.has_key('modtime_only'):
+            coll = [ndb.Key('ModTime', 'modtime', parent=key)
+                    for key in collection]
+        else:
+            coll = collection
+            
+        for entity in coll:
             if isinstance(entity, ndb.Key):
                 data.append(entity.get().hashify())
             else:
