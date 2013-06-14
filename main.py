@@ -167,10 +167,10 @@ class KoiraCollectionHandler(HardenedHandler):
         if (self.request.params.has_key('sukupuoli')
             and self.request.params['sukupuoli'] != ''
             and self.request.params['sukupuoli'] != 'undefined'):
-            query = ndb.gql("SELECT * FROM Koira WHERE archive_copy_of = NULL AND sukupuoli = :1 ORDER BY virallinen_nimi ASC",
+            query = ndb.gql("SELECT __key__ FROM Koira WHERE archive_copy_of = NULL AND sukupuoli = :1 ORDER BY virallinen_nimi ASC",
                             self.request.params['sukupuoli'])
         else:
-            query = ndb.gql("SELECT * FROM Koira WHERE archive_copy_of = NULL ORDER BY virallinen_nimi ASC")
+            query = ndb.gql("SELECT __key__ FROM Koira WHERE archive_copy_of = NULL ORDER BY virallinen_nimi ASC")
 
         self.genericGetCollection(query)
 
