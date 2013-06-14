@@ -64,7 +64,8 @@ class SignedResource(polymodel.PolyModel):
                     res[name] = str(val)
 
         modtime = ndb.Key('ModTime', 'modtime', parent=self.key).get()
-        res['modtime'] = str(time.mktime(modtime.modtime.timetuple()))
+        if modtime:
+            res['modtime'] = str(time.mktime(modtime.modtime.timetuple()))
 
         return res
             
