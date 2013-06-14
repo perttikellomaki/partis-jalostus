@@ -22,6 +22,11 @@ def field(d, name, prop, uri_prefix=None):
     d[name] = (prop, uri_prefix)
     return prop
 
+class KoiraAutocomplete(ndb.Model):
+    virallinen_nimi = ndb.StringProperty()
+    canonical = ndb.StringProperty()
+    uros = ndb.BooleanProperty()
+
 class ModTime(ndb.Model):
     modtime = ndb.DateTimeProperty(auto_now=True)
     parent_uri = ndb.StringProperty()
@@ -182,6 +187,12 @@ class KoiraCollectionHandler(HardenedHandler):
 
         modtime = ModTime(id="modtime", parent=dog.key)
         modtime.put()
+        autocomplete = KoiraAutocomplete(
+            id="autocomplete", 
+            virallinen_nimi=dog.virallinen_nimi,
+            canonical = dog.virallinen_nimi.lower(),
+            parent=dog.key)
+        autocomplete.put()
         self.jsonReply(dog.hashify())
 
 class KoiraHandler(HardenedHandler):
@@ -199,13 +210,32 @@ class KoiraHandler(HardenedHandler):
 
     def post_(self, user, key):
         dog = ndb.Key(urlsafe=key).get()
+        name = dog.virallinen_nimi
+        sex = dog.sukupuoli
         dog.populateFromRequest(self.request.params)
         dog.sign(user)
         dog.put()
+        if dog.name != name or dog.sukupuoli != sex:
+            auto = ndb.Key('KoiraAutocomplete', 'autocomplete', parent=self.key).get()
+            auto.virallinen_nimi = dog.virallinen_nimi
+            auto.canonical = dog.virallinen_nimi.lower()
+            auto.uros = dog.sukupuoli == 'uros'
+            auto.put()
 
         ndb.Key('ModTime', 'modtime', parent=self.key).get().put()
 
         self.jsonReply(dog.hashify())
+
+class KoiraAutoCompleteHandler(HardenedHandler):
+    def get_(self, user):
+        query = ndb.gql("SELECT * FROM KoiraAutocomplete WHERE canonical >= :1",
+                        self.request.params['prefix'])
+        data = []
+        entities, _, _ = query.fetch_page(3)
+        logging.info("entities: %s" % (entities,))
+        for entity in entities:
+            data.append(entity.virallinen_nimi)
+        self.jsonReply(data)
 
 class FederatedLoginHandler(HardenedHandler):
     def get_(self, user):
@@ -364,6 +394,7 @@ config['webapp2_extras.sessions'] = {
 app = webapp2.WSGIApplication(
     [("/Koira", KoiraCollectionHandler),
      ("/Koira/([^/]+)", KoiraHandler),
+     ("/KoiraAutoComplete", KoiraAutoCompleteHandler),
      ("/History/([^/]+)", HistoryHandler),
      ("/YhdistysPaimennustaipumus", YhdistysPaimennustaipumusCollectionHandler),
      ("/YhdistysPaimennustaipumus/([^/]+)", YhdistysPaimennustaipumusHandler),
