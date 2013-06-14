@@ -29,7 +29,7 @@ class ModTime(ndb.Model):
     def hashify(self):
         if self.parent_uri is None:
             self.parent_uri = self.key.parent().get().uri()
-        return {'modtime': time.mktime(self.modtime.timetuple()),
+        return {'modtime': str(time.mktime(self.modtime.timetuple())),
                 'uri': self.parent_uri}
 
 class SignedResource(polymodel.PolyModel):
@@ -62,6 +62,10 @@ class SignedResource(polymodel.PolyModel):
                     res[name] = val.isoformat()
                 else:
                     res[name] = str(val)
+
+        modtime = ndb.Key('ModTime', 'modtime', parent=self.key).get()
+        res['modtime'] = str(time.mktime(modtime.modtime.timetuple()))
+
         return res
             
 
