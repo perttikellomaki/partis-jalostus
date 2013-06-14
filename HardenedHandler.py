@@ -118,7 +118,10 @@ class HardenedHandler(BaseSessionHandler):
     def genericGetCollection(self, collection, debug_fmt = None):
         data = []
         for entity in collection:
-            data.append(entity.hashify())
+            if isinstance(entity, ndb.Key):
+                data.append(entity.get().hashify())
+            else:
+                data.append(entity.hashify())
         self.jsonReply(data, debug_fmt)
 
 
