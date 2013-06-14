@@ -166,12 +166,12 @@ class KoiraCollectionHandler(HardenedHandler):
         if (self.request.params.has_key('sukupuoli')
             and self.request.params['sukupuoli'] != ''
             and self.request.params['sukupuoli'] != 'undefined'):
-            self.genericGetCollection(
-                Koira.gql("WHERE archive_copy_of = NULL AND sukupuoli = :1 ORDER BY virallinen_nimi ASC",
-                          self.request.params['sukupuoli']))
+            query = ndb.gql("SELECT * FROM Koira WHERE archive_copy_of = NULL AND sukupuoli = :1 ORDER BY virallinen_nimi ASC",
+                            self.request.params['sukupuoli'])
         else:
-            self.genericGetCollection(
-                Koira.gql("WHERE archive_copy_of = NULL ORDER BY virallinen_nimi ASC"))
+            query = ndb.gql("SELECT * FROM Koira WHERE archive_copy_of = NULL ORDER BY virallinen_nimi ASC")
+
+        self.genericGetCollection(query)
 
     def post_(self, user):
         dog = Koira()
