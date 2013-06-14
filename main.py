@@ -148,7 +148,8 @@ class YhdistysPaimennustaipumus(SignedResource):
 
 class KoiraCollectionHandler(HardenedHandler):
     def get_(self, user):
-        if (self.request.params['sukupuoli'] != ''
+        if (self.request.params.has_key('sukupuoli')
+            and self.request.params['sukupuoli'] != ''
             and self.request.params['sukupuoli'] != 'undefined'):
             self.genericGetCollection(
                 Koira.gql("WHERE archive_copy_of = NULL AND sukupuoli = :1 ORDER BY virallinen_nimi ASC",

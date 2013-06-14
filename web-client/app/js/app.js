@@ -2,7 +2,7 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'ngResource', 'ui', 'ngGrid']).
+angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'ngResource', 'ui.bootstrap', 'ngGrid']).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/koirat', {templateUrl: 'partials/koirat.html', controller: KoiratCtrl});
     $routeProvider.when('/koira', {templateUrl: 'koira/uusi_koira.html', controller: UusiKoiraCtrl});
