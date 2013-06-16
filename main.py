@@ -215,14 +215,14 @@ class KoiraHandler(HardenedHandler):
         dog.populateFromRequest(self.request.params)
         dog.sign(user)
         dog.put()
-        if dog.name != name or dog.sukupuoli != sex:
+        if dog.virallinen_nimi != name or dog.sukupuoli != sex:
             auto = ndb.Key('KoiraAutocomplete', 'autocomplete', parent=self.key).get()
             auto.virallinen_nimi = dog.virallinen_nimi
             auto.canonical = dog.virallinen_nimi.lower()
             auto.uros = dog.sukupuoli == 'uros'
             auto.put()
 
-        ndb.Key('ModTime', 'modtime', parent=self.key).get().put()
+        ndb.Key('ModTime', 'modtime', parent=dog.key).get().put()
 
         self.jsonReply(dog.hashify())
 
