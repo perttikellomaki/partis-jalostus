@@ -18,6 +18,8 @@ function KoiratCtrl($scope, KoiraService) {
 					   $scope.myData = tmp;
 				       });
 
+    $scope.modtimes = KoiraService.query({key: '', modtime_only: true});
+
     $scope.myData = [];
 
     $scope.gridOptions = {data: 'myData',

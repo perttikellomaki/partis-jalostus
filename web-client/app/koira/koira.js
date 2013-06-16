@@ -88,9 +88,11 @@ function YhdistysPaimennustaipumusCtrl ($scope, YhdistysPaimennustaipumusService
 YhdistysPaimennustaipumusCtrl.$inject = ['$scope', 'YhdistysPaimennustaipumusService'];
 
 function UusiKoiraCtrl ($scope, $location, KoiraService) {
+    $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
+    $scope.selected = $scope.sexes[0];
     $scope.koira = KoiraService.makeNew();
     $scope.save = function () { 
-	$scope.koira.$save({key: ''},
+	$scope.koira.$save({key: '', sukupuoli: $scope.selected.sex},
 			   function (koira) {
 			       $location.path("/koira" + koira.uri);
 			   });
