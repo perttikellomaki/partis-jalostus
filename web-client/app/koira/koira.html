@@ -68,10 +68,7 @@
       <td>Isä</td>
       <td>
 	<span ng-show="editing">
-	  <select ui-select2 ng-model="koira.isa" data-placeholder="-- Isä --" style="width:200px">
-	    <option value=""></option>
-	    <option ng-repeat="item in urokset" value="{{item.uri}}">{{item.virallinen_nimi}}</option>
-	  </select>
+	  <input type="text" ng-model="isa_nimi" typeahead="suggestion for suggestion in typeahead($viewValue)">
 	</span>
 	<span ng-show="!editing">{{isa.virallinen_nimi}}</span>
       </td>
@@ -80,10 +77,7 @@
       <td>Emä</td>
       <td>
 	<span ng-show="editing">
-	  <select ui-select2 ng-model="koira.ema" data-placeholder="-- Emä --" style="width:200px">
-	    <option value=""></option>
-	    <option ng-repeat="item in nartut" value="{{item.uri}}">{{item.virallinen_nimi}}</option>
-	  </select>
+	  <input type="text" ng-model="ema_nimi" typeahead="suggestion for suggestion in typeahead($viewValue)">
 	</span>
 	<span ng-show="!editing">{{ema.virallinen_nimi}}</span>
       </td>

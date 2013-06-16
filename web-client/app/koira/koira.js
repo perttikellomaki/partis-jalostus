@@ -1,4 +1,4 @@
-function KoiraCtrl($scope, $resource, $routeParams, $location, KoiraService, SidepanelService) {
+function KoiraCtrl($scope, $resource, $routeParams, $location, $http, KoiraService, SidepanelService) {
     $scope.sidepanel = SidepanelService.get();
     $scope.sidepanel.selection = '';
 
@@ -56,8 +56,13 @@ function KoiraCtrl($scope, $resource, $routeParams, $location, KoiraService, Sid
 			  $scope.ema = KoiraService.get({uri: new_val});
 		      }
 		  })
+
+    $scope.typeahead = function (name) {
+	return $http.get("/KoiraAutoComplete?prefix=" + encodeURIComponent(name))
+	    .then(function (response) { return response.data });
+    }			
 }
-KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', 'KoiraService', 'SidepanelService'];
+KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', '$http', 'KoiraService', 'SidepanelService'];
 
 function KoiraHistoryCtrl ($scope, KoiraService) {
     if ($scope.h.isa != undefined && $scope.h.isa.length > 0) {
