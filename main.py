@@ -174,6 +174,9 @@ class KoiraCollectionHandler(HardenedHandler):
             and self.request.params['sukupuoli'] != 'undefined'):
             query = ndb.gql("SELECT __key__ FROM Koira WHERE archive_copy_of = NULL AND sukupuoli = :1 ORDER BY virallinen_nimi ASC",
                             self.request.params['sukupuoli'])
+        elif self.request.params.has_key('virallinen_nimi'):
+            query = ndb.gql("SELECT __key__ FROM Koira WHERE archive_copy_of = NULL AND virallinen_nimi = :1",
+                            self.request.params['virallinen_nimi'])
         else:
             query = ndb.gql("SELECT __key__ FROM Koira WHERE archive_copy_of = NULL ORDER BY virallinen_nimi ASC")
 
@@ -191,6 +194,7 @@ class KoiraCollectionHandler(HardenedHandler):
             id="autocomplete", 
             virallinen_nimi=dog.virallinen_nimi,
             canonical = dog.virallinen_nimi.lower(),
+            uros = dog.sukupuoli == 'uros',
             parent=dog.key)
         autocomplete.put()
         self.jsonReply(dog.hashify())
@@ -228,8 +232,14 @@ class KoiraHandler(HardenedHandler):
 
 class KoiraAutoCompleteHandler(HardenedHandler):
     def get_(self, user):
-        query = ndb.gql("SELECT * FROM KoiraAutocomplete WHERE canonical >= :1",
-                        self.request.params['prefix'])
+        if self.request.params.has_key('sukupuoli'):
+            query = ndb.gql("SELECT * FROM KoiraAutocomplete "
+                            "WHERE uros = :1 AND canonical >= :2",
+                            self.request.params['sukupuoli'] == 'uros',
+                            self.request.params['prefix'])
+        else:
+            query = ndb.gql("SELECT * FROM KoiraAutocomplete WHERE canonical >= :1",
+                            self.request.params['prefix'])
         data = []
         entities, _, _ = query.fetch_page(3)
         logging.info("entities: %s" % (entities,))

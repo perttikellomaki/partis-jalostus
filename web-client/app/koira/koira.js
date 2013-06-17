@@ -1,26 +1,161 @@
 function KoiraCtrl($scope, $resource, $routeParams, $location, $http, KoiraService, SidepanelService) {
+    $scope.dateOptions = {
+        changeYear: true,
+        changeMonth: true,
+        yearRange: '1900:-0'
+    };
+
     $scope.sidepanel = SidepanelService.get();
     $scope.sidepanel.selection = '';
 
+    $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
     $scope.birthday = {};
     var history_resource = $resource("/History/:key");
     $scope.koira_history = history_resource.query({key: $routeParams.key})
-    $scope.koira = KoiraService.get(
-	{key: $routeParams.key},
-	function (koira) {
+    $scope.koira = KoiraService.get({key: $routeParams.key});
+
+    $scope.koira.$then(
+	function (response) {
+	    var koira = response.resource;
 	    if (koira.syntymapaiva != undefined 
 		&& koira.syntymapaiva.length > 0) {
-		$scope.birthday.date = new Date(koira.syntymapaiva);
+		var date = new Date(koira.syntymapaiva);
+		$scope.birthday.date = date;
+		$scope.birthday.date_string = 
+		    date.getDate()
+		    + "." + (date.getMonth() + 1)
+		    + "." + date.getFullYear();
 	    }
 	    $scope.timestamp = new Date(koira.timestamp);
+	    if (koira.sukupuoli == 'uros') {
+		$scope.selected_sex = $scope.sexes[0];
+	    } else {
+		$scope.selected_sex = $scope.sexes[1];
+	    }
+	});
+
+    $scope.$watch(
+	"selected_sex.sex",
+	function (new_val, old_val) {
+	    console.log(new_val)
+	    $scope.koira.sukupuoli = new_val;
+	});		  
+
+    $scope.$watch(
+	"birthday.date",
+	function (new_val, old_val) {
+	    if (new_val != undefined) {
+		$scope.koira.syntymapaiva =
+		    new_val.getFullYear()
+		    + "-" + (new_val.getMonth() + 1)
+		    + "-" + new_val.getDate();
+		console.log($scope.koira.syntymapaiva);
+		$scope.birthday.date_string = 
+		    new_val.getDate()
+		    + "." + (new_val.getMonth() + 1)
+		    + "." + new_val.getFullYear();
+		$scope.koira.syntymavuosi = new_val.getFullYear();
+	    }
+	})
+
+    $scope.$watch(
+	"koira.isa",
+	function (new_val, old_val) {
+	    if (new_val != undefined 
+		&& new_val.length > 0) {
+		KoiraService.get({uri: new_val})
+		    .$then(function (response) {
+			var isa = response.resource;
+			$scope.isa_nimi = isa.virallinen_nimi;
+		    });
+	    }
+	});
+
+    $scope.$watch(
+	"koira.ema",
+	function (new_val, old_val) {
+	    if (new_val != undefined 
+		&& new_val.length > 0) {
+		KoiraService.get({uri: new_val})
+		    .$then(function (response) {
+			var ema = response.resource;
+			$scope.ema_nimi = ema.virallinen_nimi;
+		    });
+	    }
+	});
+
+    $scope.$watch(
+	"koira.ema",
+	function (new_val, old_val) {
+	    if (new_val != undefined 
+		&& new_val.length > 0) {
+		KoiraService.get({uri: new_val})
+		    .$then(function (response) {
+			var ema = response.resource;
+			$scope.ema_nimi = ema.virallinen_nimi;
+		    });
+	    }
 	});
 
     $scope.koira_show_history = false;
     $scope.editing = false;
     
     $scope.save = function () {
-	$scope.koira.$save({key: $routeParams.key});
-	$scope.koira_history = history_resource.query({key: $routeParams.key})
+
+	function handleEma() {
+	    if ($scope.ema_nimi != undefined && $scope.ema_nimi.length > 0) {
+		var ema = KoiraService.query({virallinen_nimi: $scope.ema_nimi});
+		ema.$then(function (response) {
+		    var dogs = response.resource;
+		    if (dogs.length == 0) {
+			if (confirm("Emää ei löydy tietokannasta. Lisätäänkö?")) {
+			    var inserted = KoiraService.makeNew();
+			    inserted.$save(
+				{virallinen_nimi: $scope.ema_nimi,
+				 sukupuoli: 'narttu'},
+				function (ema) {
+				    $scope.koira.ema = ema.uri;
+				    console.log($scope.koira);
+				    $scope.koira.$save({key: $routeParams.key});
+				});
+			}
+		    } else if (dogs.length == 1) {
+			$scope.koira.ema = dogs[0].uri;
+			console.log($scope.koira);
+			$scope.koira.$save({key: $routeParams.key});
+		    }
+		})
+	    } else {
+		$scope.koira.$save({key: $routeParams.key});
+	    }
+	    $scope.koira_history = history_resource.query({key: $routeParams.key})
+	}
+
+	if ($scope.isa_nimi != undefined && $scope.isa_nimi.length > 0) {
+	    var isa = KoiraService.query({virallinen_nimi: $scope.isa_nimi});
+	    isa.$then(function (response) {
+		var dogs = response.resource;
+		if (dogs.length == 0) {
+		    if (confirm("Isää ei löydy tietokannasta. Lisätäänkö?")) {
+			var inserted = KoiraService.makeNew();
+			inserted.$save(
+			    {virallinen_nimi: $scope.isa_nimi,
+			     sukupuoli: 'uros'},
+			    function (isa) {
+				$scope.koira.isa = isa.uri;
+				console.log($scope.koira);
+				handleEma();
+			    });
+		    }
+		} else if (dogs.length == 1) {
+		    $scope.koira.isa = dogs[0].uri;
+		    console.log($scope.koira);
+		    handleEma();
+		}
+	    })
+	} else {
+	    handleEma();
+	}
 	$scope.editing = false;
     }
 
@@ -37,28 +172,12 @@ function KoiraCtrl($scope, $resource, $routeParams, $location, $http, KoiraServi
 	$scope.editing = !$scope.editing;
     }
 
-    $scope.urokset = KoiraService.query({sukupuoli: "uros"});
-
-    $scope.nartut = KoiraService.query({sukupuoli: "narttu"});
-
-    $scope.items = KoiraService.query({key: ''});
-    $scope.isa = {};
-    $scope.$watch('koira.isa', 
-		  function (new_val, old_val) {
-		      if (new_val != undefined && new_val != "") {
-			  $scope.isa = KoiraService.get({uri: new_val});
-		      }
-		  })
-    $scope.ema = {};
-    $scope.$watch('koira.ema', 
-		  function (new_val, old_val) {
-		      if (new_val != undefined && new_val != "") {
-			  $scope.ema = KoiraService.get({uri: new_val});
-		      }
-		  })
-
-    $scope.typeahead = function (name) {
-	return $http.get("/KoiraAutoComplete?prefix=" + encodeURIComponent(name))
+    $scope.typeaheadUros = function (name) {
+	return $http.get("/KoiraAutoComplete?sukupuoli=uros&prefix=" + encodeURIComponent(name))
+	    .then(function (response) { return response.data });
+    }			
+    $scope.typeaheadNarttu = function (name) {
+	return $http.get("/KoiraAutoComplete?sukupuoli=narttu&prefix=" + encodeURIComponent(name))
 	    .then(function (response) { return response.data });
     }			
 }

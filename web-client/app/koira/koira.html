@@ -11,9 +11,10 @@
   </span>
 </script>
 
+<button class="pull-right btn" ng-show="editing" ng-click="save()">Tallenna</button>
+<button class="pull-right btn" ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
+
 <form ng-show="sidepanel.selection == ''">
-  <button class="btn" ng-show="editing" ng-click="save()">Tallenna</button>
-  <button class="btn" ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
   <label>Virallinen nimi / muu tunniste</label>
   <input type="text" ng-readonly="!editing" ng-model="koira.virallinen_nimi">
   <label>Kutsumanimi</label>
@@ -21,26 +22,33 @@
   <label>Kennel</label>
   <input type="text" ng-readonly="!editing" ng-model="koira.kennel">
   <label>Sukupuoli</label>
-  <input type="text" ng-readonly="!editing" ng-model="koira.sukupuoli">
-  <label>Syntymävuosi</label>
-  <input  type="text" ng-readonly="!editing" ng-model="koira.syntymavuosi">
+  <input type="text" ng-show="!editing" ng-model="koira.sukupuoli" readonly>
+  <select ng-show="editing"
+	  ng-model="selected_sex"
+	  ng-options="selected_sex.sex for selected_sex in sexes">
+  </select>
+
   <label>Syntymäpäivä</label>
-  <input ui-date 
+  <input ui-date="dateOptions"
 	 ng-show="editing"
 	 ng-model="birthday.date"
 	 ng-change="birthdayChange()"
 	 >
-  <span ng-show="!editing">{{birthday.date | date:'d.M.yyyy H:mm'}}</span>
+  <input type="text" ng-show="!editing" 
+	 ng-model="birthday.date_string"
+	 readonly>
+  <label>Syntymävuosi</label>
+  <input  type="text" ng-readonly="!editing" ng-model="koira.syntymavuosi">
   <label>Isä</label>
   <input type="text" 
 	 ng-readonly="!editing" 
 	 ng-model="isa_nimi" 
-	 typeahead="suggestion for suggestion in typeahead($viewValue)">
+	 typeahead="suggestion for suggestion in typeaheadUros($viewValue)">
   <label>Emä</label>
   <input type="text" 
 	 ng-readonly="!editing" 
 	 ng-model="ema_nimi" 
-	 typeahead="suggestion for suggestion in typeahead($viewValue)">
+	 typeahead="suggestion for suggestion in typeaheadNarttu($viewValue)">
   <br>
   <span>Tallentaja: {{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</span>
   <span ng-show="koira_history.length > 0">
