@@ -12,78 +12,37 @@
 </script>
 
 <form ng-show="sidepanel.selection == ''">
-  <button ng-show="editing" ng-click="save()">Tallenna</button>
-  <button ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
-  <table>
-    <tr>
-      <td>Virallinen nimi / muu tunniste</td>
-      <td>
-	<input ng-show="editing" ng-model="koira.virallinen_nimi"/>
-	<span ng-show="!editing">{{koira.virallinen_nimi}}</span>
-      </td>
-    </tr>
-    <tr>
-      <td>Kutsumanimi
-      <td>
-	<input ng-show="editing" ng-model="koira.kutsumanimi"/>
-	<span ng-show="!editing">{{koira.kutsumanimi}}</span>
-      </td>
-    </tr>
-    <tr>
-      <td>Kennel</td>
-      <td>
-	<input ng-show="editing" ng-model="koira.kennel"/>
-	<span ng-show="!editing">{{koira.kennel}}</span>
-      </td>
-    </tr>
-    <tr>
-      <td>Sukupuoli</td>
-      <td>
-	<select ng-show="editing"
-		ng-model="koira.sukupuoli">
-	  <option>uros</option>
-	  <option>narttu</option>
-	</select>
-	<span ng-show="!editing">{{koira.sukupuoli}}</span>
-      </td>
-    </tr>
-    <tr>
-      <td>Syntymävuosi</td>
-      <td>
-	<input ng-show="editing" ng-model="koira.syntymavuosi"/>
-	<span ng-show="!editing">{{koira.syntymavuosi}}</span>
-      </td>
-    </tr>
-    <tr>
-      <td>Syntymäpäivä</td>
-      <td>
-	<span ng-show="!editing">{{koira.syntymapaiva}}</span>
-	<input ng-show="editing" 
-	       ng-model="birthday.date" 
-	       ng-change="birthdayChange()"
-	       ui-date>
-      </td>
-    </tr>
-    <tr>
-      <td>Isä</td>
-      <td>
-	<span ng-show="editing">
-	  <input type="text" ng-model="isa_nimi" typeahead="suggestion for suggestion in typeahead($viewValue)">
-	</span>
-	<span ng-show="!editing">{{isa.virallinen_nimi}}</span>
-      </td>
-    </tr>
-    <tr>
-      <td>Emä</td>
-      <td>
-	<span ng-show="editing">
-	  <input type="text" ng-model="ema_nimi" typeahead="suggestion for suggestion in typeahead($viewValue)">
-	</span>
-	<span ng-show="!editing">{{ema.virallinen_nimi}}</span>
-      </td>
-    </tr>
-    <tr><td>Tallentaja</td><td>{{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</td></tr>
-  </table>
+  <button class="btn" ng-show="editing" ng-click="save()">Tallenna</button>
+  <button class="btn" ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
+  <label>Virallinen nimi / muu tunniste</label>
+  <input type="text" ng-readonly="!editing" ng-model="koira.virallinen_nimi">
+  <label>Kutsumanimi</label>
+  <input type="text" ng-readonly="!editing" ng-model="koira.kutsumanimi">
+  <label>Kennel</label>
+  <input type="text" ng-readonly="!editing" ng-model="koira.kennel">
+  <label>Sukupuoli</label>
+  <input type="text" ng-readonly="!editing" ng-model="koira.sukupuoli">
+  <label>Syntymävuosi</label>
+  <input  type="text" ng-readonly="!editing" ng-model="koira.syntymavuosi">
+  <label>Syntymäpäivä</label>
+  <input ui-date 
+	 ng-show="editing"
+	 ng-model="birthday.date"
+	 ng-change="birthdayChange()"
+	 >
+  <span ng-show="!editing">{{birthday.date | date:'d.M.yyyy H:mm'}}</span>
+  <label>Isä</label>
+  <input type="text" 
+	 ng-readonly="!editing" 
+	 ng-model="isa_nimi" 
+	 typeahead="suggestion for suggestion in typeahead($viewValue)">
+  <label>Emä</label>
+  <input type="text" 
+	 ng-readonly="!editing" 
+	 ng-model="ema_nimi" 
+	 typeahead="suggestion for suggestion in typeahead($viewValue)">
+  <br>
+  <span>Tallentaja: {{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</span>
   <span ng-show="koira_history.length > 0">
     <input type="checkbox" ng-model="koira_show_history">Historia</input>
     <br>
