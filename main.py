@@ -216,7 +216,7 @@ class KoiraHandler(HardenedHandler):
         dog.sign(user)
         dog.put()
         if dog.virallinen_nimi != name or dog.sukupuoli != sex:
-            auto = ndb.Key('KoiraAutocomplete', 'autocomplete', parent=self.key).get()
+            auto = ndb.Key('KoiraAutocomplete', 'autocomplete', parent=dog.key).get()
             auto.virallinen_nimi = dog.virallinen_nimi
             auto.canonical = dog.virallinen_nimi.lower()
             auto.uros = dog.sukupuoli == 'uros'
