@@ -19,11 +19,18 @@
     <span ng-show="!login_status.logged_in">
       Et ole kirjautunut
     </span>
-  <ul class="menu">
-    <li><a href="#/koirat">Koirat</a></li>
-    <li><a href="#/koira">Uusi koira</a></li>
-    <li><a href="#/login">Kirjaudu</a></li>
-  </ul>
+  </span>
+  <div class="container">
+    <div class="navbar" ng-controller="NavListController">
+      <div class="navbar-inner">
+	<ul class="nav">
+	  <li ng-class="'nav-menu-btn ' + navClass('koirat')"><a href="#/koirat">Koirat</a></li>
+	  <li ng-class="'nav-menu-btn ' + navClass('koira')"><a href="#/koira">Uusi koira</a></li>
+	  <li ng-class="'nav-menu-btn ' + navClass('kirjaudu')"><a href="#/login">Kirjaudu</a></li>
+	</ul>
+      </div>
+    </div>
+  </div>
 </div><!-- end header -->
 
 
@@ -52,10 +59,13 @@
 
 <script type="text/ng-template" id="koira_sidepanel.html">
   <h2>Koira</h2>
-  <button class="sidepanel-button" ng-click="setSelection('')">Perustiedot</button>
-  <br>
+  <ul class="nav nav-pills nav-stacked">
+    <li ng-class="navClass('perustiedot') + navClass('')"><a ng-click="setSelection('perustiedot')">Perustiedot</a></li>
+    <li ng-class="navClass('terveyskysely')"><a ng-click="setSelection('terveyskysely')">Terveyskysely</a></li>
+  </ul>
+<!--
   <button class="sidepanel-button" ng-click="setSelection('paimennustaipumus')">Paimennustaipumus</button>
-  <br>
+-->
 </script>
 
 

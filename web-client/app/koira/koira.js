@@ -218,3 +218,17 @@ function UusiKoiraCtrl ($scope, $location, KoiraService) {
     }
 }
 UusiKoiraCtrl.$inject = ['$scope', '$location', 'KoiraService'];
+
+function TerveyskyselyCtrl ($scope, TerveyskyselyService) {
+    $scope.kysely = TerveyskyselyService.makeNew();
+
+    $scope.send = function () {
+	$scope.kysely.virallinen_nimi = $scope.koira.virallinen_nimi;
+	$scope.kysely.$save();
+    }
+}
+TerveyskyselyCtrl.$inject = ['$scope', 'TerveyskyselyService'];
+
+function AutoimmuuniCtrl ($scope) {
+}
+AutoimmuuniCtrl.$inject = ['$scope'];

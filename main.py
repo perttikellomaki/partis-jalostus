@@ -81,6 +81,8 @@ class SignedResource(polymodel.PolyModel):
             if params.has_key(name) and params[name] != 'undefined':
                 if isinstance(field, ndb.StringProperty):
                     field.__set__(self, params[name])
+                elif isinstance(field, ndb.BooleanProperty):
+                    field.__set__(self, params[name] == 'true')
                 elif isinstance(field, ndb.IntegerProperty):
                     try:
                         field.__set__(self, int(params[name]))
@@ -150,6 +152,13 @@ class Koira(SignedResource):
         """Create archival copy"""
         copy = Koira()
         return self.archive_fields(copy)
+
+class Terveyskysely(SignedResource):
+    d = dict(SignedResource.d.items())
+    virallinen_nimi    = field(d, 'virallinen_nimi', ndb.StringProperty())
+    autoimmuunisairaus = field(d, 'autoimmuunisairaus', ndb.BooleanProperty())
+    slo                = field(d, 'slo', ndb.BooleanProperty())
+    imha               = field(d, 'imha', ndb.BooleanProperty())
 
 class YhdistysPaimennustaipumus(SignedResource):
     d = dict(SignedResource.d.items())
@@ -236,16 +245,40 @@ class KoiraAutoCompleteHandler(HardenedHandler):
             query = ndb.gql("SELECT * FROM KoiraAutocomplete "
                             "WHERE uros = :1 AND canonical >= :2",
                             self.request.params['sukupuoli'] == 'uros',
-                            self.request.params['prefix'])
+                            self.request.params['prefix'].lower())
         else:
             query = ndb.gql("SELECT * FROM KoiraAutocomplete WHERE canonical >= :1",
-                            self.request.params['prefix'])
+                            self.request.params['prefix'].lower())
+        maxlen = 5
         data = []
-        entities, _, _ = query.fetch_page(3)
-        logging.info("entities: %s" % (entities,))
-        for entity in entities:
-            data.append(entity.virallinen_nimi)
+        for entity in query:
+            if entity.canonical.startswith(self.request.params['prefix'].lower()):
+                data.append(entity.virallinen_nimi)
+            else:
+                break
+            if len(data) == maxlen:
+                break
         self.jsonReply(data)
+
+class TerveyskyselyHandler(HardenedHandler):
+    def post_(self, user):
+        survey = Terveyskysely()
+        survey.populateFromRequest(self.request.params)
+        survey.sign(user)
+        survey.put()
+
+        message = mail.EmailMessage()
+        message.sender = user.email()
+        message.to = "pertti.kellomaki@gmail.com"
+        message.subject = "Terveyskysely"
+        message.body = ("Koira: %s\nautoimmuunisairaus: %s\nslo: %s\nimha: %s"
+                        % (survey.virallinen_nimi,
+                           survey.autoimmuunisairaus,
+                           survey.slo,
+                           survey.imha))
+        message.send()
+        
+        self.jsonReply(survey.hashify())
 
 class FederatedLoginHandler(HardenedHandler):
     def get_(self, user):
@@ -405,6 +438,7 @@ app = webapp2.WSGIApplication(
     [("/Koira", KoiraCollectionHandler),
      ("/Koira/([^/]+)", KoiraHandler),
      ("/KoiraAutoComplete", KoiraAutoCompleteHandler),
+     ("/Terveyskysely", TerveyskyselyHandler),
      ("/History/([^/]+)", HistoryHandler),
      ("/YhdistysPaimennustaipumus", YhdistysPaimennustaipumusCollectionHandler),
      ("/YhdistysPaimennustaipumus/([^/]+)", YhdistysPaimennustaipumusHandler),

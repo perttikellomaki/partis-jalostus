@@ -11,60 +11,84 @@
   </span>
 </script>
 
-<button class="pull-right btn" ng-show="editing" ng-click="save()">Tallenna</button>
-<button class="pull-right btn" ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
+<div ng-show="sidepanel.selection == '' || sidepanel.selection == 'perustiedot'">
+  <button class="pull-right btn" ng-show="editing" ng-click="save()">Tallenna</button>
+  <button class="pull-right btn" ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
 
-<form ng-show="sidepanel.selection == ''">
-  <label>Virallinen nimi / muu tunniste</label>
-  <input type="text" ng-readonly="!editing" ng-model="koira.virallinen_nimi">
-  <label>Kutsumanimi</label>
-  <input type="text" ng-readonly="!editing" ng-model="koira.kutsumanimi">
-  <label>Kennel</label>
-  <input type="text" ng-readonly="!editing" ng-model="koira.kennel">
-  <label>Sukupuoli</label>
-  <input type="text" ng-show="!editing" ng-model="koira.sukupuoli" readonly>
-  <select ng-show="editing"
-	  ng-model="selected_sex"
-	  ng-options="selected_sex.sex for selected_sex in sexes">
-  </select>
+  <form>
+    <label>Virallinen nimi / muu tunniste</label>
+    <input type="text" ng-readonly="!editing" ng-model="koira.virallinen_nimi">
+    <label>Kutsumanimi</label>
+    <input type="text" ng-readonly="!editing" ng-model="koira.kutsumanimi">
+    <label>Kennel</label>
+    <input type="text" ng-readonly="!editing" ng-model="koira.kennel">
+    <label>Sukupuoli</label>
+    <input type="text" ng-show="!editing" ng-model="koira.sukupuoli" readonly>
+    <select ng-show="editing"
+	    ng-model="selected_sex"
+	    ng-options="selected_sex.sex for selected_sex in sexes">
+    </select>
 
-  <label>Syntymäpäivä</label>
-  <input ui-date="dateOptions"
-	 ng-show="editing"
-	 ng-model="birthday.date"
-	 ng-change="birthdayChange()"
-	 >
-  <input type="text" ng-show="!editing" 
-	 ng-model="birthday.date_string"
-	 readonly>
-  <label>Syntymävuosi</label>
-  <input  type="text" ng-readonly="!editing" ng-model="koira.syntymavuosi">
-  <label>Isä</label>
-  <input type="text" 
-	 ng-readonly="!editing" 
-	 ng-model="isa_nimi" 
-	 typeahead="suggestion for suggestion in typeaheadUros($viewValue)">
-  <label>Emä</label>
-  <input type="text" 
-	 ng-readonly="!editing" 
-	 ng-model="ema_nimi" 
-	 typeahead="suggestion for suggestion in typeaheadNarttu($viewValue)">
-  <br>
-  <span>Tallentaja: {{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</span>
-  <span ng-show="koira_history.length > 0">
-    <input type="checkbox" ng-model="koira_show_history">Historia</input>
+    <label>Syntymäpäivä</label>
+    <input ui-date="dateOptions"
+	   ng-show="editing"
+	   ng-model="birthday.date"
+	   ng-change="birthdayChange()"
+	   >
+    <input type="text" ng-show="!editing" 
+	   ng-model="birthday.date_string"
+	   readonly>
+    <label>Syntymävuosi</label>
+    <input  type="text" ng-readonly="!editing" ng-model="koira.syntymavuosi">
+    <label>Isä</label>
+    <input type="text" 
+	   ng-readonly="!editing" 
+	   ng-model="isa_nimi" 
+	   typeahead="suggestion for suggestion in typeaheadUros($viewValue)">
+    <label>Emä</label>
+    <input type="text" 
+	   ng-readonly="!editing" 
+	   ng-model="ema_nimi" 
+	   typeahead="suggestion for suggestion in typeaheadNarttu($viewValue)">
     <br>
-    <span ng-show="koira_show_history" class="history" ng-repeat="h in koira_history">
-      <span ng-controller="KoiraHistoryCtrl">
-	{{h.virallinen_nimi}}, {{h.kutsumanimi}}, {{h.kennel}}, {{h.sukupuoli}}, {{h.syntymavuosi}}, {{h.syntymapaiva}}, isä {{h_isa.virallinen_nimi}}, emä {{h_ema.virallinen_nimi}},
-	({{h.author_nick}}
-	{{h_timestamp | date:'d.M.yyyy H:mm'}})<br>
+    <span>Tallentaja: {{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</span>
+    <span ng-show="koira_history.length > 0">
+      <input type="checkbox" ng-model="koira_show_history">Historia
+      <br>
+      <span ng-show="koira_show_history" class="history" ng-repeat="h in koira_history">
+	<span ng-controller="KoiraHistoryCtrl">
+	  {{h.virallinen_nimi}}, {{h.kutsumanimi}}, {{h.kennel}}, {{h.sukupuoli}}, {{h.syntymavuosi}}, {{h.syntymapaiva}}, isä {{h_isa.virallinen_nimi}}, emä {{h_ema.virallinen_nimi}},
+	  ({{h.author_nick}}
+	  {{h_timestamp | date:'d.M.yyyy H:mm'}})<br>
+	</span>
       </span>
     </span>
-  </span>
-  <div style="background: AliceBlue;" ng-controller="YhdistysPaimennustaipumusCtrl">
-    Paimennustaipumuskoe: 
-    <span ng-show="tests.length == 0">ei testattu</span>
-    <div ng-repeat="test in tests">
+    <div style="background: AliceBlue;" ng-controller="YhdistysPaimennustaipumusCtrl">
+      Paimennustaipumuskoe: 
+      <span ng-show="tests.length == 0">ei testattu</span>
+      <div ng-repeat="test in tests">
+      </div>
+    </div>
+  </form>
+</div>
+
+<div ng-show="sidepanel.selection == 'terveyskysely'"
+     ng-controller="TerveyskyselyCtrl"
+     >
+  <button class="btn pull-right" ng-click="send()">Lähetä</button>
+  <h3>Terveyskysely -- {{koira.virallinen_nimi}}</h3>
+  <div ng-controller="AutoimmuuniCtrl">
+    <label class="checkbox">
+    <input type="checkbox" class="btn" ng-model="kysely.autoimmuunisairaus">Koiralla on jokin autoimmuunisairaus
+    </label>
+    <div collapse="!kysely.autoimmuunisairaus">
+      <div class="well well-large">
+	<form>
+	  <label class="checkbox"><input type="checkbox" ng-model="kysely.slo">SLO</label>
+	  <label class="checkbox"><input type="checkbox" ng-model="kysely.imha">IMHA</label>
+	</form>
+      </div> 
+    </div>
   </div>
-</form>
+</div>
+

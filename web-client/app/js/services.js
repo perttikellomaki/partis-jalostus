@@ -56,6 +56,16 @@ angular.module('myApp.services', [])
 				paikka: '@paikka',
 				paiva: '@paiva'}));
 	     })
+    .factory('TerveyskyselyService',
+	     function ($resource) {
+		 return makeCachedResource(
+		     $resource("/Terveyskysely/:key",
+			       {koira: '@koira',
+				virallinen_nimi: '@virallinen_nimi',
+				autoimmuunisairaus: '@autoimmuunisairaus',
+				slo: '@slo',
+				imha: '@imha'}))
+	     })
     .factory('SidepanelService',
 	     function () {
 		 var state = {};

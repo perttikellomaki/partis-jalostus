@@ -6,6 +6,15 @@ function uri2key (uri) {
     return uri.split("/")[2];
 }
 
+function NavListController($scope, $location) {
+    $scope.navClass = function (page) {
+        var currentRoute = $location.path().split('/')[1];
+	var result = page === currentRoute ? 'active' : '';
+        return result;
+    }
+}
+NavListController.$inject = ['$scope', '$location'];
+
 
 function KoiratCtrl($scope, KoiraService) {
     $scope.koirat = KoiraService.query({key: ''},
@@ -84,5 +93,10 @@ function LeftcolCtrl ($scope, $location, SidepanelService) {
     $scope.setSelection = function (selection) {
 	$scope.sidepanel.selection = selection;
     }
+
+    $scope.navClass = function (selection) {
+	return selection === $scope.sidepanel.selection ? 'active' : '';
+    }
+
 }
 LeftcolCtrl.$inject = ['$scope', '$location', 'SidepanelService'];
