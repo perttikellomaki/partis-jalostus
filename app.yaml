@@ -6,32 +6,32 @@ threadsafe: yes
 
 handlers:
 - url: /
-  static_files: web-client/app/index.html
-  upload: web-client/app/index.html
+  static_files: www/app/index.html
+  upload: www/app/index.html
 - url: /favicon\.ico
   static_files: favicon.ico
   upload: favicon\.ico
   auth_fail_action: unauthorized
 - url: /css
-  static_dir: web-client/app/css
+  static_dir: www/app/css
   auth_fail_action: unauthorized
 - url: /js
-  static_dir: web-client/app/js
+  static_dir: www/app/js
   auth_fail_action: unauthorized
 - url: /lib
-  static_dir: web-client/app/lib
+  static_dir: www/app/lib
   auth_fail_action: unauthorized
 - url: /partials
-  static_dir: web-client/app/partials
+  static_dir: www/app/partials
   auth_fail_action: unauthorized
 - url: /koira
-  static_dir: web-client/app/koira
+  static_dir: www/app/koira
   auth_fail_action: unauthorized
 - url: /img
-  static_dir: web-client/app/img
+  static_dir: www/app/img
   auth_fail_action: unauthorized
 - url: /ckeditor
-  static_dir: web-client/app/ckeditor
+  static_dir: www/app/ckeditor
   auth_fail_action: unauthorized
 - url: /CompactHistory
   script: main.app

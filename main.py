@@ -29,13 +29,9 @@ class KoiraAutocomplete(ndb.Model):
 
 class ModTime(ndb.Model):
     modtime = ndb.DateTimeProperty(auto_now=True)
-    parent_uri = ndb.StringProperty()
 
     def hashify(self):
-        if self.parent_uri is None:
-            self.parent_uri = self.key.parent().get().uri()
-        return {'modtime': str(time.mktime(self.modtime.timetuple())),
-                'uri': self.parent_uri}
+        return {'modtime': str(time.mktime(self.modtime.timetuple()))}
 
 class SignedResource(polymodel.PolyModel):
     d = {}    # dictonary for collecting fields
