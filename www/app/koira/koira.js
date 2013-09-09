@@ -37,7 +37,6 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
     $scope.$watch(
 	"selected_sex.sex",
 	function (new_val, old_val) {
-	    console.log(new_val)
 	    $scope.koira.sukupuoli = new_val;
 	});		  
 
