@@ -24,8 +24,9 @@
     <div class="navbar" ng-controller="NavListController">
       <div class="navbar-inner">
 	<ul class="nav">
+	  <li ng-class="'nav-menu-btn ' + navClass('etusivu')"><a href="#/etusivu">Etusivu</a></li>
 	  <li ng-class="'nav-menu-btn ' + navClass('koirat')"><a href="#/koirat">Koirat</a></li>
-	  <li ng-class="'nav-menu-btn ' + navClass('koira')"><a href="#/koira">Uusi koira</a></li>
+	  <li ng-class="'nav-menu-btn ' + navClass('koira')"><a href="#/koira">Koira</a></li>
 	  <li ng-class="'nav-menu-btn ' + navClass('kirjaudu')"><a href="#/login">Kirjaudu</a></li>
 	</ul>
       </div>
@@ -54,6 +55,10 @@
 	
 	</div><!-- end wrapper -->
 
+<script type="text/ng-template" id="_sidepanel.html">
+</script>
+<script type="text/ng-template" id="etusivu_sidepanel.html">
+</script>
 <script type="text/ng-template" id="koirat_sidepanel.html">
 </script>
 
@@ -90,6 +95,7 @@
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
+  <script src="etusivu/etusivu.js"></script>
   <script src="koira/koira.js"></script>
 </body>
 </html>
