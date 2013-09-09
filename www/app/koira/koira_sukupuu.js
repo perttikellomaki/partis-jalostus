@@ -9,25 +9,26 @@ function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService, SidepanelService)
 	var row = [];
 	var dog_grid_row = [];
 	for (var c=0; c < generations; c++) {
-	    var rowspan = Math.pow(2, generations-c-1);
+	    var rowspan = Math.pow(2, generations-c);
 	    entry = {rowspan: rowspan,
 		     sex: Math.floor(r / rowspan) % 2,
 		     descendant:
 		     Math.floor(r/(2*rowspan))*2*rowspan,
 		     row: r,
 		     col: c}
-	    if ((r % Math.pow(2, generations-c-1))==0) {
+	    if ((r % Math.pow(2, generations-c))==0) {
 		row.push(entry);
 	    }
-	    dog_grid_row.push(entry);
+	    dog_grid_row.push({});
 	}
 	arr.push(row);
 	dog_grid.push(dog_grid_row);
     }
     $scope.pedigree = arr;
     $scope.dog_grid = dog_grid;
-    
-    $scope.koira = KoiraService.get({uri: '/Koira/' + $routeParams.key});
+
+    $scope.koira
+	= KoiraService.get({uri: '/Koira/' + $routeParams.key});
 
     $scope.editing = false;
 
@@ -50,35 +51,12 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
     var col = $scope.element.col;
 
     if (col == 0) {
-	if ($scope.element.sex == 0) {
-	    $scope.$watch(
-		'koira.isa',
-		function (new_val) {
-		    if (new_val != undefined) {
-			$scope.this_cell_dog = KoiraService.get({uri: new_val});
-			$scope.this_cell_dog.$then(function (response) {
-			    var dog = response.resource;
-			    $scope.name = dog.virallinen_nimi;
-			});
-			$scope.dog_grid[row][col]
-			    = $scope.this_cell_dog;
-		    }
-		});
-	} else {
-	    $scope.$watch(
-		'koira.ema',
-		function (new_val) {
-		    if (new_val != undefined) {
-			$scope.this_cell_dog = KoiraService.get({uri: new_val});
-			$scope.this_cell_dog.$then(function (response) {
-			    var dog = response.resource;
-			    $scope.name = dog.virallinen_nimi;
-			});
-			$scope.dog_grid[row][col]
-			    = $scope.this_cell_dog;
-		    }
-		});
-	}
+	$scope.this_cell_dog = $scope.koira;
+	$scope.koira.$then(function (response) {
+	    var koira = response.resource;
+	    $scope.name = koira.virallinen_nimi;
+	    $scope.dog_grid[0][0] = koira;
+	});
     } else {
 	if ($scope.element.sex == 0) {
 	    $scope.$watch(
