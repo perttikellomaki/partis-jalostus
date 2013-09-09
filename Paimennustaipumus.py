@@ -25,6 +25,8 @@ class YhdistysPaimennustaipumusCollectionHandler(HardenedHandler):
         test.put()
         self.jsonReply(test.hashify())
 
+YhdistysPaimennustaipumus.collectionHandler(YhdistysPaimennustaipumusCollectionHandler)
+
 class YhdistysPaimennustaipumusHandler(HardenedHandler):
     def post_(self, user, key):
         test = self.lookupKey(urlsafe=key).get()
@@ -41,3 +43,4 @@ class YhdistysPaimennustaipumusHandler(HardenedHandler):
         test.put()
         self.jsonReply(test.hashify())
 
+YhdistysPaimennustaipumus.individualHandler(YhdistysPaimennustaipumusHandler)

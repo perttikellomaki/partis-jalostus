@@ -33,6 +33,8 @@ class KoiraCollectionHandler(HardenedHandler):
         autocomplete.put()
         self.jsonReply(dog.hashify())
 
+Koira.collectionHandler(KoiraCollectionHandler)
+
 class KoiraHandler(HardenedHandler):
     def get_(self, user, urlsafe):
         key = self.lookupKey(urlsafe=urlsafe)
@@ -62,3 +64,4 @@ class KoiraHandler(HardenedHandler):
 
         self.jsonReply(dog.hashify())
 
+Koira.individualHandler(KoiraHandler)

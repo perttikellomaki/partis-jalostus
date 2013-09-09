@@ -122,6 +122,31 @@ class SignedResource(polymodel.PolyModel):
             modtimeEntity = Modtime(id="modtime", parent=self.key)
         modtimeEntity.put()
 
+    individual_handler_ = None
+    collection_handler_ = None
+
+    @classmethod
+    def individualHandler(cls, handler=None):
+        if handler:
+            cls.individual_handler_ = handler
+        return cls.individual_handler_
+
+    @classmethod
+    def collectionHandler(cls, handler=None):
+        if handler:
+            cls.collection_handler_ = handler
+        return cls.collection_handler_
+
+    @classmethod
+    def UriPrefix(cls):
+        return "/%s" % cls.__name__
+    
+    def uriPrefix(self):
+        return self.__class__.UriPrefix()
+
+    def uri(self):
+        return "%s/%s" % (self.uriPrefix(), self.key.urlsafe())
+
 
 class Koira(SignedResource):
     d = dict(SignedResource.d.items())

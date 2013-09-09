@@ -167,26 +167,46 @@ class CompactHistoryHandler(webapp2.RequestHandler):
         logging.info("CompactHistory : delete %s" % to_delete)
         ndb.delete_multi(to_delete)
 
+def handlers(classes):
+
+    def individual(cls):
+        return ("%s/([^/]+)" % cls.UriPrefix(),
+                cls.individualHandler())
+
+    def collection(cls):
+        return (cls.UriPrefix(),
+                cls.collectionHandler())
+
+    res = []
+    for cls in classes:
+        if cls.individualHandler():
+            res.append(individual(cls))
+        if cls.collectionHandler():
+            res.append(collection(cls))
+    return res
+
+handler_list = (
+    handlers(
+        [DatastoreClasses.Koira,
+         DatastoreClasses.Terveyskysely,
+         DatastoreClasses.YhdistysPaimennustaipumus])
+    + [("/Modtime/([^/]+)", ModtimeHandler),
+       ("/KoiraAutoComplete", KoiraAutoCompleteHandler),
+       ("/History/([^/]+)", HistoryHandler),
+       ("/FederatedLogin", FederatedLoginHandler),
+       ("/LocalLogin", LocalLoginHandler),
+       ("/Logout", LogoutHandler), 
+       ("/LoginStatus", LoginStatusHandler),
+       ("/PasswordRequest", PasswordRequestHandler),
+       ("/CompactHistory/([^/]+)", CompactHistoryHandler),
+       ])
+
 config = {}
 config['webapp2_extras.sessions'] = {
     'secret_key': 'topsecretkey',
     }
 
 app = webapp2.WSGIApplication(
-    [("/Modtime/([^/]+)", ModtimeHandler),
-     ("/Koira", Koira.KoiraCollectionHandler),
-     ("/Koira/([^/]+)", Koira.KoiraHandler),
-     ("/KoiraAutoComplete", KoiraAutoCompleteHandler),
-     ("/Terveyskysely", Terveyskysely.TerveyskyselyHandler),
-     ("/History/([^/]+)", HistoryHandler),
-     ("/YhdistysPaimennustaipumus", Paimennustaipumus.YhdistysPaimennustaipumusCollectionHandler),
-     ("/YhdistysPaimennustaipumus/([^/]+)", Paimennustaipumus.YhdistysPaimennustaipumusHandler),
-     ("/FederatedLogin", FederatedLoginHandler),
-     ("/LocalLogin", LocalLoginHandler),
-     ("/Logout", LogoutHandler), 
-     ("/LoginStatus", LoginStatusHandler),
-     ("/PasswordRequest", PasswordRequestHandler),
-     ("/CompactHistory/([^/]+)", CompactHistoryHandler),
-     ],
+    handler_list,
     config=config,
     debug=True)

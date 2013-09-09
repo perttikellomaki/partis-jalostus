@@ -1,4 +1,5 @@
 from HardenedHandler import HardenedHandler
+from DatastoreClasses import Terveyskysely
 
 class TerveyskyselyHandler(HardenedHandler):
     def post_(self, user):
@@ -20,3 +21,4 @@ class TerveyskyselyHandler(HardenedHandler):
         
         self.jsonReply(survey.hashify())
 
+Terveyskysely.individualHandler(TerveyskyselyHandler)
