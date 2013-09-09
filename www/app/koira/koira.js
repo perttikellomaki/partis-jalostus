@@ -265,7 +265,7 @@ function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService, SidepanelService)
 }
 KoiraSukupuuCtrl.$inject = ['$scope', '$routeParams', 'KoiraService', 'SidepanelService'];
 
-function PedigreeCellCtrl ($scope, KoiraService) {
+function PedigreeCellCtrl ($scope, $location, KoiraService) {
     $scope.this_cell_dog = {};
     
     var row = $scope.element.row;
@@ -316,8 +316,13 @@ function PedigreeCellCtrl ($scope, KoiraService) {
 		});
 	}
     }
+
+    $scope.gotoDog = function () {
+	$location.path('/koira/perustiedot' 
+			+ $scope.this_cell_dog.uri);
+    }
 }
-PedigreeCellCtrl.$inject = ['$scope', 'KoiraService'];
+PedigreeCellCtrl.$inject = ['$scope', '$location', 'KoiraService'];
 
 function KoiraSidepanelCtrl ($scope, $routeParams, $location, SidepanelService) {
     $scope.gotoSubview = function (subview) {
