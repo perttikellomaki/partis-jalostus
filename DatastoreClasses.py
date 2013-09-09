@@ -3,6 +3,11 @@ import logging
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
 
+class KoiraAutocomplete(ndb.Model):
+    virallinen_nimi = ndb.StringProperty()
+    canonical = ndb.StringProperty()
+    uros = ndb.BooleanProperty()
+
 def field(d, name, prop, uri_prefix=None):
     d[name] = (prop, uri_prefix)
     return prop

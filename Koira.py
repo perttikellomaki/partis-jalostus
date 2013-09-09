@@ -1,7 +1,7 @@
 import logging
 from google.appengine.ext import ndb
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import Koira
+from DatastoreClasses import Koira, KoiraAutocomplete
 
 class KoiraCollectionHandler(HardenedHandler):
     def get_(self, user):

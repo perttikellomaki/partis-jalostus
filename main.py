@@ -22,11 +22,6 @@ import Paimennustaipumus
 import Terveyskysely
 import Koira
 
-class KoiraAutocomplete(ndb.Model):
-    virallinen_nimi = ndb.StringProperty()
-    canonical = ndb.StringProperty()
-    uros = ndb.BooleanProperty()
-
 class ModtimeHandler (HardenedHandler):
 
     def get_(self, key, user):
