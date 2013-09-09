@@ -232,7 +232,10 @@ function AutoimmuuniCtrl ($scope) {
 }
 AutoimmuuniCtrl.$inject = ['$scope'];
 
-function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService) {
+function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService, SidepanelService) {
+    $scope.sidepanel = SidepanelService.get();
+    $scope.sidepanel.selection = 'sukupuu';
+
     var generations = 3;
     var dog_grid = []
     var arr = []
@@ -259,14 +262,8 @@ function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService) {
     $scope.dog_grid = dog_grid;
     
     $scope.koira = KoiraService.get({uri: '/Koira/' + $routeParams.key});
-
-    $scope.koira.$then(function (response) {
-	var koira = response.resource;
-	$scope.dog_grid[0][0].uri = koira.isa;
-	$scope.dog_grid[0][0].koira = KoiraService.get({uri: koira.isa});
-    });
 }
-KoiraSukupuuCtrl.$inject = ['$scope', '$routeParams', 'KoiraService'];
+KoiraSukupuuCtrl.$inject = ['$scope', '$routeParams', 'KoiraService', 'SidepanelService'];
 
 function PedigreeCellCtrl ($scope, KoiraService) {
     $scope.this_cell_dog = {};
