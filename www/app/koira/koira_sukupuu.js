@@ -49,6 +49,10 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
     
     var row = $scope.element.row;
     var col = $scope.element.col;
+    var desc_row = $scope.element.descendant;
+    var desc_col = $scope.element.col -1;
+    $scope.desc_row = desc_row;
+    $scope.desc_col = desc_col;
 
     if (col == 0) {
 	$scope.this_cell_dog = $scope.koira;
@@ -60,7 +64,7 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
     } else {
 	if ($scope.element.sex == 0) {
 	    $scope.$watch(
-		'dog_grid[element.descendant][element.col-1].isa',
+		'dog_grid[desc_row][desc_col].isa',
 		function (new_val) {
 		    if (new_val != undefined) {
 			$scope.this_cell_dog = KoiraService.get({uri: new_val});
@@ -74,7 +78,7 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 		});
 	} else {
 	    $scope.$watch(
-		'dog_grid[element.descendant][element.col-1].ema',
+		'dog_grid[desc_row][desc_col].ema',
 		function (new_val) {
 		    if (new_val != undefined) {
 			$scope.this_cell_dog = KoiraService.get({uri: new_val});
@@ -102,6 +106,45 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 		    console.log("no change for empty entry");
 		} else {
 		    console.log("new dog " + $scope.name);
+		    
+		    var dog = KoiraService.query({virallinen_nimi: $scope.name});
+		    dog.$then(function (response) {
+			var dogs = response.resource;
+			console.log("Looked for " + $scope.name + " found " + JSON.stringify(dogs));
+			if (dogs.length == 0) {
+			    if (confirm("Koiraa "
+					+ $scope.name
+					+ " ei löydy tietokannasta. Lisätäänkö?")) {
+				$scope.this_cell_dog = KoiraService.makeNew();
+				$scope.dog_grid[row][col] = $scope.this_cell_dog;
+				$scope.this_cell_dog.$save(
+				    {virallinen_nimi: $scope.name,
+				     sukupuoli: $scope.element.sex == 0 ? 'uros' : 'narttu'},
+				    function (new_dog) {
+					console.log("new_dog: " + JSON.stringify(new_dog));
+					var descendant = $scope.dog_grid[desc_row][desc_col];
+					if ($scope.element.sex == 0) {
+					    descendant.isa = new_dog.uri;
+					} else {
+					    descendant.ema = new_dog.uri;
+					}
+					console.log("saving " + JSON.stringify(descendant))
+					descendant.$save({key: uri2key(descendant.uri)});
+				    });
+			    }
+			} else if (dogs.length == 1) {
+			    $scope.this_cell_dog = dogs[0];
+			    $scope.dog_grid[row][col] = $scope.this_cell_dog;
+			    var descendant = $scope.dog_grid[desc_row][desc_col];
+			    if ($scope.element.sex == 0) {
+				descendant.isa = $scope.this_cell_dog.uri;
+			    } else {
+				descendant.ema = $scope.this_cell_dog.uri;
+			    }
+			    console.log("Saving " + JSON.stringify(descendant));
+			    descendant.$save({key: uri2key(descendant.uri)});
+			}
+		    });
 		}
 	    } else {
 		if ($scope.this_cell_dog.virallinen_nimi == $scope.name) {
@@ -112,6 +155,6 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 				+ " to " + $scope.name);
 		}
 	    }
-	});	       
+	}); 
 }
 PedigreeCellCtrl.$inject = ['$scope', '$location', 'KoiraService'];
