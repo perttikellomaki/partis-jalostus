@@ -1,0 +1,28 @@
+<div>
+  <button class="pull-right btn" ng-show="editing" ng-click="save()">Tallenna</button>
+  <button class="pull-right btn" ng-show="!editing" ng-click="edit()">Muuta</button>
+</div>
+
+<h2>{{koira.virallinen_nimi}}</h2>
+
+<table border="1">
+  <tr ng-repeat="row in pedigree">
+    <td ng-repeat="element in row"
+	ng-show="element.col > 0"
+	style="height: 1em; min-width: 5em;",
+	rowspan="{{element.rowspan}}"
+	ng-controller="PedigreeCellCtrl">
+      <a ng-show="!editing" 
+	 ng-click="gotoDog()">{{this_cell_dog.virallinen_nimi}}
+      </a>
+      <input type="text"
+	     ng-show="editing && element.sex == 0" 
+	     ng-model="name"
+	     typeahead="suggestion for suggestion in typeaheadUros($viewValue)">
+      <input type="text"
+	     ng-show="editing && element.sex == 1" 
+	     ng-model="name"
+	     typeahead="suggestion for suggestion in typeaheadNarttu($viewValue)">
+    </td>
+  </tr>
+</table>
