@@ -64,9 +64,10 @@
 
 <script type="text/ng-template" id="koira_sidepanel.html">
   <h2>Koira</h2>
-  <ul class="nav nav-pills nav-stacked">
-    <li ng-class="navClass('perustiedot') + navClass('')"><a ng-click="setSelection('perustiedot')">Perustiedot</a></li>
-    <li ng-class="navClass('terveyskysely')"><a ng-click="setSelection('terveyskysely')">Terveyskysely</a></li>
+  <ul class="nav nav-pills nav-stacked" ng-controller="KoiraSidepanelCtrl">
+    <li ng-class="navClass('perustiedot') + navClass('')"><a ng-click="gotoSubview('perustiedot')">Perustiedot</a></li>
+    <li ng-class="navClass('sukupuu')"><a ng-click="gotoSubview('sukupuu')">Sukupuu</a></li>
+    <li ng-class="navClass('terveyskysely')"><a ng-click="gotoSubview('terveyskysely')">Terveyskysely</a></li>
   </ul>
 <!--
   <button class="sidepanel-button" ng-click="setSelection('paimennustaipumus')">Paimennustaipumus</button>

@@ -232,3 +232,100 @@ TerveyskyselyCtrl.$inject = ['$scope', 'TerveyskyselyService'];
 function AutoimmuuniCtrl ($scope) {
 }
 AutoimmuuniCtrl.$inject = ['$scope'];
+
+function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService) {
+    var generations = 3;
+    var dog_grid = []
+    var arr = []
+    for (var r=0; r < Math.pow(2,generations); r++) {
+	var row = [];
+	var dog_grid_row = [];
+	for (var c=0; c < generations; c++) {
+	    var rowspan = Math.pow(2, generations-c-1);
+	    entry = {rowspan: rowspan,
+		     sex: Math.floor(r / rowspan) % 2,
+		     descendant:
+		     Math.floor(r/(2*rowspan))*2*rowspan,
+		     row: r,
+		     col: c}
+	    if ((r % Math.pow(2, generations-c-1))==0) {
+		row.push(entry);
+	    }
+	    dog_grid_row.push(entry);
+	}
+	arr.push(row);
+	dog_grid.push(dog_grid_row);
+    }
+    $scope.pedigree = arr;
+    $scope.dog_grid = dog_grid;
+    
+    $scope.koira = KoiraService.get({uri: '/Koira/' + $routeParams.key});
+
+    $scope.koira.$then(function (response) {
+	var koira = response.resource;
+	$scope.dog_grid[0][0].uri = koira.isa;
+	$scope.dog_grid[0][0].koira = KoiraService.get({uri: koira.isa});
+    });
+}
+KoiraSukupuuCtrl.$inject = ['$scope', '$routeParams', 'KoiraService'];
+
+function PedigreeCellCtrl ($scope, KoiraService) {
+    $scope.this_cell_dog = {};
+    
+    var row = $scope.element.row;
+    var col = $scope.element.col;
+
+    if (col == 0) {
+	if ($scope.element.sex == 0) {
+	    $scope.$watch(
+		'koira.isa',
+		function (new_val) {
+		    if (new_val != undefined) {
+			$scope.this_cell_dog = KoiraService.get({uri: new_val});
+			$scope.dog_grid[row][col]
+			    = $scope.this_cell_dog;
+		    }
+		});
+	} else {
+	    $scope.$watch(
+		'koira.ema',
+		function (new_val) {
+		    if (new_val != undefined) {
+			$scope.this_cell_dog = KoiraService.get({uri: new_val});
+			$scope.dog_grid[row][col]
+			    = $scope.this_cell_dog;
+		    }
+		});
+	}
+    } else {
+	if ($scope.element.sex == 0) {
+	    $scope.$watch(
+		'dog_grid[element.descendant][element.col-1].isa',
+		function (new_val) {
+		    if (new_val != undefined) {
+			$scope.this_cell_dog = KoiraService.get({uri: new_val});
+			$scope.dog_grid[row][col]
+			    = $scope.this_cell_dog;
+		    }
+		});
+	} else {
+	    $scope.$watch(
+		'dog_grid[element.descendant][element.col-1].ema',
+		function (new_val) {
+		    if (new_val != undefined) {
+			$scope.this_cell_dog = KoiraService.get({uri: new_val});
+			$scope.dog_grid[row][col]
+			    = $scope.this_cell_dog;
+		    }
+		});
+	}
+    }
+}
+PedigreeCellCtrl.$inject = ['$scope', 'KoiraService'];
+
+function KoiraSidepanelCtrl ($scope, $routeParams, $location, SidepanelService) {
+    $scope.gotoSubview = function (subview) {
+	$location.path('/koira/' + subview + '/Koira/' + $routeParams.key);
+    }
+}
+KoiraSidepanelCtrl.$inject = ['$scope', '$routeParams', '$location', 'SidepanelService'];
