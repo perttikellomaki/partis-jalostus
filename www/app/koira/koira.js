@@ -170,15 +170,6 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
     $scope.toggleEdit = function () {
 	$scope.editing = !$scope.editing;
     }
-
-    $scope.typeaheadUros = function (name) {
-	return $http.get("/KoiraAutoComplete?sukupuoli=uros&prefix=" + encodeURIComponent(name))
-	    .then(function (response) { return response.data });
-    }			
-    $scope.typeaheadNarttu = function (name) {
-	return $http.get("/KoiraAutoComplete?sukupuoli=narttu&prefix=" + encodeURIComponent(name))
-	    .then(function (response) { return response.data });
-    }			
 }
 KoiraPerustiedotCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', '$http', 'KoiraService', 'SidepanelService'];
 

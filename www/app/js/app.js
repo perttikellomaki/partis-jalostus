@@ -11,4 +11,16 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 
     $routeProvider.when('/koira/sukupuu/Koira/:key', {templateUrl: 'koira/koira_sukupuu.html', controller: KoiraSukupuuCtrl});
     $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: LoginCtrl});
     $routeProvider.otherwise({redirectTo: '/etusivu'});
-  }]);
+  }])
+    .run(['$rootScope', '$http',
+	  function ($rootScope, $http) {
+	      $rootScope.typeaheadUros = function (name) {
+		  return $http.get("/KoiraAutoComplete?sukupuoli=uros&prefix=" + encodeURIComponent(name))
+		      .then(function (response) { return response.data });
+	      }			
+	      $rootScope.typeaheadNarttu = function (name) {
+		  return $http.get("/KoiraAutoComplete?sukupuoli=narttu&prefix=" + encodeURIComponent(name))
+		      .then(function (response) { return response.data });
+	      }
+	  }])
+;
