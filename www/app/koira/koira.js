@@ -1,4 +1,4 @@
-function KoiraCtrl($scope, $resource, $routeParams, $location, $http, KoiraService, SidepanelService) {
+function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http, KoiraService, SidepanelService) {
     $scope.dateOptions = {
         changeYear: true,
         changeMonth: true,
@@ -181,7 +181,7 @@ function KoiraCtrl($scope, $resource, $routeParams, $location, $http, KoiraServi
 	    .then(function (response) { return response.data });
     }			
 }
-KoiraCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', '$http', 'KoiraService', 'SidepanelService'];
+KoiraPerustiedotCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', '$http', 'KoiraService', 'SidepanelService'];
 
 function KoiraHistoryCtrl ($scope, KoiraService) {
     if ($scope.h.isa != undefined && $scope.h.isa.length > 0) {
