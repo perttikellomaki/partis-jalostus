@@ -118,7 +118,7 @@ class HardenedHandler(BaseSessionHandler):
     def genericGetCollection(self, collection, debug_fmt=None):
         data = []
         if self.request.params.has_key('modtime_only'):
-            coll = [ndb.Key('ModTime', 'modtime', parent=key)
+            coll = [ndb.Key('Modtime', 'modtime', parent=key)
                     for key in collection]
         else:
             coll = collection

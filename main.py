@@ -27,11 +27,19 @@ class KoiraAutocomplete(ndb.Model):
     canonical = ndb.StringProperty()
     uros = ndb.BooleanProperty()
 
-class ModTime(ndb.Model):
+class Modtime(ndb.Model):
     modtime = ndb.DateTimeProperty(auto_now=True)
 
     def hashify(self):
         return {'modtime': str(time.mktime(self.modtime.timetuple()))}
+
+class ModtimeHandler (HardenedHandler):
+
+    def get_(self, key, user):
+        parent = ndb.Key(urlsafe=key)
+        modtime = ndb.Key('Modtime', 'modtime', parent=parent).get()
+        self.response.headers['Content-Type'] = 'text/json'
+        self.response.out.write(json.dumps(modtime.hashify()))
 
 class SignedResource(polymodel.PolyModel):
     d = {}    # dictonary for collecting fields
@@ -64,7 +72,7 @@ class SignedResource(polymodel.PolyModel):
                 else:
                     res[name] = str(val)
 
-        modtime = ndb.Key('ModTime', 'modtime', parent=self.key).get()
+        modtime = ndb.Key('Modtime', 'modtime', parent=self.key).get()
         if modtime:
             res['modtime'] = str(time.mktime(modtime.modtime.timetuple()))
 
@@ -133,6 +141,16 @@ class SignedResource(polymodel.PolyModel):
         copy.archive_copy_of = self.key
         return copy
 
+    def Put(self):
+        """Put to datastore and stamp modtime."""
+        self.put()
+        modtimeKey = ndb.Key('Modtime', 'modtime', parent=self.key)
+        modtimeEntity = modtimeKey.get()
+        if modtimeEntity is None:
+            modtimeEntity = Modtime(id="modtime", parent=self.key)
+        modtimeEntity.put()
+
+
 class Koira(SignedResource):
     d = dict(SignedResource.d.items())
     virallinen_nimi = field(d, 'virallinen_nimi', ndb.StringProperty())
@@ -191,10 +209,8 @@ class KoiraCollectionHandler(HardenedHandler):
         dog = Koira()
         dog.populateFromRequest(self.request.params)
         dog.sign(user)
-        dog.put()
+        dog.Put()
 
-        modtime = ModTime(id="modtime", parent=dog.key)
-        modtime.put()
         autocomplete = KoiraAutocomplete(
             id="autocomplete", 
             virallinen_nimi=dog.virallinen_nimi,
@@ -209,7 +225,7 @@ class KoiraHandler(HardenedHandler):
         key = self.lookupKey(urlsafe=urlsafe)
         logging.info("key: %s" % key)
         if self.request.params.has_key('modtime'):
-            entry_key = ndb.Key('ModTime', 'modtime', parent=key)
+            entry_key = ndb.Key('Modtime', 'modtime', parent=key)
             logging.info("entry_key: %s" % entry_key)
             entry = entry_key.get()
             self.jsonReply(entry.hashify())
@@ -231,7 +247,7 @@ class KoiraHandler(HardenedHandler):
             auto.uros = dog.sukupuoli == 'uros'
             auto.put()
 
-        ndb.Key('ModTime', 'modtime', parent=dog.key).get().put()
+        ndb.Key('Modtime', 'modtime', parent=dog.key).get().put()
 
         self.jsonReply(dog.hashify())
 
@@ -431,7 +447,8 @@ config['webapp2_extras.sessions'] = {
     }
 
 app = webapp2.WSGIApplication(
-    [("/Koira", KoiraCollectionHandler),
+    [("/Modtime/([^/]+)", ModtimeHandler),
+     ("/Koira", KoiraCollectionHandler),
      ("/Koira/([^/]+)", KoiraHandler),
      ("/KoiraAutoComplete", KoiraAutoCompleteHandler),
      ("/Terveyskysely", TerveyskyselyHandler),
