@@ -172,7 +172,7 @@ class Koira(ndb.Model, SignedResource):
 
     @staticmethod
     def canonical (s):
-        return s.lower().replace("'", "")
+        return s.lower().replace("'", "").replace("-", " ")
 
     def canonical_name(self):
         return Koira.canonical(self.virallinen_nimi)
