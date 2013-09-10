@@ -5,6 +5,11 @@
 
 <h2>{{koira.virallinen_nimi}}</h2>
 
+Sukupolvia: <input type="text" 
+		   ng-model="generations_text"
+		   ng-change="updateGenerations()"
+		   style="width: 2em">
+
 <table border="1">
   <tr ng-repeat="row in pedigree">
     <td ng-repeat="element in row"

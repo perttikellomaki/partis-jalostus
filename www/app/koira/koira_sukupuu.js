@@ -2,30 +2,46 @@ function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService, SidepanelService)
     $scope.sidepanel = SidepanelService.get();
     $scope.sidepanel.selection = 'sukupuu';
 
-    var generations = 3;
-    var dog_grid = []
-    var arr = []
-    for (var r=0; r < Math.pow(2,generations); r++) {
-	var row = [];
-	var dog_grid_row = [];
-	for (var c=0; c < generations; c++) {
-	    var rowspan = Math.pow(2, generations-c);
-	    entry = {rowspan: rowspan,
-		     sex: Math.floor(r / rowspan) % 2,
-		     descendant:
-		     Math.floor(r/(2*rowspan))*2*rowspan,
-		     row: r,
-		     col: c}
-	    if ((r % Math.pow(2, generations-c))==0) {
-		row.push(entry);
+    function updatePedigree (generations) {
+	console.log("upd " + generations);
+	var dog_grid = []
+	var arr = []
+	for (var r=0; r < Math.pow(2,generations-1); r++) {
+	    var row = [];
+	    var dog_grid_row = [];
+	    for (var c=0; c < generations; c++) {
+		var rowspan = Math.pow(2, generations-c);
+		entry = {rowspan: rowspan,
+			 sex: Math.floor(r / rowspan) % 2,
+			 descendant:
+			 Math.floor(r/(2*rowspan))*2*rowspan,
+			 row: r,
+			 col: c}
+		if ((r % Math.pow(2, generations-c))==0) {
+		    row.push(entry);
+		}
+		dog_grid_row.push({});
+		console.log(r + "," + c)
 	    }
-	    dog_grid_row.push({});
+	    arr.push(row);
+	    dog_grid.push(dog_grid_row);
 	}
-	arr.push(row);
-	dog_grid.push(dog_grid_row);
+	$scope.pedigree = arr;
+	$scope.dog_grid = dog_grid;
     }
-    $scope.pedigree = arr;
-    $scope.dog_grid = dog_grid;
+
+    $scope.generations_text = "3";
+    console.log("CTRL")
+    updatePedigree(4);
+    
+    $scope.updateGenerations = function () {
+	console.log("s.gens: " + $scope.generations_text)
+	var gens = parseInt($scope.generations_text);
+	if (gens != NaN && gens > 2 && gens < 8) {
+	    console.log("gens: " + gens)
+	    updatePedigree(gens+1);
+	}
+    }
 
     $scope.koira
 	= KoiraService.get({uri: '/Koira/' + $routeParams.key});
