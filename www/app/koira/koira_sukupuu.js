@@ -1,27 +1,25 @@
-function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService, SidepanelService) {
+function KoiraSukupuuCtrl ($scope, $routeParams, $timeout, KoiraService, SidepanelService) {
     $scope.sidepanel = SidepanelService.get();
     $scope.sidepanel.selection = 'sukupuu';
 
     function updatePedigree (generations) {
-	console.log("upd " + generations);
 	var dog_grid = []
 	var arr = []
 	for (var r=0; r < Math.pow(2,generations-1); r++) {
 	    var row = [];
 	    var dog_grid_row = [];
 	    for (var c=0; c < generations; c++) {
-		var rowspan = Math.pow(2, generations-c);
+		var rowspan = Math.pow(2, generations-c-1);
 		entry = {rowspan: rowspan,
 			 sex: Math.floor(r / rowspan) % 2,
 			 descendant:
 			 Math.floor(r/(2*rowspan))*2*rowspan,
 			 row: r,
 			 col: c}
-		if ((r % Math.pow(2, generations-c))==0) {
+		if ((r % Math.pow(2, generations-c-1))==0) {
 		    row.push(entry);
 		}
 		dog_grid_row.push({});
-		console.log(r + "," + c)
 	    }
 	    arr.push(row);
 	    dog_grid.push(dog_grid_row);
@@ -31,15 +29,20 @@ function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService, SidepanelService)
     }
 
     $scope.generations_text = "3";
-    console.log("CTRL")
     updatePedigree(4);
     
     $scope.updateGenerations = function () {
-	console.log("s.gens: " + $scope.generations_text)
 	var gens = parseInt($scope.generations_text);
-	if (gens != NaN && gens > 2 && gens < 8) {
-	    console.log("gens: " + gens)
-	    updatePedigree(gens+1);
+	if (gens != NaN && gens > 2) {
+	    if (gens < 6) {
+		updatePedigree(gens+1);
+	    } else {
+		$scope.status = "Muodostetaan...";
+		$timeout(function () {
+		    updatePedigree(gens+1);
+		    $scope.status = "Muodostetaan... valmis";
+		}, 500);
+	    }
 	}
     }
 
@@ -57,7 +60,7 @@ function KoiraSukupuuCtrl ($scope, $routeParams, KoiraService, SidepanelService)
 	$scope.editing = false;
     }
 }
-KoiraSukupuuCtrl.$inject = ['$scope', '$routeParams', 'KoiraService', 'SidepanelService'];
+KoiraSukupuuCtrl.$inject = ['$scope', '$routeParams', '$timeout', 'KoiraService', 'SidepanelService'];
 
 function PedigreeCellCtrl ($scope, $location, KoiraService) {
     $scope.this_cell_dog = {};
@@ -126,7 +129,6 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 		    var dog = KoiraService.query({virallinen_nimi: $scope.name});
 		    dog.$then(function (response) {
 			var dogs = response.resource;
-			console.log("Looked for " + $scope.name + " found " + JSON.stringify(dogs));
 			if (dogs.length == 0) {
 			    if (confirm("Koiraa "
 					+ $scope.name
@@ -137,14 +139,12 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 				    {virallinen_nimi: $scope.name,
 				     sukupuoli: $scope.element.sex == 0 ? 'uros' : 'narttu'},
 				    function (new_dog) {
-					console.log("new_dog: " + JSON.stringify(new_dog));
 					var descendant = $scope.dog_grid[desc_row][desc_col];
 					if ($scope.element.sex == 0) {
 					    descendant.isa = new_dog.uri;
 					} else {
 					    descendant.ema = new_dog.uri;
 					}
-					console.log("saving " + JSON.stringify(descendant))
 					descendant.$save({key: uri2key(descendant.uri)});
 				    });
 			    }
@@ -157,7 +157,6 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 			    } else {
 				descendant.ema = $scope.this_cell_dog.uri;
 			    }
-			    console.log("Saving " + JSON.stringify(descendant));
 			    descendant.$save({key: uri2key(descendant.uri)});
 			}
 		    });
