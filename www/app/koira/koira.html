@@ -57,7 +57,7 @@
       <br>
       <span ng-show="koira_show_history" class="history" ng-repeat="h in koira_history">
 	<span ng-controller="KoiraHistoryCtrl">
-	  {{h.virallinen_nimi}}, {{h.kutsumanimi}}, {{h.kennel}}, {{h.sukupuoli}}, {{h.syntymavuosi}}, {{h.syntymapaiva}}, isä {{h_isa.virallinen_nimi}}, emä {{h_ema.virallinen_nimi}},
+	  {{h.virallinen_nimi}}, {{h.kutsumanimi}}, {{h.kennel}}, {{h.sukupuoli}}, {{h.syntymavuosi}}, {{h.syntymapaiva}}, {{h_isa.virallinen_nimi}}, {{h_ema.virallinen_nimi}},
 	  ({{h.author_nick}}
 	  {{h_timestamp | date:'d.M.yyyy H:mm'}})<br>
 	</span>
