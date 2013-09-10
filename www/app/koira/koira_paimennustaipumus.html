@@ -1,0 +1,36 @@
+<button class="btn pull-right" ng-click="newTest()">Uusi</button>
+<h2>{{koira.virallinen_nimi}}</h2>
+
+<h3>Epäviralliset paimennustaipumuskokeet</h3>
+
+
+<div class="well" 
+     ng-repeat="test in tests"
+     ng-controller="YhdistysPaimennustaipumusCtrl">
+  <form>
+    <button class="btn pull-right" ng-show="editing" ng-click="save()">Tallenna</button>
+    <button class="btn pull-right" ng-show="!editing" ng-click="edit()">Muuta</button>
+    <label>Paikka</label>
+    <input type="text" ng-readonly="!editing" ng-model="test.paikka"/>
+    <label>Päivä</label>
+    <input ui-date="dateOptions"
+	   ng-show="editing"
+	   ng-model="test_date"
+	   ng-change="test.paiva = dateToYYYYMMDD(test_date)"
+	   >
+    <input type="text" ng-show="!editing" readonly ng-model="test.paiva"/>
+    <label>Tuomari</label>
+    <input type="text" ng-readonly="!editing" ng-model="test.tuomari"/>
+    <label>Kiinnostus</label>
+    <input type="text" ng-readonly="!editing" ng-model="test.kiinnostus"/>
+    <label>Luontainen taipumus</label>
+    <input type="text" ng-readonly="!editing" ng-model="test.taipumus"/>
+    <label>Henkinen kestävyys</label>
+    <input type="text" ng-readonly="!editing" ng-model="test.henkinen_kestavyys"/>
+    <label>Ohjattavuus</label>
+    <input type="text" ng-readonly="!editing" ng-model="test.ohjattavuus"/>
+    <label>Kommentit</label>
+    <textarea ng-readonly="!editing" ng-model="test.kommentit"></textarea>
+  </form>
+<span>Tallentaja: {{test.author_nick}} {{test.timestamp | date:'d.M.yyyy H:mm'}}</span>
+</div>

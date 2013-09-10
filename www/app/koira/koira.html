@@ -1,16 +1,3 @@
-
-<script type="text/ng-template" id="paimennus_input">
-  <span ng-show="entry">
-    Kiinnostus <input ng-model="entry.resource.kiinnostus"/><br>
-    Luontainen taipumus <input ng-model="entry.resource.taipumus"/><br>
-    Henkinen kestävyys <input ng-model="entry.resource.henkinen_kestavyys"/><br>
-    Ohjattavuus <input ng-model="entry.resource.ohjattavuus"/><br>
-    Tuomari <input ng-model="entry.resource.tuomari"/><br>
-    Paikka <input ng-model="entry.resource.paikka"/><br>
-    Päivä <input ng-model="entry.resource.paiva"/><br>
-  </span>
-</script>
-
 <div ng-show="sidepanel.selection == '' || sidepanel.selection == 'perustiedot'">
   <button class="pull-right btn" ng-show="editing" ng-click="save()">Tallenna</button>
   <button class="pull-right btn" ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
@@ -63,12 +50,6 @@
 	</span>
       </span>
     </span>
-    <div style="background: AliceBlue;" ng-controller="YhdistysPaimennustaipumusCtrl">
-      Paimennustaipumuskoe: 
-      <span ng-show="tests.length == 0">ei testattu</span>
-      <div ng-repeat="test in tests">
-      </div>
-    </div>
   </form>
 </div>
 

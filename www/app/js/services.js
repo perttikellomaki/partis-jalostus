@@ -54,7 +54,8 @@ angular.module('myApp.services', [])
 				ohjattavuus: '@ohjattavuus',
 				tuomari: '@tuomari',
 				paikka: '@paikka',
-				paiva: '@paiva'}));
+				paiva: '@paiva',
+				kommentit: '@kommentit'}));
 	     })
     .factory('TerveyskyselyService',
 	     function ($resource) {

@@ -194,6 +194,7 @@ class YhdistysPaimennustaipumus(ndb.Model, SignedResource):
     tuomari =            field(d, 'tuomari', ndb.StringProperty())
     paikka =             field(d, 'paikka', ndb.StringProperty())
     paiva =              field(d, 'paiva', ndb.DateProperty())
+    kommentit =          field(d, 'kommentit', ndb.StringProperty())
 
     def archive(self):
         """Create archival copy"""
