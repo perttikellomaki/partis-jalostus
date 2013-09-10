@@ -1,7 +1,6 @@
 import time
 import logging
 from google.appengine.ext import ndb
-from google.appengine.ext.ndb import polymodel
 
 class KoiraAutocomplete(ndb.Model):
     virallinen_nimi = ndb.StringProperty()
@@ -18,7 +17,7 @@ class Modtime(ndb.Model):
     def hashify(self):
         return {'modtime': str(time.mktime(self.modtime.timetuple()))}
 
-class SignedResource(polymodel.PolyModel):
+class SignedResource(object):
     d = {}    # dictonary for collecting fields
     author =       field(d, 'author', ndb.StringProperty())
     author_nick =  field(d, 'author_nick', ndb.StringProperty())
@@ -153,7 +152,7 @@ class SignedResource(polymodel.PolyModel):
         return "%s/%s" % (self.uriPrefix(), self.key.urlsafe())
 
 
-class Koira(SignedResource):
+class Koira(ndb.Model, SignedResource):
     d = dict(SignedResource.d.items())
     virallinen_nimi = field(d, 'virallinen_nimi', ndb.StringProperty())
     kutsumanimi =     field(d, 'kutsumanimi', ndb.StringProperty())
@@ -169,14 +168,14 @@ class Koira(SignedResource):
         copy = Koira()
         return self.archive_fields(copy)
 
-class Terveyskysely(SignedResource):
+class Terveyskysely(ndb.Model, SignedResource):
     d = dict(SignedResource.d.items())
     virallinen_nimi    = field(d, 'virallinen_nimi', ndb.StringProperty())
     autoimmuunisairaus = field(d, 'autoimmuunisairaus', ndb.BooleanProperty())
     slo                = field(d, 'slo', ndb.BooleanProperty())
     imha               = field(d, 'imha', ndb.BooleanProperty())
 
-class YhdistysPaimennustaipumus(SignedResource):
+class YhdistysPaimennustaipumus(ndb.Model, SignedResource):
     d = dict(SignedResource.d.items())
     koira =              field(d, 'koira', ndb.KeyProperty(), uri_prefix="/Koira")
     kiinnostus =         field(d, 'kiinnostus', ndb.IntegerProperty())

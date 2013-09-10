@@ -102,8 +102,9 @@ class LogoutHandler(HardenedHandler):
 
 class HistoryHandler(HardenedHandler):
     def get_(self, user, key):
+        entity = ndb.Key(urlsafe=key).get()
         self.genericGetCollection(
-            DatastoreClasses.SignedResource.gql(
+            entity.__class__.gql(
                 "WHERE archive_copy_of = KEY(:1) ORDER BY timestamp DESC",
                 key))
 
@@ -148,10 +149,10 @@ Voit kirjautua osoitteellasi %s ja salasanalla %s
 
 class CompactHistoryHandler(webapp2.RequestHandler):
     def post(self, key):
-        history = DatastoreClasses.SignedResource.gql(
+        top = ndb.Key(urlsafe=key).get()
+        history = top.__class__.gql(
             "WHERE archive_copy_of = KEY(:1) ORDER BY timestamp DESC",
             key)
-        top = ndb.Key(urlsafe=key).get()
         to_delete = []
         for item in history:
             if top.subsumes(item):
