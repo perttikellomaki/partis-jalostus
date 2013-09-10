@@ -1,4 +1,6 @@
 import time
+import dateutil
+import dateutil.parser
 import logging
 from google.appengine.ext import ndb
 
@@ -72,7 +74,7 @@ class SignedResource(object):
                     try:
                         field.__set__(self, dateutil.parser.parse(params[name]))
                     except:
-                        pass
+                        logging.error("Error setting birthday from %s" % params[name])
                 elif isinstance(field, ndb.KeyProperty):
                     try:
                         key = params[name].split("/")[2]
