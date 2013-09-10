@@ -36,10 +36,10 @@ class KoiraAutoCompleteHandler(HardenedHandler):
             query = ndb.gql("SELECT * FROM KoiraAutocomplete "
                             "WHERE uros = :1 AND canonical >= :2",
                             self.request.params['sukupuoli'] == 'uros',
-                            self.request.params['prefix'].lower())
+                            DatastoreClasses.Koira.canonical(self.request.params['prefix']))
         else:
             query = ndb.gql("SELECT * FROM KoiraAutocomplete WHERE canonical >= :1",
-                            self.request.params['prefix'].lower())
+                            DatastoreClasses.Koira.canonical(self.request.params['prefix']))
         maxlen = 5
         data = []
         for entity in query:

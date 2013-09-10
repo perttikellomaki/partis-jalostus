@@ -27,7 +27,7 @@ class KoiraCollectionHandler(HardenedHandler):
         autocomplete = KoiraAutocomplete(
             id="autocomplete", 
             virallinen_nimi=dog.virallinen_nimi,
-            canonical = dog.virallinen_nimi.lower(),
+            canonical = dog.canonical_name(),
             uros = dog.sukupuoli == 'uros',
             parent=dog.key)
         autocomplete.put()
@@ -58,7 +58,7 @@ class KoiraHandler(HardenedHandler):
         if dog.virallinen_nimi != name or dog.sukupuoli != sex:
             auto = ndb.Key('KoiraAutocomplete', 'autocomplete', parent=dog.key).get()
             auto.virallinen_nimi = dog.virallinen_nimi
-            auto.canonical = dog.virallinen_nimi.lower()
+            auto.canonical = dog.canonical_name()
             auto.uros = dog.sukupuoli == 'uros'
             auto.put()
 
