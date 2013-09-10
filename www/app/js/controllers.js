@@ -3,7 +3,11 @@
 /* Controllers */
 
 function uri2key (uri) {
-    return uri.split("/")[2];
+    if (uri == undefined) {
+	return undefined;
+    } else {
+	return uri.split("/")[2];
+    }
 }
 
 function NavListController($scope, $location) {
