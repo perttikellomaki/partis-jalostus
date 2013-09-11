@@ -2,7 +2,7 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'ngResource', 'ui.bootstrap', 'ui.date', 'ngGrid']).
+angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'ngResource', 'ui.bootstrap', 'ui.date', 'ngGrid', 'LocalStorageModule']).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/etusivu', {templateUrl: 'etusivu/etusivu.html', controller: EtusivuCtrl});
     $routeProvider.when('/koirat', {templateUrl: 'partials/koirat.html', controller: KoiratCtrl});

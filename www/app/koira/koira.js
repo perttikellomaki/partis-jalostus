@@ -10,11 +10,9 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 
     $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
     $scope.birthday = {};
-    $scope.koira = KoiraService.get({key: $routeParams.key});
-
-    $scope.koira.$then(
-	function (response) {
-	    var koira = response.resource;
+    KoiraService.get({uri: '/Koira/' + $routeParams.key})
+	.then(function (koira) {
+	    $scope.koira = koira;
 	    $scope.history_target = koira.uri;
 	    if (koira.syntymapaiva != undefined 
 		&& koira.syntymapaiva.length > 0) {
@@ -36,7 +34,9 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
     $scope.$watch(
 	"selected_sex.sex",
 	function (new_val, old_val) {
-	    $scope.koira.sukupuoli = new_val;
+	    if (new_val != undefined) {
+		$scope.koira.sukupuoli = new_val;
+	    }
 	});		  
 
     $scope.$watch(
@@ -47,7 +47,6 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 		    new_val.getFullYear()
 		    + "-" + (new_val.getMonth() + 1)
 		    + "-" + new_val.getDate();
-		console.log($scope.koira.syntymapaiva);
 		$scope.birthday.date_string = 
 		    new_val.getDate()
 		    + "." + (new_val.getMonth() + 1)
@@ -62,8 +61,7 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	    if (new_val != undefined 
 		&& new_val.length > 0) {
 		KoiraService.get({uri: new_val})
-		    .$then(function (response) {
-			var isa = response.resource;
+		    .then(function (isa) {
 			$scope.isa_nimi = isa.virallinen_nimi;
 		    });
 	    }
@@ -75,8 +73,7 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	    if (new_val != undefined 
 		&& new_val.length > 0) {
 		KoiraService.get({uri: new_val})
-		    .$then(function (response) {
-			var ema = response.resource;
+		    .then(function (ema) {
 			$scope.ema_nimi = ema.virallinen_nimi;
 		    });
 	    }
@@ -88,8 +85,7 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	    if (new_val != undefined 
 		&& new_val.length > 0) {
 		KoiraService.get({uri: new_val})
-		    .$then(function (response) {
-			var ema = response.resource;
+		    .then(function (ema) {
 			$scope.ema_nimi = ema.virallinen_nimi;
 		    });
 	    }
@@ -107,23 +103,21 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 		    if (dogs.length == 0) {
 			if (confirm("Emää ei löydy tietokannasta. Lisätäänkö?")) {
 			    var inserted = KoiraService.makeNew();
-			    inserted.$save(
-				{virallinen_nimi: $scope.ema_nimi,
-				 sukupuoli: 'narttu'},
-				function (ema) {
-				    $scope.koira.ema = ema.uri;
-				    console.log($scope.koira);
-				    $scope.koira.$save({key: $routeParams.key});
-				});
+			    KoiraService.save(inserted,
+					      {virallinen_nimi: $scope.ema_nimi,
+					       sukupuoli: 'narttu'},
+					      function (ema) {
+						  $scope.koira.ema = ema.uri;
+						  KoiraService.save($scope.koira, {key: $routeParams.key});
+					      });
 			}
 		    } else if (dogs.length == 1) {
 			$scope.koira.ema = dogs[0].uri;
-			console.log($scope.koira);
-			$scope.koira.$save({key: $routeParams.key});
+			KoiraService.save($scope.koira, {key: $routeParams.key});
 		    }
 		})
 	    } else {
-		$scope.koira.$save({key: $routeParams.key});
+		KoiraService.save($scope.koira, {key: $routeParams.key});
 	    }
 	}
 
@@ -134,18 +128,16 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 		if (dogs.length == 0) {
 		    if (confirm("Isää ei löydy tietokannasta. Lisätäänkö?")) {
 			var inserted = KoiraService.makeNew();
-			inserted.$save(
-			    {virallinen_nimi: $scope.isa_nimi,
-			     sukupuoli: 'uros'},
-			    function (isa) {
-				$scope.koira.isa = isa.uri;
-				console.log($scope.koira);
-				handleEma();
-			    });
+			KoiraService.save(inserted,
+					  {virallinen_nimi: $scope.isa_nimi,
+					   sukupuoli: 'uros'},
+					  function (isa) {
+					      $scope.koira.isa = isa.uri;
+					      handleEma();
+					  });
 		    }
 		} else if (dogs.length == 1) {
 		    $scope.koira.isa = dogs[0].uri;
-		    console.log($scope.koira);
 		    handleEma();
 		}
 	    })
@@ -198,10 +190,11 @@ function UusiKoiraCtrl ($scope, $location, KoiraService) {
     $scope.selected = $scope.sexes[0];
     $scope.koira = KoiraService.makeNew();
     $scope.save = function () { 
-	$scope.koira.$save({key: '', sukupuoli: $scope.selected.sex},
-			   function (koira) {
-			       $location.path("/koira/perustiedot" + koira.uri);
-			   });
+	KoiraService.save($scope.koira, 
+			  {key: '', sukupuoli: $scope.selected.sex},
+			  function (koira) {
+			      $location.path("/koira/perustiedot" + koira.uri);
+			  });
     }
 }
 UusiKoiraCtrl.$inject = ['$scope', '$location', 'KoiraService'];

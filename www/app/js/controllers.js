@@ -122,8 +122,8 @@ function HistoryItemCtrl ($scope, KoiraService) {
 		    var uri = entry.value;
 		    entry.value = '';
 		    KoiraService.get({uri: uri})
-			.$then(function (response) {
-			    entry.value = response.resource.virallinen_nimi;
+			.then(function (dog) {
+			    entry.value = dog.virallinen_nimi;
 			    console.log(entry);
 			})
 		}
