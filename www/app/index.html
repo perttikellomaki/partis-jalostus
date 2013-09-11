@@ -8,10 +8,8 @@
 </head>
 <body>
 <div id="header"><!-- begin header -->
-  <h1>PROTOTYYPPI Jalostustietokanta -- Suomen Partacolliet ry.</h1>
+  <h1>Jalostustietokanta -- Suomen Partacolliet ry.</h1>
 
-  TÄMÄ TIETOKANTA ON KOEKÄYTÖSSÄ JA SAATETAAN TYHJENTÄÄ ILMAN VAROITUKSIA.
-  <br>
   <span ng-controller="LoginStatusCtrl">
     <span ng-show="login_status.logged_in">
       Olet kirjautunut käyttäjänä {{login_status.nick}} <a href="/Logout">Kirjaudu ulos</a>
@@ -25,7 +23,7 @@
       <div class="navbar-inner">
 	<ul class="nav">
 	  <li ng-class="'nav-menu-btn ' + navClass('etusivu')"><a href="#/etusivu">Etusivu</a></li>
-	  <li ng-class="'nav-menu-btn ' + navClass('koira') + navClass('uusi_koira')"><a href="#/uusi_koira">Koira</a></li>
+	  <li ng-class="'nav-menu-btn ' + navClass('koira') + navClass('koira_etusivu')"><a href="#/koira_etusivu">Koirat</a></li>
 	  <li ng-class="'nav-menu-btn ' + navClass('kirjaudu')"><a href="#/login">Kirjaudu</a></li>
 	</ul>
       </div>
@@ -56,9 +54,11 @@
 
 <script type="text/ng-template" id="_sidepanel.html">
 </script>
+<script type="text/ng-template" id="login_sidepanel.html">
+</script>
 <script type="text/ng-template" id="etusivu_sidepanel.html">
 </script>
-<script type="text/ng-template" id="uusi_koira_sidepanel.html">
+<script type="text/ng-template" id="koira_etusivu_sidepanel.html">
 </script>
 
 <script type="text/ng-template" id="koira_sidepanel.html">
@@ -67,7 +67,9 @@
     <li ng-class="navClass('perustiedot') + navClass('')"><a ng-click="gotoSubview('perustiedot')">Perustiedot</a></li>
     <li ng-class="navClass('sukupuu')"><a ng-click="gotoSubview('sukupuu')">Sukupuu</a></li>
     <li ng-class="navClass('paimennustaipumus')"><a ng-click="gotoSubview('paimennustaipumus')">Paimennustaipumus</a></li>
+<!--
     <li ng-class="navClass('terveyskysely')"><a ng-click="gotoSubview('terveyskysely')">Terveyskysely</a></li>
+-->
   </ul>
 </script>
 
@@ -109,6 +111,7 @@
   <script src="js/directives.js"></script>
   <script src="etusivu/etusivu.js"></script>
   <script src="koira/koira.js"></script>
+  <script src="koira/koira_etusivu.js"></script>
   <script src="koira/koira_sukupuu.js"></script>
   <script src="koira/koira_paimennustaipumus.js"></script>
 </body>

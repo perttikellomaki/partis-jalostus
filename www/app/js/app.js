@@ -5,7 +5,7 @@
 angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'ngResource', 'ui.bootstrap', 'ui.date', 'ngGrid', 'LocalStorageModule']).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/etusivu', {templateUrl: 'etusivu/etusivu.html', controller: EtusivuCtrl});
-    $routeProvider.when('/uusi_koira', {templateUrl: 'koira/uusi_koira.html', controller: UusiKoiraCtrl});
+    $routeProvider.when('/koira_etusivu', {templateUrl: 'koira/koira_etusivu.html', controller: KoiraEtusivuCtrl});
     $routeProvider.when('/koira/perustiedot/Koira/:key', {templateUrl: 'koira/koira.html', controller: KoiraPerustiedotCtrl});
     $routeProvider.when('/koira/sukupuu/Koira/:key', {templateUrl: 'koira/koira_sukupuu.html', controller: KoiraSukupuuCtrl});
     $routeProvider.when('/koira/paimennustaipumus/Koira/:key', {templateUrl: 'koira/koira_paimennustaipumus.html', controller: KoiraPaimennustaipumusCtrl});

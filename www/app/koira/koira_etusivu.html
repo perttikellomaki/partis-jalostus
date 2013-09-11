@@ -1,0 +1,28 @@
+<div class="well" ng-controller="SearchKoiraCtrl">
+  <form>
+    <fieldset>
+      <legend>Etsi koira</legend>
+      <label>Virallinen nimi /muu tunniste</label>
+	<input type="text" 
+		     ng-model="koira"
+		     typeahead="suggestion for suggestion in typeahead($viewValue)">
+	<button class="btn" ng-click="gotoDog(koira)">Hae</button>
+    </fieldset>
+  </form>
+</div>
+
+<div class="well">
+  <form ng-controller="UusiKoiraCtrl">
+    <fieldset>
+      <legend>Uusi koira</legend>
+      <label>Virallinen nimi / muu tunniste</label>
+      <input type="text" ng-model="koira.virallinen_nimi">
+      <label>Sukupuoli</label>
+      <select ng-model="selected"
+	      ng-options="selected.sex for selected in sexes">
+      </select>
+      <label></label>
+      <button class="btn" ng-click="save()">Tallenna</button>
+    </fieldset>
+  </form>
+</div>
