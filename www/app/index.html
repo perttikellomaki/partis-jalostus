@@ -24,6 +24,7 @@
 	<ul class="nav">
 	  <li ng-class="'nav-menu-btn ' + navClass('etusivu')"><a href="#/etusivu">Etusivu</a></li>
 	  <li ng-class="'nav-menu-btn ' + navClass('koira') + navClass('koira_etusivu')"><a href="#/koira_etusivu">Koirat</a></li>
+	  <li ng-class="'nav-menu-btn ' + navClass('kennel') + navClass('kennel_etusivu')"><a href="#/kennel_etusivu">Kennelit</a></li>
 	  <li ng-class="'nav-menu-btn ' + navClass('kirjaudu')"><a href="#/login">Kirjaudu</a></li>
 	</ul>
       </div>
@@ -73,6 +74,9 @@
   </ul>
 </script>
 
+<script type="text/ng-template" id="kennel_etusivu_sidepanel.html">
+</script>
+
 <script type="text/ng-template" id="history_renderer">
   <div ng-if="history_target != undefined">
     <form>
@@ -114,5 +118,6 @@
   <script src="koira/koira_etusivu.js"></script>
   <script src="koira/koira_sukupuu.js"></script>
   <script src="koira/koira_paimennustaipumus.js"></script>
+  <script src="kennel/kennel_etusivu.js"></script>
 </body>
 </html>
