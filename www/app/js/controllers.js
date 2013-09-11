@@ -104,3 +104,32 @@ function LeftcolCtrl ($scope, $location, SidepanelService) {
 
 }
 LeftcolCtrl.$inject = ['$scope', '$location', 'SidepanelService'];
+
+function HistoryCtrl ($scope, $resource) {
+    var HistoryService = $resource('/History/:key');
+    $scope.history = HistoryService.query({key: uri2key($scope.history_target)});
+}
+HistoryCtrl.$inject = ['$scope', '$resource'];
+
+function HistoryItemCtrl ($scope, KoiraService) {
+    var ignore_keys = ['author_nick', 'author', 'author_email', 'timestamp', 'uri'];
+    $scope.entries = [];
+    for (var p in $scope.h) {
+	if (p[0] != '$' && ignore_keys.indexOf(p) == -1) {
+	    (function () {
+		var entry = {key: p, value: $scope.h[p]};
+		if (entry.key == 'isa' || entry.key == 'ema' || entry.key == 'koira') {
+		    var uri = entry.value;
+		    entry.value = '';
+		    KoiraService.get({uri: uri})
+			.$then(function (response) {
+			    entry.value = response.resource.virallinen_nimi;
+			    console.log(entry);
+			})
+		}
+		$scope.entries.push(entry);
+	    })();
+	}
+    }
+}
+HistoryItemCtrl.$inject = ['$scope', 'KoiraService'];

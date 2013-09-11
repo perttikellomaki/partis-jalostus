@@ -33,4 +33,5 @@
     <textarea ng-readonly="!editing" ng-model="test.kommentit"></textarea>
   </form>
 <span>Tallentaja: {{test.author_nick}} {{test.timestamp | date:'d.M.yyyy H:mm'}}</span>
+<div ng-include="'history_renderer'"></div>
 </div>

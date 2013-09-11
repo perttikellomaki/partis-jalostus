@@ -70,11 +70,21 @@
     <li ng-class="navClass('paimennustaipumus')"><a ng-click="gotoSubview('paimennustaipumus')">Paimennustaipumus</a></li>
     <li ng-class="navClass('terveyskysely')"><a ng-click="gotoSubview('terveyskysely')">Terveyskysely</a></li>
   </ul>
-<!--
-  <button class="sidepanel-button" ng-click="setSelection('paimennustaipumus')">Paimennustaipumus</button>
--->
 </script>
 
+<script type="text/ng-template" id="history_renderer">
+  <div ng-if="history_target != undefined">
+    <form>
+      <label class="checkbox"><input type="checkbox" ng-model="show_history">Muutoshistoria</label>
+    </form>
+    <div ng-if="show_history" ng-controller="HistoryCtrl">
+      <div class="well" ng-repeat="h in history" ng-controller="HistoryItemCtrl">
+	{{h.author_nick}} {{h.timestamp | date:'d.M.yyyy H:mm'}} <br>
+	<span ng-repeat="entry in entries">{{entry.key}}: {{entry.value}}, </span>
+      </div>
+    </div>
+  </div>
+</script>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>

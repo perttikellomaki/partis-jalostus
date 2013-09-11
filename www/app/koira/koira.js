@@ -10,13 +10,12 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 
     $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
     $scope.birthday = {};
-    var history_resource = $resource("/History/:key");
-    $scope.koira_history = history_resource.query({key: $routeParams.key})
     $scope.koira = KoiraService.get({key: $routeParams.key});
 
     $scope.koira.$then(
 	function (response) {
 	    var koira = response.resource;
+	    $scope.history_target = koira.uri;
 	    if (koira.syntymapaiva != undefined 
 		&& koira.syntymapaiva.length > 0) {
 		var date = new Date(koira.syntymapaiva);
@@ -96,7 +95,6 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	    }
 	});
 
-    $scope.koira_show_history = false;
     $scope.editing = false;
     
     $scope.save = function () {
@@ -127,7 +125,6 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	    } else {
 		$scope.koira.$save({key: $routeParams.key});
 	    }
-	    $scope.koira_history = history_resource.query({key: $routeParams.key})
 	}
 
 	if ($scope.isa_nimi != undefined && $scope.isa_nimi.length > 0) {

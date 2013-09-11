@@ -39,17 +39,6 @@
 	   typeahead="suggestion for suggestion in typeaheadNarttu($viewValue)">
     <br>
     <span>Tallentaja: {{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</span>
-    <span ng-show="koira_history.length > 0">
-      <input type="checkbox" ng-model="koira_show_history">Historia
-      <br>
-      <span ng-show="koira_show_history" class="history" ng-repeat="h in koira_history">
-	<span ng-controller="KoiraHistoryCtrl">
-	  {{h.virallinen_nimi}}, {{h.kutsumanimi}}, {{h.kennel}}, {{h.sukupuoli}}, {{h.syntymavuosi}}, {{h.syntymapaiva}}, {{h_isa.virallinen_nimi}}, {{h_ema.virallinen_nimi}},
-	  ({{h.author_nick}}
-	  {{h_timestamp | date:'d.M.yyyy H:mm'}})<br>
-	</span>
-      </span>
-    </span>
   </form>
 </div>
 
@@ -73,3 +62,4 @@
   </div>
 </div>
 
+<div ng-include="'history_renderer'"></div>
