@@ -19,33 +19,6 @@ function NavListController($scope, $location) {
 }
 NavListController.$inject = ['$scope', '$location'];
 
-
-function KoiratCtrl($scope, KoiraService) {
-    $scope.koirat = KoiraService.query({key: ''},
-				       function (nodes) {
-					   var tmp = [];
-					   for (var n in nodes) {
-					       var node = nodes[n];
-					       tmp.push(node);
-					   }
-					   $scope.myData = tmp;
-				       });
-
-    $scope.modtimes = KoiraService.query({key: '', modtime_only: true});
-
-    $scope.myData = [];
-
-    $scope.gridOptions = {data: 'myData',
-			  displaySelectionCheckbox: false,
-			  columnDefs: [{field: 'virallinen_nimi',
-					displayName: 'Virallinen nimi',
-					cellTemplate: '<div><a href="/#/koira{{row.entity.uri}}">{{row.entity[col.field]}}</a></div>'
-				       }
-				       ]
-			 };
-}
-KoiratCtrl.$inject = ['$scope', 'KoiraService'];
-
 function LoginStatusCtrl ($scope, $resource) {
     var resource = $resource("/LoginStatus");
     var status = resource.get();
