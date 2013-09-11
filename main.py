@@ -1,20 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: latin-1 -*-
 #
-#%%import uuid
+import uuid
 import webapp2
 #%%from webapp2_extras import sessions
 #%%from google.appengine.api import app_identity
-#%%from google.appengine.api import mail
-#%%from google.appengine.api import users
+from google.appengine.api import mail
+from google.appengine.api import users
 from google.appengine.ext import ndb
-#%%from google.appengine.ext.ndb import polymodel
-#%%import json
-#%%import os
-#%%import datetime
-#%%import time
-#%%import dateutil
-#%%import dateutil.parser
+import json
 import logging
 from HardenedHandler import HardenedHandler, LocalUser
 import DatastoreClasses
