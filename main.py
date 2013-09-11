@@ -107,6 +107,7 @@ class LoginStatusHandler(HardenedHandler):
         if user:
             self.jsonReply({
                     'logged_in': True,
+                    'is_admin': users.is_current_user_admin(),
                     'nick': user.nickname(),
                     'email': str(user.email())})
         else:
