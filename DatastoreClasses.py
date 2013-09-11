@@ -19,15 +19,12 @@ class Modtime(ndb.Model):
     def hashify(self):
         return {'modtime': str(time.mktime(self.modtime.timetuple()))}
 
-class SignedResource(object):
+class UriAddressable(object):
     d = {}    # dictonary for collecting fields
     author =       field(d, 'author', ndb.StringProperty())
     author_nick =  field(d, 'author_nick', ndb.StringProperty())
     author_email = field(d, 'author_email', ndb.StringProperty())
     timestamp =    field(d, 'timestamp', ndb.DateTimeProperty(auto_now=True))
-
-    # archive_copy_of is intentionally not defined using field()
-    archive_copy_of = ndb.KeyProperty()
 
     def uri(self):
         return "/%s/%s" % (self.__class__.__name__, self.key.urlsafe())
@@ -82,6 +79,44 @@ class SignedResource(object):
                     except:
                         pass
                         
+    def Put(self):
+        """Put to datastore and stamp modtime."""
+        self.put()
+        modtimeKey = ndb.Key('Modtime', 'modtime', parent=self.key)
+        modtimeEntity = modtimeKey.get()
+        if modtimeEntity is None:
+            modtimeEntity = Modtime(id="modtime", parent=self.key)
+        modtimeEntity.put()
+
+    individual_handler_ = None
+    collection_handler_ = None
+
+    @classmethod
+    def individualHandler(cls, handler=None):
+        if handler:
+            cls.individual_handler_ = handler
+        return cls.individual_handler_
+
+    @classmethod
+    def collectionHandler(cls, handler=None):
+        if handler:
+            cls.collection_handler_ = handler
+        return cls.collection_handler_
+
+    @classmethod
+    def UriPrefix(cls):
+        return "/%s" % cls.__name__
+    
+    def uriPrefix(self):
+        return self.__class__.UriPrefix()
+
+    def uri(self):
+        return "%s/%s" % (self.uriPrefix(), self.key.urlsafe())
+
+class SignedResource(UriAddressable):
+    # archive_copy_of is intentionally not defined using field()
+    archive_copy_of = ndb.KeyProperty()
+
                     
     def subsumes(self, item):
         """Return true if self is signed by the same user, and
@@ -118,40 +153,6 @@ class SignedResource(object):
             field.__set__(copy, field.__get__(self, type(self)))
         copy.archive_copy_of = self.key
         return copy
-
-    def Put(self):
-        """Put to datastore and stamp modtime."""
-        self.put()
-        modtimeKey = ndb.Key('Modtime', 'modtime', parent=self.key)
-        modtimeEntity = modtimeKey.get()
-        if modtimeEntity is None:
-            modtimeEntity = Modtime(id="modtime", parent=self.key)
-        modtimeEntity.put()
-
-    individual_handler_ = None
-    collection_handler_ = None
-
-    @classmethod
-    def individualHandler(cls, handler=None):
-        if handler:
-            cls.individual_handler_ = handler
-        return cls.individual_handler_
-
-    @classmethod
-    def collectionHandler(cls, handler=None):
-        if handler:
-            cls.collection_handler_ = handler
-        return cls.collection_handler_
-
-    @classmethod
-    def UriPrefix(cls):
-        return "/%s" % cls.__name__
-    
-    def uriPrefix(self):
-        return self.__class__.UriPrefix()
-
-    def uri(self):
-        return "%s/%s" % (self.uriPrefix(), self.key.urlsafe())
 
 
 class Koira(ndb.Model, SignedResource):
