@@ -203,7 +203,7 @@ function UusiKoiraCtrl ($scope, $location, KoiraService) {
     $scope.save = function () { 
 	$scope.koira.$save({key: '', sukupuoli: $scope.selected.sex},
 			   function (koira) {
-			       $location.path("/koira" + koira.uri);
+			       $location.path("/koira/perustiedot" + koira.uri);
 			   });
     }
 }
