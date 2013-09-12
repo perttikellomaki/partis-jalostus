@@ -3,6 +3,7 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 from HardenedHandler import HardenedHandler
 from DatastoreClasses import Kennels, Kennel
+import Util
 
 class KennelCollectionHandler(HardenedHandler):
     def get_(self, user):
@@ -14,6 +15,7 @@ class KennelCollectionHandler(HardenedHandler):
             parent = Kennels.getSingleton()
             kennel = Kennel(parent=parent)
             kennel.populateFromRequest(self.request.params)
+            kennel.canonical_name = Util.canonical(kennel.nimi)
             kennel.Put()
             self.jsonReply(kennel.hashify())
         else:
@@ -32,6 +34,7 @@ class KennelHandler (HardenedHandler):
         if users.is_current_user_admin():
             kennel = ndb.Key(urlsafe=key).get()
             kennel.populateFromRequest(self.request.params)
+            kennel.canonical_name = Util.canonical(kennel.nimi)
             kennel.Put()
             self.jsonReply(kennel.hashify())
         else:
