@@ -61,6 +61,11 @@ class KoiraHandler(HardenedHandler):
             self.jsonReply(entry.hashify())
         else:
             dog = key.get()
+
+            # FIXME: remove when all dogs have a canonical name
+            dog.canonical_name = Util.canonical(dog.virallinen_nimi)
+            dog.put()
+
             self.jsonReply(dog.hashify())
 
     def post_(self, user, key):
