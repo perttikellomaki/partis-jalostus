@@ -124,6 +124,7 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 		if (confirm("Koiraa "
 			    + $scope.name
 			    + " ei löydy tietokannasta. Lisätäänkö?")) {
+		    // FIXME: dry
 		    $scope.this_cell_dog = KoiraService.makeNew();
 		    $scope.dog_grid[row][col] = $scope.this_cell_dog;
 		    KoiraService.save(
@@ -141,15 +142,46 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 			});
 		}
 	    } else if (dogs.length == 1) {
-		$scope.this_cell_dog = dogs[0];
-		$scope.dog_grid[row][col] = $scope.this_cell_dog;
-		var descendant = $scope.dog_grid[desc_row][desc_col];
-		if ($scope.element.sex == 0) {
-		    descendant.isa = $scope.this_cell_dog.uri;
-		} else {
-		    descendant.ema = $scope.this_cell_dog.uri;
+		var original = $scope.name;
+		if ($scope.name.split(' ').length == 1) {
+		    $scope.name = prompt("Koiran '"
+					 + original
+					 + "' nimessä ei ole kenneliä, ja tietokannassa "
+					 + "on saman niminen koira. Jos tarkoitat "
+					 + "tietokannassa jo olevaa koiraa, jätä nimi ennalleen. "
+					 + "Muussa tapauksessa lisää nimeen jotain, jolla sen "
+					 + "erottaa eri koiraksi (vuosiluku, selite, tms.).",
+					 original);
 		}
-		KoiraService.save(descendant, {key: uri2key(descendant.uri)});
+		if ($scope.name == original) {
+		    $scope.this_cell_dog = dogs[0];
+		    $scope.dog_grid[row][col] = $scope.this_cell_dog;
+		    var descendant = $scope.dog_grid[desc_row][desc_col];
+		    if ($scope.element.sex == 0) {
+			descendant.isa = $scope.this_cell_dog.uri;
+		    } else {
+			descendant.ema = $scope.this_cell_dog.uri;
+		    }
+		    KoiraService.save(descendant, {key: uri2key(descendant.uri)});
+		} else {
+
+		    // FIXME: dry
+		    $scope.this_cell_dog = KoiraService.makeNew();
+		    $scope.dog_grid[row][col] = $scope.this_cell_dog;
+		    KoiraService.save(
+			$scope.this_cell_dog,
+			{virallinen_nimi: $scope.name,
+			 sukupuoli: $scope.element.sex == 0 ? 'uros' : 'narttu'},
+			function (new_dog) {
+			    var descendant = $scope.dog_grid[desc_row][desc_col];
+			    if ($scope.element.sex == 0) {
+				descendant.isa = new_dog.uri;
+			    } else {
+				descendant.ema = new_dog.uri;
+			    }
+			    KoiraService.save(descendant, {key: uri2key(descendant.uri)});
+			});
+		}
 	    }
 	});
     }
