@@ -107,11 +107,15 @@ class HistoryHandler(HardenedHandler):
 class LoginStatusHandler(HardenedHandler):
     def get_(self, user):
         if user:
-            self.jsonReply({
-                    'logged_in': True,
+            info = {'logged_in': True,
                     'is_admin': users.is_current_user_admin(),
                     'nick': user.nickname(),
-                    'email': str(user.email())})
+                    'email': str(user.email())}
+            kennels = DatastoreClasses.Kennel.gql("WHERE kasvattaja_email = :1",
+                                                  str(user.email()))
+            if kennels.count() > 0:
+                info['kennel'] = kennels.get().nimi
+            self.jsonReply(info)
         else:
             self.jsonReply({
                     'logged_in': False,

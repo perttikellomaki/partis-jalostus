@@ -24,6 +24,7 @@ function LoginStatusCtrl ($scope, $rootScope, $resource) {
     var status = resource.get();
     status.$then(function (response) {
 	$rootScope.IS_ADMIN = response.resource.is_admin;
+	$rootScope.KENNEL = response.resource.kennel;
     });
     $scope.login_status = status;
     $scope.$on('LoginStatusChanged', function (event, path) {
