@@ -159,6 +159,15 @@ class CompactHistoryHandler(webapp2.RequestHandler):
         logging.info("CompactHistory : delete %s" % to_delete)
         ndb.delete_multi(to_delete)
 
+class ChangeNotificationCollectionHandler (HardenedHandler):
+    def get_(self, user):
+        if self.request.params.has_key('kennel'):
+            self.genericGetCollection(
+                DatastoreClasses.ChangeNotification.gql("WHERE kennel = :1 ORDER BY timestamp DESC",
+                                                        self.request.params['kennel']))
+
+DatastoreClasses.ChangeNotification.collectionHandler(ChangeNotificationCollectionHandler)
+
 def handlers(classes):
 
     def individual(cls):
@@ -181,6 +190,7 @@ handler_list = (
     handlers(
         [DatastoreClasses.Koira,
          DatastoreClasses.Kennel,
+         DatastoreClasses.ChangeNotification,
          DatastoreClasses.Terveyskysely,
          DatastoreClasses.YhdistysPaimennustaipumus])
     + [("/Modtime/([^/]+)", ModtimeHandler),

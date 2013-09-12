@@ -1,1 +1,7 @@
 <h3>{{kennel.nimi}}</h3>
+
+<div class="well" ng-repeat="change in changes" ng-controller="KennelChangeCtrl">
+  <a ng-href="#/koira/perustiedot{{change.koira}}">{{koira.virallinen_nimi}}</a>: {{change.author_nick}} muutti tietoja {{change.timestamp | date:'d.M.yyyy H:mm'}}.
+</div>
+
+  

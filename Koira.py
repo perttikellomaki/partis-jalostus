@@ -1,7 +1,7 @@
 import logging
 from google.appengine.ext import ndb
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import Koira, KoiraAutocomplete
+from DatastoreClasses import Koira, KoiraAutocomplete, ChangeNotification
 
 class KoiraCollectionHandler(HardenedHandler):
     def get_(self, user):
@@ -31,6 +31,13 @@ class KoiraCollectionHandler(HardenedHandler):
             uros = dog.sukupuoli == 'uros',
             parent=dog.key)
         autocomplete.put()
+
+        ChangeNotification(kennel=dog.kennel, 
+                           is_creation=True, 
+                           koira=dog.key, 
+                           changed_entity=dog.key,
+                           author_nick=user.nickname()).put()
+
         self.jsonReply(dog.hashify())
 
 Koira.collectionHandler(KoiraCollectionHandler)
@@ -50,6 +57,7 @@ class KoiraHandler(HardenedHandler):
 
     def post_(self, user, key):
         dog = ndb.Key(urlsafe=key).get()
+        original_kennel = dog.kennel
         name = dog.virallinen_nimi
         sex = dog.sukupuoli
         dog.populateFromRequest(self.request.params)
@@ -61,6 +69,21 @@ class KoiraHandler(HardenedHandler):
             auto.canonical = dog.canonical_name()
             auto.uros = dog.sukupuoli == 'uros'
             auto.put()
+
+        if (original_kennel is not None 
+            and original_kennel != ''
+            and original_kennel != dog.kennel):
+            
+            # kennel changed, create notification for both original and new kennel
+            ChangeNotification(kennel=original_kennel, 
+                               koira=dog.key, 
+                               changed_entity=dog.key,
+                               author_nick=user.nickname()).put()
+
+        ChangeNotification(kennel=dog.kennel,
+                           koira=dog.key, 
+                           changed_entity=dog.key,
+                           author_nick=user.nickname()).put()
 
         self.jsonReply(dog.hashify())
 

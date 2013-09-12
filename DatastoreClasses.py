@@ -21,6 +21,7 @@ class Modtime(ndb.Model):
 
 class UriAddressable(object):
     d = {}    # dictonary for collecting fields
+    timestamp =    field(d, 'timestamp', ndb.DateTimeProperty(auto_now=True))
 
     def uri(self):
         return "/%s/%s" % (self.__class__.__name__, self.key.urlsafe())
@@ -39,9 +40,12 @@ class UriAddressable(object):
                 if isinstance(field, ndb.StringProperty):
                     res[name] = val
                 elif isinstance(field, ndb.KeyProperty):
-                    res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
+                    if uri_prefix:
+                        res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
+                    else:
+                        res[name] = "/%s/%s" % (val.kind(), val.urlsafe())
                 elif isinstance(field, ndb.DateTimeProperty):
-                    res[name] = val.isoformat()
+                    res[name] = "%sZ" % val.isoformat()
                 else:
                     res[name] = str(val)
 
@@ -114,7 +118,6 @@ class UriAddressable(object):
 class SignedResource(UriAddressable):
     d = dict(UriAddressable.d.items())
 
-    timestamp =    field(d, 'timestamp', ndb.DateTimeProperty(auto_now=True))
     author =       field(d, 'author', ndb.StringProperty())
     author_nick =  field(d, 'author_nick', ndb.StringProperty())
     author_email = field(d, 'author_email', ndb.StringProperty())
@@ -231,3 +234,11 @@ class Kennels (ndb.Model, UriAddressable):
 class Kennel (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     nimi = field(d, 'nimi', ndb.StringProperty())
+
+class ChangeNotification (ndb.Model, UriAddressable):
+    d = dict(UriAddressable.d.items())
+    kennel =         field(d, 'kennel', ndb.StringProperty())
+    is_creation =    field(d, 'is_creation', ndb.BooleanProperty())  # true if entity was created
+    koira =          field(d, 'koira', ndb.KeyProperty())
+    changed_entity = field(d, 'changed_entity', ndb.KeyProperty())
+    author_nick =    field(d, 'author_nick', ndb.StringProperty())
