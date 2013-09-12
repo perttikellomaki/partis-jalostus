@@ -1,7 +1,8 @@
 import logging
 from google.appengine.ext import ndb
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import Koira, KoiraAutocomplete, ChangeNotification
+from DatastoreClasses import Koira, KoiraAutocomplete, ChangeNotification, Kennel
+import Util
 
 class KoiraCollectionHandler(HardenedHandler):
     def get_(self, user):
@@ -21,13 +22,20 @@ class KoiraCollectionHandler(HardenedHandler):
     def post_(self, user):
         dog = Koira()
         dog.populateFromRequest(self.request.params)
+        dog.canonical_name = Util.canonical(dog.virallinen_nimi)
         dog.sign(user)
+
+        for kennel in Kennel.query():
+            if dog.canonical_name.startswith(kennel.canonical_name):
+                dog.kennel = kennel.nimi
+                break;
+
         dog.Put()
 
         autocomplete = KoiraAutocomplete(
             id="autocomplete", 
             virallinen_nimi=dog.virallinen_nimi,
-            canonical = dog.canonical_name(),
+            canonical = dog.canonical_name,
             uros = dog.sukupuoli == 'uros',
             parent=dog.key)
         autocomplete.put()

@@ -174,14 +174,12 @@ class Koira(ndb.Model, SignedResource):
     syntymavuosi =    field(d, 'syntymavuosi', ndb.IntegerProperty())
     isa =             field(d, 'isa', ndb.KeyProperty(), uri_prefix="/Koira")
     ema =             field(d, 'ema', ndb.KeyProperty(), uri_prefix="/Koira")
+    canonical_name =  field(d, 'canonical_name', ndb.StringProperty())
 
     def archive(self):
         """Create archival copy"""
         copy = Koira()
         return self.archive_fields(copy)
-
-    def canonical_name(self):
-        return Util.canonical(self.virallinen_nimi)
 
 class Terveyskysely(ndb.Model, SignedResource):
     d = dict(SignedResource.d.items())
