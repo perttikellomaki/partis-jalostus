@@ -10,8 +10,8 @@ class KoiraAutocomplete(ndb.Model):
     canonical = ndb.StringProperty()
     uros = ndb.BooleanProperty()
 
-def field(d, name, prop, uri_prefix=None):
-    d[name] = (prop, uri_prefix)
+def field(d, name, prop, uri_prefix=None, hashify=True):
+    d[name] = (prop, uri_prefix, hashify)
     return prop
 
 class Modtime(ndb.Model):
@@ -35,9 +35,9 @@ class UriAddressable(object):
         if self.key.parent():
             res['parent'] = self.key.parent().urlsafe()
         for name, info in self.fields().items():
-            field, uri_prefix = info
+            field, uri_prefix, hashify = info
             val = field.__get__(self, type(self))
-            if val:
+            if hashify and val:
                 if isinstance(field, ndb.StringProperty):
                     res[name] = val
                 elif isinstance(field, ndb.KeyProperty):
@@ -59,7 +59,7 @@ class UriAddressable(object):
 
     def populateFromRequest(self, params):
         for name, info in self.fields().items():
-            field, _ = info
+            field, _, _ = info
             if params.has_key(name) and params[name] != 'undefined':
                 if isinstance(field, ndb.StringProperty):
                     field.__set__(self, params[name])
