@@ -11,5 +11,6 @@ KennelMuutoksetCtrl.$inject = ['$scope', '$resource', '$routeParams', 'KennelSer
 
 function KennelChangeCtrl ($scope, KoiraService) {
     $scope.koira = KoiraService.get({uri: $scope.change.koira});
+    $scope.changed_entity_kind = $scope.change.changed_entity.split('/')[1];
 }
 KennelChangeCtrl.$inject = ['$scope', 'KoiraService'];
