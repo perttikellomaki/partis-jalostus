@@ -3,6 +3,7 @@ import dateutil
 import dateutil.parser
 import logging
 from google.appengine.ext import ndb
+import Util
 
 class KoiraAutocomplete(ndb.Model):
     virallinen_nimi = ndb.StringProperty()
@@ -179,12 +180,8 @@ class Koira(ndb.Model, SignedResource):
         copy = Koira()
         return self.archive_fields(copy)
 
-    @staticmethod
-    def canonical (s):
-        return s.lower().replace("'", "").replace("-", " ")
-
     def canonical_name(self):
-        return Koira.canonical(self.virallinen_nimi)
+        return Util.canonical(self.virallinen_nimi)
 
 class Terveyskysely(ndb.Model, SignedResource):
     d = dict(SignedResource.d.items())
