@@ -11,3 +11,10 @@ function KennelEtusivuCtrl ($scope, KennelService) {
     }
 }
 KennelEtusivuCtrl.$inject = ['$scope', 'KennelService'];
+
+function KennelSidepanelCtrl ($scope, $routeParams, $location) {
+    $scope.gotoSubview = function (subview) {
+	$location.path('/kennel/' + subview + '/Kennel/' + $routeParams.key);
+    }
+}
+KennelSidepanelCtrl.$inject = ['$scope', '$routeParams', '$location'];

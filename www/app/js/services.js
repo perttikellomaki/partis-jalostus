@@ -159,7 +159,8 @@ angular.module('myApp.services', [])
 	      function (CachedResourceService, localStorageService) {
 		  return CachedResourceService.make(
 		      '/Kennel/:key',
-		      {nimi: '@nimi'},
+		      {nimi: '@nimi',
+		       kasvattaja_email: '@kasvattaja_email'},
 		      localStorageService);
 	      }])
     .factory('YhdistysPaimennustaipumusService', 

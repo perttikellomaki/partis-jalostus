@@ -228,7 +228,8 @@ class Kennels (ndb.Model, UriAddressable):
 
 class Kennel (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
-    nimi = field(d, 'nimi', ndb.StringProperty())
+    nimi =             field(d, 'nimi', ndb.StringProperty())
+    kasvattaja_email = field(d, 'kasvattaja_email', ndb.StringProperty())
     canonical_name = ndb.StringProperty()
 
 class ChangeNotification (ndb.Model, UriAddressable):

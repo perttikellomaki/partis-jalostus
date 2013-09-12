@@ -80,9 +80,10 @@ class HardenedHandler(BaseSessionHandler):
                 # Make a archive copy, which will be committed to datastore
                 # in jsonReply() if the modification is successful.
                 entity = ndb.Key(urlsafe=path[2]).get()
-                self.archive_copy = entity.archive()
-                logging.info("Created archive copy %s" % self.archive_copy)
-                logging.info("archive_copy_of %s" % self.archive_copy.archive_copy_of)
+                if entity.__dict__.has_key('archive'):
+                    self.archive_copy = entity.archive()
+                    logging.info("Created archive copy %s" % self.archive_copy)
+                    logging.info("archive_copy_of %s" % self.archive_copy.archive_copy_of)
 
             self.post_(self.currentUser(),
                        *args, **kwargs)
