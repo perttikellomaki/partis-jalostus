@@ -21,10 +21,6 @@ class Modtime(ndb.Model):
 
 class UriAddressable(object):
     d = {}    # dictonary for collecting fields
-    author =       field(d, 'author', ndb.StringProperty())
-    author_nick =  field(d, 'author_nick', ndb.StringProperty())
-    author_email = field(d, 'author_email', ndb.StringProperty())
-    timestamp =    field(d, 'timestamp', ndb.DateTimeProperty(auto_now=True))
 
     def uri(self):
         return "/%s/%s" % (self.__class__.__name__, self.key.urlsafe())
@@ -34,6 +30,8 @@ class UriAddressable(object):
 
     def hashify(self):
         res = {'uri': self.uri()}
+        if self.key.parent():
+            res['parent'] = self.key.parent().urlsafe()
         for name, info in self.fields().items():
             field, uri_prefix = info
             val = field.__get__(self, type(self))
@@ -114,6 +112,13 @@ class UriAddressable(object):
         return "%s/%s" % (self.uriPrefix(), self.key.urlsafe())
 
 class SignedResource(UriAddressable):
+    d = dict(UriAddressable.d.items())
+
+    timestamp =    field(d, 'timestamp', ndb.DateTimeProperty(auto_now=True))
+    author =       field(d, 'author', ndb.StringProperty())
+    author_nick =  field(d, 'author_nick', ndb.StringProperty())
+    author_email = field(d, 'author_email', ndb.StringProperty())
+
     # archive_copy_of is intentionally not defined using field()
     archive_copy_of = ndb.KeyProperty()
 
@@ -202,3 +207,27 @@ class YhdistysPaimennustaipumus(ndb.Model, SignedResource):
         copy = YhdistysPaimennustaipumus()
         return self.archive_fields(copy)
 
+class Kennels (ndb.Model, UriAddressable):
+    """Singleton object to hold modtime for kennels."""
+    d = dict(UriAddressable.d.items())
+
+    @staticmethod
+    def getSingleton():
+
+        def get_or_insert():
+            key = ndb.Key(Kennels, 'kennels')
+            p = key.get()
+            if p is None:
+                p = Kennels(id = 'kennels')
+                p.Put()
+                return p.key
+            else:
+                return key
+            
+        return ndb.transaction(lambda: get_or_insert())
+
+
+
+class Kennel (ndb.Model, UriAddressable):
+    d = dict(UriAddressable.d.items())
+    nimi = field(d, 'nimi', ndb.StringProperty())

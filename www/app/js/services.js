@@ -75,6 +75,7 @@ angular.module('myApp.services', [])
 				    console.log("cached value expired: " + JSON.stringify(cached_value))
 				}
 				console.log("fetch from server " + uri);
+				delete params['uri'];
 				var instance_from_server = resource.get(params);
 				instance_from_server.$then(function (response) {
 				    var res = response.resource;
@@ -151,6 +152,14 @@ angular.module('myApp.services', [])
 		       syntymavuosi: '@syntymavuosi',
 		       isa: '@isa',
 		       ema: '@ema'},
+		      localStorageService);
+	      }])
+    .factory('KennelService',
+	     ['CachedResourceService', 'localStorageService',
+	      function (CachedResourceService, localStorageService) {
+		  return CachedResourceService.make(
+		      '/Kennel/:key',
+		      {nimi: '@nimi'},
 		      localStorageService);
 	      }])
     .factory('YhdistysPaimennustaipumusService', 

@@ -15,6 +15,7 @@ import DatastoreClasses
 import Paimennustaipumus
 import Terveyskysely
 import Koira
+import Kennel
 
 class ModtimeHandler (HardenedHandler):
 
@@ -179,6 +180,7 @@ def handlers(classes):
 handler_list = (
     handlers(
         [DatastoreClasses.Koira,
+         DatastoreClasses.Kennel,
          DatastoreClasses.Terveyskysely,
          DatastoreClasses.YhdistysPaimennustaipumus])
     + [("/Modtime/([^/]+)", ModtimeHandler),

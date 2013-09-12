@@ -1,1 +1,13 @@
-Kennel etusivu.
+<div class="pull-right" ng-show="IS_ADMIN">
+  <button class="btn" ng-click="creating=true">Uusi</button> &nbsp;
+  <span ng-show="creating">
+    <input type="text" placeholder="nimi" ng-model="new_kennel.nimi"> <button class="btn" ng-click="create()">Luo kennel</button>
+  </span>
+</div>
+<h2>Kennelit</h2>
+<ul>
+  <li ng-repeat="kennel in kennels">
+    <a ng-href="#/kennel_muutokset{{kennel.uri}}">{{kennel.nimi}}</a>
+  </li>
+</ul>
+
