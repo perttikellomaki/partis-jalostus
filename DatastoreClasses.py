@@ -46,6 +46,8 @@ class UriAddressable(object):
                         res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
                     else:
                         res[name] = "/%s/%s" % (val.kind(), val.urlsafe())
+                elif isinstance(field, ndb.DateProperty):
+                    res[name] = "%s" % val.isoformat()
                 elif isinstance(field, ndb.DateTimeProperty):
                     res[name] = "%sZ" % val.isoformat()
                 else:
