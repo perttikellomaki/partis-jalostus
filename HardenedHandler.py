@@ -110,9 +110,9 @@ class HardenedHandler(BaseSessionHandler):
         try:
             # Possibly commit the archive copy created in self.post()
             self.archive_copy.put()
-            taskqueue.add(
-                url=("/CompactHistory/%s" 
-                     % self.archive_copy.archive_copy_of.urlsafe()))
+            #taskqueue.add(
+            #    url=("/CompactHistory/%s" 
+            #         % self.archive_copy.archive_copy_of.urlsafe()))
             self.archive_copy = None
         except:
             pass
