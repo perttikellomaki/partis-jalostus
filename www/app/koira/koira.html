@@ -7,8 +7,8 @@
     Hyväksy
   </button>
 
-  <div ng-show="koira.verified"><b>Kasvattajan tai ylläpitäjän tarkastama tieto</b></div>
-  <div ng-show="!koira.verified"><b>Tarkastamaton tieto</b></div>
+  <div ng-show="koira.verified == 'true'"><b>Kasvattajan tai ylläpitäjän tarkastama tieto</b></div>
+  <div ng-show="koira.verified == 'false'"><b>Tarkastamaton tieto</b></div>
   <form>
     <label>Virallinen nimi / muu tunniste</label>
     <input type="text" ng-readonly="!editing" ng-model="koira.virallinen_nimi">

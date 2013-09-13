@@ -7,8 +7,8 @@
 <div class="well" 
      ng-repeat="test in tests"
      ng-controller="YhdistysPaimennustaipumusCtrl">
-  <div ng-show="test.verified"><b>Kasvattajan tai ylläpitäjän tarkastama tieto</b></div>
-  <div ng-show="!test.verified"><b>Tarkastamaton tieto</b></div>
+  <div ng-show="test.verified == 'true'"><b>Kasvattajan tai ylläpitäjän tarkastama tieto</b></div>
+  <div ng-show="test.verified == 'false'"><b>Tarkastamaton tieto</b></div>
   <form>
     <button class="btn pull-right" ng-show="editing" ng-click="save()">Tallenna</button>
     <button class="btn pull-right" ng-show="!editing" ng-click="edit()">Muuta</button>
