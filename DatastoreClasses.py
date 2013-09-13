@@ -41,6 +41,11 @@ class UriAddressable(object):
             if hashify and val:
                 if isinstance(field, ndb.StringProperty):
                     res[name] = val
+                if isinstance(field, ndb.BooleanProperty):
+                    if val:
+                        res[name] = "true"
+                    else:
+                        res[name] = "false"
                 elif isinstance(field, ndb.KeyProperty):
                     if uri_prefix:
                         res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
