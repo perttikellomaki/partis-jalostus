@@ -159,6 +159,11 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
     $scope.toggleEdit = function () {
 	$scope.editing = !$scope.editing;
     }
+
+    $scope.verify = function () {
+	$scope.koira.verified = true;
+	KoiraService.save($scope.koira);
+    }
 }
 KoiraPerustiedotCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', '$http', 'KoiraService', 'SidepanelService'];
 

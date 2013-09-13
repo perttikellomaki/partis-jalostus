@@ -21,7 +21,7 @@ class YhdistysPaimennustaipumusHandler(HardenedHandler):
     def post_(self, user, key):
         test = self.lookupKey(urlsafe=key).get()
         test.populateFromRequest(self.request.params)
-        test.sign(user)
+        test.sign(user, self.request, test.koira)
         test.put()
         self.jsonReply(test.hashify())
 

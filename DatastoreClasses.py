@@ -2,6 +2,7 @@ import time
 import dateutil
 import dateutil.parser
 import logging
+from google.appengine.api import users
 from google.appengine.ext import ndb
 import Util
 
@@ -10,8 +11,8 @@ class KoiraAutocomplete(ndb.Model):
     canonical = ndb.StringProperty()
     uros = ndb.BooleanProperty()
 
-def field(d, name, prop, uri_prefix=None, hashify=True):
-    d[name] = (prop, uri_prefix, hashify)
+def field(d, name, prop, uri_prefix=None, hashify=True, autopopulate=True):
+    d[name] = (prop, uri_prefix, hashify, autopopulate)
     return prop
 
 class Modtime(ndb.Model):
@@ -35,7 +36,7 @@ class UriAddressable(object):
         if self.key.parent():
             res['parent'] = self.key.parent().urlsafe()
         for name, info in self.fields().items():
-            field, uri_prefix, hashify = info
+            field, uri_prefix, hashify, _ = info
             val = field.__get__(self, type(self))
             if hashify and val:
                 if isinstance(field, ndb.StringProperty):
@@ -59,8 +60,8 @@ class UriAddressable(object):
 
     def populateFromRequest(self, params):
         for name, info in self.fields().items():
-            field, _, _ = info
-            if params.has_key(name) and params[name] != 'undefined':
+            field, _, _, autopopulate = info
+            if autopopulate and params.has_key(name) and params[name] != 'undefined':
                 if isinstance(field, ndb.StringProperty):
                     field.__set__(self, params[name])
                 elif isinstance(field, ndb.BooleanProperty):
@@ -122,6 +123,7 @@ class SignedResource(UriAddressable):
     author =       field(d, 'author', ndb.StringProperty())
     author_nick =  field(d, 'author_nick', ndb.StringProperty())
     author_email = field(d, 'author_email', ndb.StringProperty())
+    verified     = field(d, 'verified', ndb.BooleanProperty(), autopopulate=False)
 
     # archive_copy_of is intentionally not defined using field()
     archive_copy_of = ndb.KeyProperty()
@@ -134,7 +136,7 @@ class SignedResource(UriAddressable):
 
         for name, info in self.fields().items():
             if name != 'timestamp':
-                field, uri_prefix, _ = info
+                field, uri_prefix, _, _ = info
                 my_val = field.__get__(self, type(self))
                 item_val = field.__get__(item, type(item))
                 if my_val == item_val:
@@ -151,14 +153,24 @@ class SignedResource(UriAddressable):
         # no conflicting values found    
         return True
 
-    def sign(self, user):
+    def sign(self, user, request=None, dog_key=None):
         self.author = str(user.user_id())
         self.author_nick = user.nickname()
         self.author_email = user.email()
 
+        if request and request.params.has_key('verified'):
+            if users.is_current_user_admin():
+                self.verified = True
+            else:
+                kennel = Kennel.gql("WHERE kasvattaja_email = :1",
+                                    self.author_email)
+                if kennel.count() > 0:
+                    self.verified = (dog_key.get().kennel
+                                     == kennel.get().nimi)
+
     def archive_fields(self, copy):
         for name, info in self.fields().items():
-            field, _, _ = info
+            field, _, _, _ = info
             field.__set__(copy, field.__get__(self, type(self)))
         copy.archive_copy_of = self.key
         return copy

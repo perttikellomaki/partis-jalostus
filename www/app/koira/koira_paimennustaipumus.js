@@ -4,8 +4,10 @@ function KoiraPaimennustaipumusCtrl ($scope, $routeParams, KoiraService, Sidepan
 
     var koira_uri = '/Koira/' + $routeParams.key;
 
-    $scope.koira
-	= KoiraService.get({uri: koira_uri});
+    KoiraService.get({uri: koira_uri})
+	.then(function (koira) {
+	    $scope.koira = koira;
+	});
 
     $scope.tests = YhdistysPaimennustaipumusService.query(
 	{koira: koira_uri});
@@ -30,6 +32,11 @@ function YhdistysPaimennustaipumusCtrl ($scope, YhdistysPaimennustaipumusService
     $scope.save = function () {
 	$scope.test.$save({key: uri2key($scope.test.uri)});
 	$scope.editing = false;
+    }
+
+    $scope.verify = function () {
+	$scope.test.verified = true;
+	$scope.test.$save({key: uri2key($scope.test.uri)});
     }
 }
 YhdistysPaimennustaipumusCtrl.$inject = ['$scope', 'YhdistysPaimennustaipumusService'];

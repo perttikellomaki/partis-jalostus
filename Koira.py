@@ -74,7 +74,8 @@ class KoiraHandler(HardenedHandler):
         name = dog.virallinen_nimi
         sex = dog.sukupuoli
         dog.populateFromRequest(self.request.params)
-        dog.sign(user)
+        dog.verified = False
+        dog.sign(user, self.request, dog.key)
         dog.Put()
         if dog.virallinen_nimi != name or dog.sukupuoli != sex:
             auto = ndb.Key('KoiraAutocomplete', 'autocomplete', parent=dog.key).get()

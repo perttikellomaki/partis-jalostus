@@ -151,7 +151,8 @@ angular.module('myApp.services', [])
 		       syntymapaiva: '@syntymapaiva',
 		       syntymavuosi: '@syntymavuosi',
 		       isa: '@isa',
-		       ema: '@ema'},
+		       ema: '@ema',
+		       verified: '@verified'},
 		      localStorageService);
 	      }])
     .factory('KennelService',
@@ -175,7 +176,8 @@ angular.module('myApp.services', [])
 				tuomari: '@tuomari',
 				paikka: '@paikka',
 				paiva: '@paiva',
-				kommentit: '@kommentit'}));
+				kommentit: '@kommentit',
+				verified: '@verified'}));
 	     })
     .factory('TerveyskyselyService',
 	     function ($resource) {

@@ -1,7 +1,14 @@
 <div ng-show="sidepanel.selection == '' || sidepanel.selection == 'perustiedot'">
   <button class="pull-right btn" ng-show="editing" ng-click="save()">Tallenna</button>
   <button class="pull-right btn" ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
+  <button class="pull-right btn" 
+	  ng-show="!editing && !koira.verified && (koira.kennel == KENNEL || IS_ADMIN)" 
+	  ng-click="verify()">
+    Hyväksy
+  </button>
 
+  <div ng-show="koira.verified"><b>Kasvattajan tai ylläpitäjän tarkastama tieto</b></div>
+  <div ng-show="!koira.verified"><b>Tarkastamaton tieto</b></div>
   <form>
     <label>Virallinen nimi / muu tunniste</label>
     <input type="text" ng-readonly="!editing" ng-model="koira.virallinen_nimi">
