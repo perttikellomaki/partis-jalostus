@@ -134,7 +134,7 @@ class SignedResource(UriAddressable):
 
         for name, info in self.fields().items():
             if name != 'timestamp':
-                field, uri_prefix = info
+                field, uri_prefix, _ = info
                 my_val = field.__get__(self, type(self))
                 item_val = field.__get__(item, type(item))
                 if my_val == item_val:
@@ -158,7 +158,7 @@ class SignedResource(UriAddressable):
 
     def archive_fields(self, copy):
         for name, info in self.fields().items():
-            field, _ = info
+            field, _, _ = info
             field.__set__(copy, field.__get__(self, type(self)))
         copy.archive_copy_of = self.key
         return copy
