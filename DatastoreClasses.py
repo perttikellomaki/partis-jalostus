@@ -38,25 +38,26 @@ class UriAddressable(object):
         for name, info in self.fields().items():
             field, uri_prefix, hashify, _ = info
             val = field.__get__(self, type(self))
-            if hashify and val:
-                if isinstance(field, ndb.StringProperty):
-                    res[name] = val
+            if hashify:
                 if isinstance(field, ndb.BooleanProperty):
                     if val:
                         res[name] = "true"
                     else:
                         res[name] = "false"
-                elif isinstance(field, ndb.KeyProperty):
-                    if uri_prefix:
-                        res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
+                elif val:
+                    if isinstance(field, ndb.StringProperty):
+                        res[name] = val
+                    elif isinstance(field, ndb.KeyProperty):
+                        if uri_prefix:
+                            res[name] = "%s/%s" % (uri_prefix, val.urlsafe())
+                        else:
+                            res[name] = "/%s/%s" % (val.kind(), val.urlsafe())
+                    elif isinstance(field, ndb.DateProperty):
+                        res[name] = "%s" % val.isoformat()
+                    elif isinstance(field, ndb.DateTimeProperty):
+                        res[name] = "%sZ" % val.isoformat()
                     else:
-                        res[name] = "/%s/%s" % (val.kind(), val.urlsafe())
-                elif isinstance(field, ndb.DateProperty):
-                    res[name] = "%s" % val.isoformat()
-                elif isinstance(field, ndb.DateTimeProperty):
-                    res[name] = "%sZ" % val.isoformat()
-                else:
-                    res[name] = str(val)
+                        res[name] = str(val)
 
         modtime = ndb.Key('Modtime', 'modtime', parent=self.key).get()
         if modtime:
