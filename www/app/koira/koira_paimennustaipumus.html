@@ -17,6 +17,14 @@
 	    ng-click="verify()">
       Hyväksy
     </button>
+    <label class="checkbox">
+      <input type="checkbox" 
+	     ng-readonly="!editing" 
+	     ng-model="test.hyvaksytty"
+	     ng-true-value="true",
+	     ng-false-value="false">
+      Hyväksytty
+</label>
     <label>Paikka</label>
     <input type="text" ng-readonly="!editing" ng-model="test.paikka"/>
     <label>Päivä</label>

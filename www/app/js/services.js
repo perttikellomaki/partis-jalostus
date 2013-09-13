@@ -169,6 +169,7 @@ angular.module('myApp.services', [])
 		 return makeCachedResource(
 		     $resource("/YhdistysPaimennustaipumus/:key",
 			       {koira: '@koira',
+				hyvaksytty: '@hyvaksytty',
 				kiinnostus: '@kiinnostus',
 				taipumus: '@taipumus',
 				henkinen_kestavyys: '@henkinen_kestavyys',

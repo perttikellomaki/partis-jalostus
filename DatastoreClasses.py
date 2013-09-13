@@ -211,6 +211,7 @@ class Terveyskysely(ndb.Model, SignedResource):
 class YhdistysPaimennustaipumus(ndb.Model, SignedResource):
     d = dict(SignedResource.d.items())
     koira =              field(d, 'koira', ndb.KeyProperty(), uri_prefix="/Koira")
+    hyvaksytty =         field(d, 'hyvaksytty', ndb.BooleanProperty())
     kiinnostus =         field(d, 'kiinnostus', ndb.IntegerProperty())
     taipumus =           field(d, 'taipumus', ndb.IntegerProperty())
     henkinen_kestavyys = field(d, 'henkinen_kestavyys',  ndb.IntegerProperty())
