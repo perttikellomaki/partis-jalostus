@@ -64,10 +64,9 @@
 	padding:10px;
 	}
 #leftcol { 
-	position:relative;
-	top:-10px;
-	left:-10px;
-	float:left;
+	position:absolute;
+	top: 0px;
+	left: 0px;
 	width:200px;
 	margin:0 0 -10px 0;
 	padding:10px;
@@ -75,7 +74,7 @@
 	}
 #centercol {
 	position:relative;
-	padding-left: 240px;
+	padding-left: 225px;
 	}
 #footer {
 	position:relative;
