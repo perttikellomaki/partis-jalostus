@@ -1,15 +1,22 @@
 <div>
-  <button class="pull-right btn" ng-show="editing" ng-click="save()">Tallenna</button>
-  <button class="pull-right btn" ng-show="!editing" ng-click="edit()">Muuta</button>
+  <button class="pull-right btn btn-default" ng-show="editing" ng-click="save()">Tallenna</button>
+  <button class="pull-right btn btn-default" ng-show="!editing" ng-click="edit()">Muuta</button>
 </div>
 
 <h2>{{koira.virallinen_nimi}}</h2>
 
-Sukupolvia: <input type="text" 
-		   ng-model="generations_text"
-		   style="width: 2em">
-<button class="btn" ng-click="updateGenerations()">Muodosta sukupuu</button> {{status}}
-
+<div class="row">
+  <div class="col-xs-12">
+    <form class="form-inline" role="form">
+      <div class="form-group">
+	<label for="sukupuu-generations">Sukupolvia</label>
+	<input type="text" id="sukupuu-generations" ng-model="generations_text" class="form-control" style="max-width: 50px;">
+      </div>
+      <button class="btn btn-default" ng-click="updateGenerations()">Muodosta sukupuu</button> {{status}}
+    </form>
+  </div>
+</div>
+<br>
 <table border="1">
   <tr ng-repeat="row in pedigree">
     <td ng-repeat="element in row"
