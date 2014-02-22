@@ -16,6 +16,9 @@ function NavListController($scope, $location) {
 	var result = page === currentRoute ? 'active' : '';
         return result;
     }
+    $scope.gotoView = function (path) {
+	$location.path(path);
+    }
 }
 NavListController.$inject = ['$scope', '$location'];
 

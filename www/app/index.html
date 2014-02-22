@@ -22,18 +22,33 @@
       Et ole kirjautunut
     </span>
   </span>
-  <div class="container">
-    <div class="navbar" ng-controller="NavListController">
-      <div class="navbar-inner">
-	<ul class="nav">
-	  <li ng-class="'nav-menu-btn ' + navClass('etusivu')"><a href="#/etusivu">Etusivu</a></li>
-	  <li ng-class="'nav-menu-btn ' + navClass('koira') + navClass('koira_etusivu')"><a href="#/koira_etusivu">Koirat</a></li>
-	  <li ng-class="'nav-menu-btn ' + navClass('kennel') + navClass('kennel_etusivu')"><a href="#/kennel_etusivu">Kennelit</a></li>
-	  <li ng-class="'nav-menu-btn ' + navClass('kirjaudu')"><a href="#/login">Kirjaudu</a></li>
-	</ul>
+
+  <header class="navbar navbar-default" ng-controller="NavListController">
+    <div class="navbar-inner">
+      <div class="container">
+	<div class="navbar-header">
+          <button type="button" ng-init="isCollapsed = true" class="navbar-toggle" data-target="#main-navbar-collapse" ng-click="isCollapsed = !isCollapsed">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">
+	    Partistietokanta
+	  </a>
+        </div>
+
+        <nav id="main-navbar-collapse" class="collapse navbar-collapse" collapse="isCollapsed">
+	  <ul class="nav navbar-nav">
+	    <li ng-class="navClass('etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('etusivu')">Etusivu</a></li>
+	    <li ng-class="navClass('koira') + navClass('koira_etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('koira_etusivu')">Koirat</a></li>
+	    <li ng-class="navClass('kennel') + navClass('kennel_etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('kennel_etusivu')">Kennelit</a></li>
+	    <li ng-class="navClass('kirjaudu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('login')">Kirjaudu</a></li>
+	  </ul>
+	</nav>
       </div>
     </div>
-  </div>
+  </header>
 </div><!-- end header -->
 
 
