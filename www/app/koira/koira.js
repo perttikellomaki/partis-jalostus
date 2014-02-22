@@ -1,5 +1,4 @@
 function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http, KoiraService, SidepanelService) {
-    $scope.date_format = 'dd.MM.yyyy';
     
     $scope.open = function($event) {
 	$event.preventDefault();
