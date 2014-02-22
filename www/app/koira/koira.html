@@ -31,8 +31,16 @@
 	  <input type="text" id="koira-sukupuoli" class="form-control" ng-show="!editing" ng-model="koira.sukupuoli" readonly> 
 	  <select ng-show="editing" id="koira-sukupuoli" class="form-control" ng-model="selected_sex" ng-options="selected_sex.sex for selected_sex in sexes"> </select>
 	</div>
-
-	<div class="form-group">
+	<div class="form-group" ng-show="!editing">
+	  <label for="koira-syntymapaiva-ro">Syntymäpäivä</label>
+	  <input type="text" 
+		 id="koira-syntymapaiva-ro" 
+		 class="form-control" 
+		 ng-show="!editing" 
+		 ng-model="birthday.date_string" 
+		 readonly/>
+	</div>
+	<div class="form-group" ng-show="editing">
 	  <label for="koira-syntymapaiva">Syntymäpäivä</label>
           <div class="input-group">
             <input id="koira-syntymapaiva"
@@ -46,7 +54,10 @@
 		   show-button-bar="false"
 		   close-text="Close" />
             <span class="input-group-btn">
-              <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              <button class="btn btn-default" 
+		      ng-show="editing" 
+		      ng-click="open($event)">
+		<i class="glyphicon glyphicon-calendar"></i></button>
             </span>
           </div>
 	</div>
