@@ -5,20 +5,12 @@
   </span>
 </div>
 <div class="well">
-  <h3>Kirjaudu sähköpostiosoitteella (salasana välitetään selväkielisenä)</h3>
-  <form>
-    <label>Sähköposti</label><input type="text" ng-model="local_login.email"/>
-    <label>Salasana</label><input type="text" ng-model="local_login.password"/>
-    <button class="btn" ng-click="login()">Kirjaudu</button>{{local_login.status_message}}
-  </form>
-</div>
-<div class="well">
   <form>
     <h3>Tilaa salasana sähköpostiin</h3>
     <label>Sähköposti</label><input type="text" ng-model="request.email"/>
     <label>Nimimerkki</label> <input type="text" ng-model="request.nickname"/>
     <label>Roskapostisuoja</label> <input type="text" ng-model="request.secret"/>
-    <span class="help-inline">Anna tähän rotuyhdistyksen täydellinen nimi isoine kirjaimineen ja välimerkkeineen (voit katsoa sen <a href="http://www.suomenpartacolliet.info">yhdistyksen sivuilta</a>).</span>
+    <span class="help-inline">Anna tähän rotuyhdistyksen täydellinen nimi isoine kirjaimineen ja välimerkkeineen (voit kopioida sen tämän sivun ylälaidasta).</span>
     <div ng-show="request.status_message.length > 0">
       <b>{{request.status_message}}</b>
     </div>

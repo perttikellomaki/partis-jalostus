@@ -3,8 +3,9 @@
 #
 import uuid
 import webapp2
-#%%from webapp2_extras import sessions
-#%%from google.appengine.api import app_identity
+import urllib
+from webapp2_extras import sessions
+from google.appengine.api import app_identity
 from google.appengine.api import mail
 from google.appengine.api import users
 from google.appengine.ext import ndb
@@ -81,7 +82,28 @@ class LocalLoginHandler(HardenedHandler):
             self.jsonReply({'email': '',
                             'password': '',
                             'status_message': 'Kirjautuminen ei onnistunut'})
-            
+
+class LocalLoginRedirectHandler(HardenedHandler):
+    def get_unauthenticated_(self):
+        entries = LocalUser.gql("WHERE email = :1",
+                                self.request.params['email'])
+        if entries.count() == 1:
+            local_user = entries.get()
+
+            if self.request.params['password'] == local_user.password:
+
+                # record user data in session
+                self.session['email'] = user.email
+                self.session['user_id'] = "local-%s" % user.key().id()
+                self.session['nickname'] = user.nickname
+                
+                self.redirect(self.request.params['redirect_url'])
+
+            else:
+                self.response.out.write("""<html><head><title>Salasanasi on vanhentunut</title></head>
+<body><h1>Salasanasi on vanhentunut</h1><p>Ole hyvä ja tilaa uusi salasana sähköpostiisi.</p></body></html>""")
+        else:
+            self.response.out.write("""<html><head><title>Käyttäjää ei löydy</title></head><body><p>Tällä sähköpostiosoitteella ei löydy käyttäjää.</p></body></html>""")
 
 class LogoutHandler(HardenedHandler):
     def get_(self, user):
@@ -135,15 +157,21 @@ class PasswordRequestHandler(HardenedHandler):
             else:
                 entry = entries.get()
             message = mail.EmailMessage()
-            #message.sender = "noreply@%s.appspot.com" % app_identity.get_application_id()
-            message.sender = "pertti.kellomaki@gmail.com"
+            message.sender = "partistietokanta@gmail.com"
             message.to = email
             message.subject = "Uusi salasana"
             message.body = ("""Hei!
 
 Pyysit salasanaa Suomen Partacolliet ry:n jalostustietokantaan. 
-Voit kirjautua osoitteellasi %s ja salasanalla %s
-""" % (entry.email, entry.password))
+Voit kirjautua tietokantaan tästä linkistä: <https://%s.appspot.com/LocalLoginRedirect?%s"""
+                            % (app_identity.get_application_id(),
+                               urllib.urlencode({'email': entry.email, 
+                                                 'password': entry.password,
+                                                 'redirect_url': ('https://%s.appspot.com/' 
+                                                                  % app_identity.get_application_id())})))
+
+                                                 
+                               
             message.send()
             self.jsonReply({'email': '', 'nick': '', 'secret': '',
                             'status_message': 'Viesti matkalla'})
@@ -203,6 +231,7 @@ handler_list = (
        ("/History/([^/]+)", HistoryHandler),
        ("/FederatedLogin", FederatedLoginHandler),
        ("/LocalLogin", LocalLoginHandler),
+       ("/LocalLoginRedirect", LocalLoginRedirectHandler),
        ("/Logout", LogoutHandler), 
        ("/LoginStatus", LoginStatusHandler),
        ("/PasswordRequest", PasswordRequestHandler),
