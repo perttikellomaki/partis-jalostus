@@ -1,8 +1,11 @@
 function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http, KoiraService, SidepanelService) {
-    $scope.dateOptions = {
-        changeYear: true,
-        changeMonth: true,
-        yearRange: '1900:-0'
+    $scope.date_format = 'dd.MM.yyyy';
+    
+    $scope.open = function($event) {
+	$event.preventDefault();
+	$event.stopPropagation();
+	
+	$scope.opened = true;
     };
 
     $scope.sidepanel = SidepanelService.get();

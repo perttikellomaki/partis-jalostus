@@ -1,7 +1,7 @@
 <div ng-show="sidepanel.selection == '' || sidepanel.selection == 'perustiedot'">
-  <button class="pull-right btn" ng-show="editing" ng-click="save()">Tallenna</button>
-  <button class="pull-right btn" ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
-  <button class="pull-right btn" 
+  <button class="pull-right btn btn-default" ng-show="editing" ng-click="save()">Tallenna</button>
+  <button class="pull-right btn btn-default" ng-show="!editing" ng-click="toggleEdit()">Muuta</button>
+  <button class="pull-right btn btn-default" 
 	  ng-show="!editing && !koira.verified && (koira.kennel == KENNEL || IS_ADMIN)" 
 	  ng-click="verify()">
     Hyväksy
@@ -9,45 +9,65 @@
 
   <div ng-show="koira.verified == 'true'"><b>Kasvattajan tai ylläpitäjän tarkastama tieto</b></div>
   <div ng-show="koira.verified == 'false'"><b>Tarkastamaton tieto</b></div>
-  <form>
-    <label>Virallinen nimi / muu tunniste</label>
-    <input type="text" ng-readonly="!editing" ng-model="koira.virallinen_nimi">
-    <label>Kutsumanimi</label>
-    <input type="text" ng-readonly="!editing" ng-model="koira.kutsumanimi">
-    <label>Kennel</label>
-    <input type="text" ng-readonly="!editing" ng-model="koira.kennel">
-    <label>Sukupuoli</label>
-    <input type="text" ng-show="!editing" ng-model="koira.sukupuoli" readonly>
-    <select ng-show="editing"
-	    ng-model="selected_sex"
-	    ng-options="selected_sex.sex for selected_sex in sexes">
-    </select>
-
-    <label>Syntymäpäivä</label>
-    <input ui-date="dateOptions"
-	   ng-show="editing"
-	   ng-model="birthday.date"
-	   ng-change="birthdayChange()"
-	   >
-    <input type="text" ng-show="!editing" 
-	   ng-model="birthday.date_string"
-	   readonly>
-    <label>Syntymävuosi</label>
-    <input  type="text" ng-readonly="!editing" ng-model="koira.syntymavuosi">
-    <label>Isä</label>
-    <input type="text" 
-	   ng-readonly="!editing" 
-	   ng-model="isa_nimi" 
-	   typeahead="suggestion for suggestion in typeaheadUros($viewValue)">
-    <label>Emä</label>
-    <input type="text" 
-	   ng-readonly="!editing" 
-	   ng-model="ema_nimi" 
-	   typeahead="suggestion for suggestion in typeaheadNarttu($viewValue)">
-    <br>
-    <span>Tallentaja: {{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</span>
-  </form>
 </div>
+<div>
+  <div class="row">
+    <div class="col-sm-6">
+      <form role="form">
+	<div class="form-group">
+	  <label for="koira-virallinen">Virallinen nimi / muu tunniste</label>
+	  <input type="text" id="" class="form-control" ng-readonly="!editing" ng-model="koira.virallinen_nimi">
+	</div>
+	<div class="form-group">
+	  <label for="koira-kutsuma">Kutsumanimi</label>
+	  <input type="text" id="koira-kutsuma" class="form-control" ng-readonly="!editing" ng-model="koira.kutsumanimi">
+	</div>
+	<div class="form-group">
+	  <label for="koira-kennel">Kennel</label>
+	  <input type="text" id="koira-kennel" class="form-control" ng-readonly="!editing" ng-model="koira.kennel">
+	</div>
+	<div class="form-group">
+	  <label for="koira-sukupuoli">Sukupuoli</label>
+	  <input type="text" id="koira-sukupuoli" class="form-control" ng-show="!editing" ng-model="koira.sukupuoli" readonly> 
+	  <select ng-show="editing" id="koira-sukupuoli" class="form-control" ng-model="selected_sex" ng-options="selected_sex.sex for selected_sex in sexes"> </select>
+	</div>
+
+	<div class="form-group">
+	  <label for="koira-syntymapaiva">Syntymäpäivä</label>
+          <div class="input-group">
+            <input id="koira-syntymapaiva"
+		   type="text"
+		   class="form-control" 
+		   ng-model="birthday.date"
+		   ng-change="birthdayChange()"
+		   datepicker-popup="{{date_format}}" 
+		   is-open="opened" 
+		   show-weeks="false"
+		   show-button-bar="false"
+		   close-text="Close" />
+            <span class="input-group-btn">
+              <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </div>
+	</div>
+	<div class="form-group">
+	  <label for="koira-syntymapaiva">Syntymävuosi</label>
+	  <input type="text" id="koira-syntymapaiva" class="form-control" ng-readonly="!editing" ng-model="koira.syntymavuosi">
+	</div>
+	<div class="form-group">
+	  <label for="koira-isa">Isä</label>
+	  <input type="text" id="koira-isa" class="form-control" ng-readonly="!editing" ng-model="isa_nimi" typeahead="suggestion for suggestion in typeaheadUros($viewValue)">
+	</div>
+	<div class="form-group">
+	  <label for="koira-ema">Emä</label>
+	  <input type="text" id="koira-ema" class="form-control" ng-readonly="!editing" ng-model="ema_nimi" typeahead="suggestion for suggestion in typeaheadNarttu($viewValue)">
+	</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div>Tallentaja: {{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</div>
 
 <div ng-show="sidepanel.selection == 'terveyskysely'"
      ng-controller="TerveyskyselyCtrl"
