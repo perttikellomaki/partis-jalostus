@@ -1,14 +1,26 @@
 <div class="well" ng-controller="SearchKoiraCtrl">
-  <form>
-    <fieldset>
-      <legend>Etsi koira</legend>
-      <label>Virallinen nimi /muu tunniste</label>
-	<input type="text" 
-		     ng-model="koira"
-		     typeahead="suggestion for suggestion in typeahead($viewValue)">
-	<button class="btn" ng-click="gotoDog(koira)">Hae</button>
-    </fieldset>
-  </form>
+  <h3>Etsi koira</h3>
+  <div class="row">
+    <div class="col-sm-6">
+      <form role="form">
+	<div class="form-group">
+	  <label for="search-koira-input">Virallinen nimi /muu tunniste</label>
+	  <div class="input-group">
+	    <input type="text"
+ 		   ng-model="koira"
+		   typeahead="suggestion for suggestion in typeahead($viewValue)"
+		   class="form-control" 
+		   id="search-koira-input" 
+		   placeholder="nimi">
+	    <span class="input-group-btn">
+	      <button class="btn btn-default" ng-click="gotoDog(koira)">Hae</button>
+	    </span>
+	  </div>
+	</div>
+      </form>
+    </div>
+  </div>
+</div>
 </div>
 
 <div class="well">
