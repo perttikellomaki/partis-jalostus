@@ -77,8 +77,8 @@ angular.module('myApp.services', [])
 				console.log("fetch from server " + uri);
 				delete params['uri'];
 				var instance_from_server = resource.get(params);
-				instance_from_server.$then(function (response) {
-				    var res = response.resource;
+				instance_from_server.$promise.$then(function (response) {
+				    var res = response;
 				    res.refresh_time_from_server = new Date();
 				    localStorageService.set(uri, JSON.stringify(res));
 				    deferred.resolve(res);

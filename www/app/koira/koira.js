@@ -98,8 +98,8 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	function handleEma() {
 	    if ($scope.ema_nimi != undefined && $scope.ema_nimi.length > 0) {
 		var ema = KoiraService.query({virallinen_nimi: $scope.ema_nimi});
-		ema.$then(function (response) {
-		    var dogs = response.resource;
+		ema.$promise.then(function (response) {
+		    var dogs = response;
 		    if (dogs.length == 0) {
 			if (confirm("Emää ei löydy tietokannasta. Lisätäänkö?")) {
 			    var inserted = KoiraService.makeNew();
@@ -123,8 +123,8 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 
 	if ($scope.isa_nimi != undefined && $scope.isa_nimi.length > 0) {
 	    var isa = KoiraService.query({virallinen_nimi: $scope.isa_nimi});
-	    isa.$then(function (response) {
-		var dogs = response.resource;
+	    isa.$promise.then(function (response) {
+		var dogs = response;
 		if (dogs.length == 0) {
 		    if (confirm("Isää ei löydy tietokannasta. Lisätäänkö?")) {
 			var inserted = KoiraService.makeNew();

@@ -118,8 +118,8 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 
     function updateDogEntry () {
 	var dog = KoiraService.query({virallinen_nimi: $scope.name});
-	dog.$then(function (response) {
-	    var dogs = response.resource;
+	dog.$promise.then(function (response) {
+	    var dogs = response;
 	    if (dogs.length == 0) {
 		if (confirm("Koiraa "
 			    + $scope.name
