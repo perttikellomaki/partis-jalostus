@@ -5,8 +5,8 @@ function KoiraPaimennustaipumusCtrl ($scope, $routeParams, KoiraService, Sidepan
     var koira_uri = '/Koira/' + $routeParams.key;
 
     KoiraService.get({uri: koira_uri})
-	.then(function (koira) {
-	    $scope.koira = koira;
+	.Then(function (response) {
+	    $scope.koira = response.resource;
 	});
 
     $scope.tests = YhdistysPaimennustaipumusService.query(

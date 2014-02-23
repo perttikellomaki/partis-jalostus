@@ -19,13 +19,38 @@ import Koira
 import Kennel
 import Util
 
-class ModtimeHandler (HardenedHandler):
+class ModTimeHandler (HardenedHandler):
+    def get_(self, user, key):
+        modtime_key = ndb.Key('ModTime', 'modtime', 
+                              parent = ndb.Key(urlsafe=key))
+        try:
+            self.jsonReply(modtime_key.get().hashify(),
+                           "ModTime => %s")
+        except:
+            parent = ndb.Key(urlsafe=key).get()
+            if parent:
+                parent.stampModTime()
+                self.jsonReply(modtime_key.get().hashify())
+            else:
+                self.response.set_status(410)
+                self.response.out.write("No such entity, maybe it has been deleted?")
 
-    def get_(self, key, user):
-        parent = ndb.Key(urlsafe=key)
-        modtime = ndb.Key('Modtime', 'modtime', parent=parent).get()
-        self.response.headers['Content-Type'] = 'text/json'
-        self.response.out.write(json.dumps(modtime.hashify()))
+
+class DepModTimeHandler (HardenedHandler):
+    def get_(self, user, key):
+        modtime_key = ndb.Key('DependentModTime', 'dependent_modtime', 
+                              parent = ndb.Key(urlsafe=key))
+        try:
+            self.jsonReply(modtime_key.get().hashify(),
+                           "DepModTime => %s")
+        except:
+            parent = ndb.Key(urlsafe=key).get()
+            if parent:
+                parent.stampDependentModTime()
+                self.jsonReply(modtime_key.get().hashify())
+            else:
+                self.response.set_status(410)
+                self.response.out.write("No such entity, maybe it has been deleted?")
 
 class KoiraAutoCompleteHandler(HardenedHandler):
     def get_(self, user):
@@ -226,7 +251,8 @@ handler_list = (
          DatastoreClasses.ChangeNotification,
          DatastoreClasses.Terveyskysely,
          DatastoreClasses.YhdistysPaimennustaipumus])
-    + [("/Modtime/([^/]+)", ModtimeHandler),
+    + [("/ModTime/([^/]+)", ModTimeHandler),
+       ("/DepModTime/([^/]+)", DepModTimeHandler),
        ("/KoiraAutoComplete", KoiraAutoCompleteHandler),
        ("/History/([^/]+)", HistoryHandler),
        ("/FederatedLogin", FederatedLoginHandler),

@@ -3,7 +3,8 @@ function KennelMuutoksetCtrl ($scope, $resource, $routeParams, KennelService, Si
 
     var change_resource = $resource('/ChangeNotification');
     $scope.kennel = KennelService.get({uri: '/Kennel/' + $routeParams.key});
-    $scope.kennel.then(function (kennel) {
+    $scope.kennel.Then(function (response) {
+	var kennel = response.resource;
 	$scope.changes = change_resource.query({kennel: kennel.nimi});
     });
 }

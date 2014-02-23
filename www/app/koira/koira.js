@@ -13,7 +13,8 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
     $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
     $scope.birthday = {};
     KoiraService.get({uri: '/Koira/' + $routeParams.key})
-	.then(function (koira) {
+	.Then(function (response) {
+	    var koira = response.resource;
 	    $scope.koira = koira;
 	    $scope.history_target = koira.uri;
 	    if (koira.syntymapaiva != undefined 
@@ -63,7 +64,8 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	    if (new_val != undefined 
 		&& new_val.length > 0) {
 		KoiraService.get({uri: new_val})
-		    .then(function (isa) {
+		    .Then(function (response) {
+			var isa = response.resource;
 			$scope.isa_nimi = isa.virallinen_nimi;
 		    });
 	    }
@@ -75,7 +77,8 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	    if (new_val != undefined 
 		&& new_val.length > 0) {
 		KoiraService.get({uri: new_val})
-		    .then(function (ema) {
+		    .Then(function (response) {
+			var ema = response.resource;
 			$scope.ema_nimi = ema.virallinen_nimi;
 		    });
 	    }
@@ -87,7 +90,8 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	    if (new_val != undefined 
 		&& new_val.length > 0) {
 		KoiraService.get({uri: new_val})
-		    .then(function (ema) {
+		    .Then(function (response) {
+			var ema = response.resource;
 			$scope.ema_nimi = ema.virallinen_nimi;
 		    });
 	    }
@@ -100,8 +104,8 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	function handleEma() {
 	    if ($scope.ema_nimi != undefined && $scope.ema_nimi.length > 0) {
 		var ema = KoiraService.query({virallinen_nimi: $scope.ema_nimi});
-		ema.$promise.then(function (response) {
-		    var dogs = response;
+		ema.thenServer(function (response) {
+		    var dogs = response.resource;
 		    if (dogs.length == 0) {
 			if (confirm("Emää ei löydy tietokannasta. Lisätäänkö?")) {
 			    var inserted = KoiraService.makeNew();
@@ -125,8 +129,8 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 
 	if ($scope.isa_nimi != undefined && $scope.isa_nimi.length > 0) {
 	    var isa = KoiraService.query({virallinen_nimi: $scope.isa_nimi});
-	    isa.$promise.then(function (response) {
-		var dogs = response;
+	    isa.thenServer(function (response) {
+		var dogs = response.resource;
 		if (dogs.length == 0) {
 		    if (confirm("Isää ei löydy tietokannasta. Lisätäänkö?")) {
 			var inserted = KoiraService.makeNew();

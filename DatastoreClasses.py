@@ -5,23 +5,14 @@ import logging
 from google.appengine.api import users
 from google.appengine.ext import ndb
 import Util
+from UriAddressable import UriAddressable, field
 
 class KoiraAutocomplete(ndb.Model):
     virallinen_nimi = ndb.StringProperty()
     canonical = ndb.StringProperty()
     uros = ndb.BooleanProperty()
 
-def field(d, name, prop, uri_prefix=None, hashify=True, autopopulate=True):
-    d[name] = (prop, uri_prefix, hashify, autopopulate)
-    return prop
-
-class Modtime(ndb.Model):
-    modtime = ndb.DateTimeProperty(auto_now=True)
-
-    def hashify(self):
-        return {'modtime': str(time.mktime(self.modtime.timetuple()))}
-
-class UriAddressable(object):
+class XUriAddressable(object):
     d = {}    # dictonary for collecting fields
     timestamp =    field(d, 'timestamp', ndb.DateTimeProperty(auto_now=True))
 
@@ -131,7 +122,7 @@ class SignedResource(UriAddressable):
     author =       field(d, 'author', ndb.StringProperty())
     author_nick =  field(d, 'author_nick', ndb.StringProperty())
     author_email = field(d, 'author_email', ndb.StringProperty())
-    verified     = field(d, 'verified', ndb.BooleanProperty(), autopopulate=False)
+    verified     = field(d, 'verified', ndb.BooleanProperty(), readonly=True)
 
     # archive_copy_of is intentionally not defined using field()
     archive_copy_of = ndb.KeyProperty()
@@ -178,8 +169,8 @@ class SignedResource(UriAddressable):
 
     def archive_fields(self, copy):
         for name, info in self.fields().items():
-            field, _, _, _ = info
-            field.__set__(copy, field.__get__(self, type(self)))
+            prop, _, _, _, _, _, _ = info
+            prop.__set__(copy, prop.__get__(self, type(self)))
         copy.archive_copy_of = self.key
         return copy
 

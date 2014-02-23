@@ -10,8 +10,8 @@ function SearchKoiraCtrl ($scope, $http, $location, KoiraService) {
 
     $scope.gotoDog = function (name) {
 	var dogs = KoiraService.query({virallinen_nimi: name});
-	dogs.$promise.then(function (response) {
-	    var results = response;
+	dogs.thenServer(function (response) {
+	    var results = response.resource;
 	    if (results.length == 0) {
 		alert("Koiraa ei löydy.");
 	    } else if (results.length > 1) {

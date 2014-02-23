@@ -1,8 +1,8 @@
 function KennelAdminCtrl ($scope, $routeParams, KennelService, SidepanelService) {
     SidepanelService.get().selection = 'admin';
     KennelService.get({uri: '/Kennel/' + $routeParams.key})
-	.then(function (kennel) {
-	    $scope.kennel = kennel;
+	.Then(function (response) {
+	    $scope.kennel = response.resource;
 	});
 
     $scope.save = function () {

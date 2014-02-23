@@ -74,7 +74,8 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
     $scope.desc_col = desc_col;
 
     if (col == 0) {
-	$scope.koira.then(function (koira) {
+	$scope.koira.Then(function (response) {
+	    var koira = response.resource;
 	    $scope.this_cell_dog = koira;
 	    $scope.name = koira.virallinen_nimi;
 	    $scope.dog_grid[0][0] = koira;
@@ -86,7 +87,8 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 		function (new_val) {
 		    if (new_val != undefined) {
 			KoiraService.get({uri: new_val})
-			    .then(function (dog) {
+			    .Then(function (response) {
+				var dog = response.resource;
 				$scope.this_cell_dog = dog;
 				$scope.name = dog.virallinen_nimi;
 				$scope.dog_grid[row][col]
@@ -100,7 +102,8 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 		function (new_val) {
 		    if (new_val != undefined) {
 			KoiraService.get({uri: new_val})
-			    .then(function (dog) {
+			    .Then(function (response) {
+				var dog = response.resource;
 				$scope.this_cell_dog = dog;
 				$scope.name = dog.virallinen_nimi;
 				$scope.dog_grid[row][col]
@@ -118,8 +121,8 @@ function PedigreeCellCtrl ($scope, $location, KoiraService) {
 
     function updateDogEntry () {
 	var dog = KoiraService.query({virallinen_nimi: $scope.name});
-	dog.$promise.then(function (response) {
-	    var dogs = response;
+	dog.Then(function (response) {
+	    var dogs = response.resource;
 	    if (dogs.length == 0) {
 		if (confirm("Koiraa "
 			    + $scope.name
