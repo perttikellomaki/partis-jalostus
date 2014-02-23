@@ -11,6 +11,12 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
     $scope.typeaheadNarttu = TypeaheadService.typeaheadNarttu;
     $scope.typeaheadClear = TypeaheadService.clear;
 
+    $scope.gotoDog = function (uri) {
+	if (uri != undefined) {
+	    $location.path("/koira/perustiedot" + uri);
+	}
+    }
+
     $scope.sidepanel = SidepanelService.get();
     $scope.sidepanel.selection = '';
 

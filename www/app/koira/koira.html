@@ -66,11 +66,41 @@
 	</div>
 	<div class="form-group">
 	  <label for="koira-isa">Isä</label>
-	  <input type="text" id="koira-isa" class="form-control" ng-readonly="!editing" ng-model="isa_nimi" typeahead="suggestion for suggestion in typeaheadUros($viewValue)">
+	  <div class="input-group">
+	    <input type="text" id="koira-isa" class="form-control" ng-readonly="!editing" ng-model="isa_nimi" typeahead="suggestion for suggestion in typeaheadUros($viewValue)">
+	    <span class="input-group-btn">
+	      <button class="btn btn-default form-control" 
+		      ng-show="editing"
+		      style="max-width: 50px;"
+		      ng-click="typeaheadClear()">
+		<span class="glyphicon glyphicon-refresh"></span>
+	      </button>
+	      <button class="btn btn-default form-control" 
+		      ng-show="!editing"
+		      ng-click="gotoDog(koira.isa)">
+		<span class="glyphicon glyphicon-arrow-right"></span>
+	      </button>
+	    </span>
+	  </div>
 	</div>
 	<div class="form-group">
 	  <label for="koira-ema">Emä</label>
-	  <input type="text" id="koira-ema" class="form-control" ng-readonly="!editing" ng-model="ema_nimi" typeahead="suggestion for suggestion in typeaheadNarttu($viewValue)">
+	  <div class="input-group">
+	    <input type="text" id="koira-ema" class="form-control" ng-readonly="!editing" ng-model="ema_nimi" typeahead="suggestion for suggestion in typeaheadNarttu($viewValue)">
+	    <span class="input-group-btn">
+	      <button class="btn btn-default form-control" 
+		      ng-show="editing"
+		      style="max-width: 50px;"
+		      ng-click="typeaheadClear()">
+		<span class="glyphicon glyphicon-refresh"></span>
+	      </button>
+	      <button class="btn btn-default form-control" 
+		      ng-show="!editing"
+		      ng-click="gotoDog(koira.ema)">
+		<span class="glyphicon glyphicon-arrow-right"></span>
+	      </button>
+	    </span>
+	  </div>
 	</div>
       </form>
     </div>
