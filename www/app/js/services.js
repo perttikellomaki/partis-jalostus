@@ -89,24 +89,42 @@ angular.module('myApp.services', [])
 		 };
 	     })
     .factory('TypeaheadService',
-	     ['$http', 'localStorageService',
-	      function ($http, localStorageService) {
-		  function typeahead (name) {
-		      return $http.get("/KoiraAutoComplete?&prefix=" + encodeURIComponent(name))
-			  .then(function (response) { return response.data });
+	     ['$http', '$q', 'localStorageService',
+	      function ($http, $q, localStorageService) {
+		  function makeTypeahead (prefix) {
+		      function typeahead(name) {
+			  var cached = localStorageService.get(prefix + encodeURIComponent(name));
+			  if (cached) {
+			      var deferred = $q.defer();
+			      deferred.resolve(cached);
+			      return deferred.promise;
+			  } else {
+			      return $http.get(prefix + encodeURIComponent(name))
+				  .then(function (response) { 
+				      localStorageService.set(prefix + encodeURIComponent(name),
+							      response.data);
+				      return response.data 
+				  });
+			  }
+		      }
+		      return typeahead;
 		  }
-		  function typeaheadUros (name) {
-		      return $http.get("/KoiraAutoComplete?sukupuoli=uros&prefix=" + encodeURIComponent(name))
-			  .then(function (response) { return response.data });
-		  }			
-		  function typeaheadNarttu (name) {
-		      return $http.get("/KoiraAutoComplete?sukupuoli=narttu&prefix=" + encodeURIComponent(name))
-			  .then(function (response) { return response.data });
+		  function clear () {
+		      var keys = localStorageService.keys();
+		      for (var k in keys) {
+			  // Only drop entries that are addressed with an uri.
+			  // This keeps refresh tokens and the like in local storage.
+			  var re = new RegExp("/KoiraAutoComplete");
+			  if (keys[k].match(re)) {
+			      localStorageService.remove(keys[k]);
+			  }
+		      }
 		  }
 		  return {
-		      typeahead: typeahead,
-		      typeaheadUros: typeaheadUros,
-		      typeaheadNarttu: typeaheadNarttu
+		      typeahead: makeTypeahead("/KoiraAutoComplete?&prefix="),
+		      typeaheadUros: makeTypeahead("/KoiraAutoComplete?sukupuoli=uros&prefix="),
+		      typeaheadNarttu: makeTypeahead("/KoiraAutoComplete?sukupuoli=narttu&prefix="),
+		      clear: clear
 		  }
 	      }])
 ;
