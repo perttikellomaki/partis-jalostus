@@ -17,14 +17,6 @@ angular.module('myApp', ['ngRoute', 'myApp.filters', 'myApp.services', 'myApp.di
   }])
     .run(['$rootScope', '$http',
 	  function ($rootScope, $http) {
-	      $rootScope.typeaheadUros = function (name) {
-		  return $http.get("/KoiraAutoComplete?sukupuoli=uros&prefix=" + encodeURIComponent(name))
-		      .then(function (response) { return response.data });
-	      }			
-	      $rootScope.typeaheadNarttu = function (name) {
-		  return $http.get("/KoiraAutoComplete?sukupuoli=narttu&prefix=" + encodeURIComponent(name))
-		      .then(function (response) { return response.data });
-	      }
 	      $rootScope.dateToYYYYMMDD = function (date) {
 		  // convert date to "yyyy-mm-dd"
 		  var bds = date.getFullYear()

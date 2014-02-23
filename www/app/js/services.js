@@ -88,4 +88,25 @@ angular.module('myApp.services', [])
 		     get: function () { return state; },
 		 };
 	     })
+    .factory('TypeaheadService',
+	     ['$http', 'localStorageService',
+	      function ($http, localStorageService) {
+		  function typeahead (name) {
+		      return $http.get("/KoiraAutoComplete?&prefix=" + encodeURIComponent(name))
+			  .then(function (response) { return response.data });
+		  }
+		  function typeaheadUros (name) {
+		      return $http.get("/KoiraAutoComplete?sukupuoli=uros&prefix=" + encodeURIComponent(name))
+			  .then(function (response) { return response.data });
+		  }			
+		  function typeaheadNarttu (name) {
+		      return $http.get("/KoiraAutoComplete?sukupuoli=narttu&prefix=" + encodeURIComponent(name))
+			  .then(function (response) { return response.data });
+		  }
+		  return {
+		      typeahead: typeahead,
+		      typeaheadUros: typeaheadUros,
+		      typeaheadNarttu: typeaheadNarttu
+		  }
+	      }])
 ;

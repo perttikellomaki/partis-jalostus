@@ -2,11 +2,9 @@ function KoiraEtusivuCtrl ($scope) {
 }
 KoiraEtusivuCtrl.$inject = ['$scope'];
 
-function SearchKoiraCtrl ($scope, $http, $location, KoiraService) {
-    $scope.typeahead = function (name) {
-	return $http.get("/KoiraAutoComplete?&prefix=" + encodeURIComponent(name))
-	    .then(function (response) { return response.data });
-    }
+function SearchKoiraCtrl ($scope, $http, $location, KoiraService, TypeaheadService) {
+
+    $scope.typeahead = TypeaheadService.typeahead;
 
     $scope.gotoDog = function (name) {
 	var dogs = KoiraService.query({virallinen_nimi: name});
@@ -22,4 +20,4 @@ function SearchKoiraCtrl ($scope, $http, $location, KoiraService) {
 	});
     }
 }
-SearchKoiraCtrl.$inject = ['$scope', '$http', '$location', 'KoiraService'];
+SearchKoiraCtrl.$inject = ['$scope', '$http', '$location', 'KoiraService', 'TypeaheadService'];

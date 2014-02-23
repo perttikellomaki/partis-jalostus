@@ -1,4 +1,4 @@
-function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http, KoiraService, SidepanelService) {
+function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http, KoiraService, SidepanelService, TypeaheadService) {
     
     $scope.open = function($event) {
 	$event.preventDefault();
@@ -6,6 +6,9 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	
 	$scope.opened = true;
     };
+
+    $scope.typeaheadUros = TypeaheadService.typeaheadUros;
+    $scope.typeaheadNarttu = TypeaheadService.typeaheadNarttu;
 
     $scope.sidepanel = SidepanelService.get();
     $scope.sidepanel.selection = '';
@@ -171,7 +174,7 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 	KoiraService.save($scope.koira);
     }
 }
-KoiraPerustiedotCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', '$http', 'KoiraService', 'SidepanelService'];
+KoiraPerustiedotCtrl.$inject = ['$scope', '$resource', '$routeParams', '$location', '$http', 'KoiraService', 'SidepanelService', 'TypeaheadService'];
 
 function KoiraHistoryCtrl ($scope, KoiraService) {
     if ($scope.h.isa != undefined && $scope.h.isa.length > 0) {
