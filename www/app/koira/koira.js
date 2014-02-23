@@ -9,6 +9,7 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 
     $scope.typeaheadUros = TypeaheadService.typeaheadUros;
     $scope.typeaheadNarttu = TypeaheadService.typeaheadNarttu;
+    $scope.typeaheadClear = TypeaheadService.clear;
 
     $scope.sidepanel = SidepanelService.get();
     $scope.sidepanel.selection = '';

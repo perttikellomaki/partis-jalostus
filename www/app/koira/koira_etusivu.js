@@ -5,6 +5,7 @@ KoiraEtusivuCtrl.$inject = ['$scope'];
 function SearchKoiraCtrl ($scope, $http, $location, KoiraService, TypeaheadService) {
 
     $scope.typeahead = TypeaheadService.typeahead;
+    $scope.typeaheadClear = TypeaheadService.clear;
 
     $scope.gotoDog = function (name) {
 	var dogs = KoiraService.query({virallinen_nimi: name});
