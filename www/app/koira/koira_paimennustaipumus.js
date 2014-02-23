@@ -38,5 +38,13 @@ function YhdistysPaimennustaipumusCtrl ($scope, YhdistysPaimennustaipumusService
 	$scope.test.verified = true;
 	$scope.test.$save({key: uri2key($scope.test.uri)});
     }
+
+    $scope.open = function($event) {
+	console.log("open")
+	$event.preventDefault();
+	$event.stopPropagation();
+	
+	$scope.opened = true;
+    };
 }
 YhdistysPaimennustaipumusCtrl.$inject = ['$scope', 'YhdistysPaimennustaipumusService'];

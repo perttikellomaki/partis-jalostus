@@ -1,4 +1,4 @@
-<button class="btn pull-right" ng-click="newTest()">Uusi</button>
+<button class="btn btn-default pull-right" ng-click="newTest()">Uusi</button>
 <h2>{{koira.virallinen_nimi}}</h2>
 
 <h3>Epäviralliset paimennustaipumuskokeet</h3>
@@ -7,46 +7,90 @@
 <div class="well" 
      ng-repeat="test in tests"
      ng-controller="YhdistysPaimennustaipumusCtrl">
-  <div ng-show="test.verified == 'true'"><b>Kasvattajan tai ylläpitäjän tarkastama tieto</b></div>
-  <div ng-show="test.verified == 'false'"><b>Tarkastamaton tieto</b></div>
-  <form>
-    <button class="btn pull-right" ng-show="editing" ng-click="save()">Tallenna</button>
-    <button class="btn pull-right" ng-show="!editing" ng-click="edit()">Muuta</button>
-    <button class="pull-right btn" 
-	    ng-show="!editing && !test.verified && (koira.kennel == KENNEL || IS_ADMIN)" 
-	    ng-click="verify()">
-      Hyväksy
-    </button>
-    <label class="checkbox">
-      <input type="checkbox" 
-	     ng-readonly="!editing" 
-	     ng-model="test.hyvaksytty"
-	     ng-true-value="true",
-	     ng-false-value="false">
-      Hyväksytty
-</label>
-    <label>Paikka</label>
-    <input type="text" ng-readonly="!editing" ng-model="test.paikka"/>
-    <label>Päivä</label>
-    <input ui-date="dateOptions"
-	   ng-show="editing"
-	   ng-model="test_date"
-	   ng-change="test.paiva = dateToYYYYMMDD(test_date)"
-	   >
-    <input type="text" ng-show="!editing" readonly ng-model="test.paiva"/>
-    <label>Tuomari</label>
-    <input type="text" ng-readonly="!editing" ng-model="test.tuomari"/>
-    <label>Kiinnostus</label>
-    <input type="text" ng-readonly="!editing" ng-model="test.kiinnostus"/>
-    <label>Luontainen taipumus</label>
-    <input type="text" ng-readonly="!editing" ng-model="test.taipumus"/>
-    <label>Henkinen kestävyys</label>
-    <input type="text" ng-readonly="!editing" ng-model="test.henkinen_kestavyys"/>
-    <label>Ohjattavuus</label>
-    <input type="text" ng-readonly="!editing" ng-model="test.ohjattavuus"/>
-    <label>Kommentit</label>
-    <textarea ng-readonly="!editing" ng-model="test.kommentit"></textarea>
-  </form>
-<span>Tallentaja: {{test.author_nick}} {{test.timestamp | date:'d.M.yyyy H:mm'}}</span>
-<div ng-include="'history_renderer'"></div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div ng-show="test.verified == 'true'"><b>Kasvattajan tai ylläpitäjän tarkastama tieto</b></div>
+      <div ng-show="test.verified == 'false'"><b>Tarkastamaton tieto</b></div>
+    </div>
+    <div class="col-xs-6">
+      <button class="btn btn-default pull-right" ng-show="editing" ng-click="save()">Tallenna</button>
+      <button class="btn btn-default pull-right" ng-show="!editing" ng-click="edit()">Muuta</button>
+      <button class="pull-right btn btn-default" 
+	      ng-show="!editing && test.verified == 'false' && (koira.kennel == KENNEL || IS_ADMIN)" 
+	      ng-click="verify()">
+	Hyväksy
+      </button>
+    </div>
+    <div class="col-xs-6">
+      <form role="form">
+	<div class="form-group">
+	  <label for="paimennus-paikka">Paikka</label>
+	  <input type="text" class="form-control" id="paimennus-paikka" ng-readonly="!editing" ng-model="test.paikka"/>
+	</div>
+	<div class="form-group" ng-show="editing">
+	  <label for="paimennus-paiva">Päivä</label>
+	  <div class="input-group">
+            <input id="paimennus-paiva"
+		   type="text"
+		   class="form-control" 
+		   ng-model="test_date"
+		   ng-change="test.paiva = dateToYYYYMMDD(test_date)"
+		   datepicker-popup="dd.MM.yyyy" 
+		   is-open="opened" 
+		   show-weeks="false"
+		   show-button-bar="false"
+		   close-text="Close" />
+            <span class="input-group-btn">
+              <button class="btn btn-default" 
+		      ng-show="editing" 
+		      ng-click="open($event)"
+		      >
+		<i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+	  </div>
+	</div>
+	<div class="form-group" ng-show="!editing">
+	  <label for="paimennus-paiva-ro">Päivä</label>
+	  <input type="text" class="form-control" id="paimennus-paiva-ro" ng-show="!editing" readonly ng-model="test.paiva"/>
+	</div>
+	<div class="form-group">
+	  <label for="paimennus-tuomari">Tuomari</label>
+	  <input type="text" class="form-control" id="paimennus-tuomari" ng-readonly="!editing" ng-model="test.tuomari"/>
+	</div>
+	<div class="form-group">
+	  <label for="paimennus-kiinnostus">Kiinnostus</label>
+	  <input type="text" class="form-control" id="paimennus-kiinnostus" ng-readonly="!editing" ng-model="test.kiinnostus"/>
+	</div>
+	<div class="form-group">
+	  <label for="paimennus-taipumus">Luontainen taipumus</label>
+	  <input type="text" class="form-control" id="paimennus-taipumus" ng-readonly="!editing" ng-model="test.taipumus"/>
+	</div>
+	<div class="form-group">
+	  <label for="paimennus-kestavyys">Henkinen kestävyys</label>
+	  <input type="text" class="form-control" id="paimennus-kestavyys" ng-readonly="!editing" ng-model="test.henkinen_kestavyys"/>
+	</div>
+	<div class="form-group">
+	  <label for="paimennus-ohjattavuus">Ohjattavuus</label>
+	  <input type="text" class="form-control" id="paimennus-ohjattavuus" ng-readonly="!editing" ng-model="test.ohjattavuus"/>
+	</div>
+	<div class="form-group">
+	  <label for="paimennus-kommentit">Kommentit</label>
+	  <textarea class="form-control" ng-readonly="!editing" id="paimennus-kommentit" ng-model="test.kommentit"></textarea>
+	</div>
+	<div class="checkbox">
+	  <label>
+	    <input type="checkbox" 
+		   ng-readonly="!editing" 
+		   ng-model="test.hyvaksytty"
+		   ng-true-value="true",
+		   ng-false-value="false">
+	    Hyväksytty
+	  </label>
+	</div>
+      </form>
+      <div>Tallentaja: {{test.author_nick}} {{test.timestamp | date:'d.M.yyyy H:mm'}}</div>
+      <div ng-include="'history_renderer'"></div>
+    </div>
+  </div>
 </div>
+

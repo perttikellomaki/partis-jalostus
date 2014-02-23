@@ -180,18 +180,6 @@ function KoiraHistoryCtrl ($scope, KoiraService) {
 }
 KoiraHistoryCtrl.$inject = ['$scope', 'KoiraService'];
 
-function YhdistysPaimennustaipumusCtrl ($scope, YhdistysPaimennustaipumusService) {
-    $scope.tests = [];
-    $scope.$watch('koira.uri',
-		  function (new_val) {
-		      if (new_val != undefined) {
-			  $scope.tests = YhdistysPaimennustaipumusService.query(
-			      {koira: new_val})
-		      }
-		  });
-}
-YhdistysPaimennustaipumusCtrl.$inject = ['$scope', 'YhdistysPaimennustaipumusService'];
-
 function UusiKoiraCtrl ($scope, $location, KoiraService) {
     $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
     $scope.selected = $scope.sexes[0];
