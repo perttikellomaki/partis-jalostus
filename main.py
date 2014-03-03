@@ -119,7 +119,7 @@ class LocalLoginRedirectHandler(HardenedHandler):
 
                 # record user data in session
                 self.session['email'] = user.email
-                self.session['user_id'] = "local-%s" % user.key().id()
+                self.session['user_id'] = "local:%s" % user.key().id()
                 self.session['nickname'] = user.nickname
                 
                 self.redirect(self.request.params['redirect_url'])
@@ -262,7 +262,13 @@ handler_list = (
        ("/LoginStatus", LoginStatusHandler),
        ("/PasswordRequest", PasswordRequestHandler),
        ("/CompactHistory/([^/]+)", CompactHistoryHandler),
-       ])
+       ]
+    + [webapp2.Route('/logout', handler='HardenedHandler.AuthHandler:logout', name='logout'),
+       webapp2.Route('/auth/<provider>', 
+                     handler='HardenedHandler.AuthHandler:_simple_auth', name='auth_login'),
+       webapp2.Route('/auth/<provider>/callback', 
+                     handler='HardenedHandler.AuthHandler:_auth_callback', name='auth_callback')]
+    )
 
 config = {}
 config['webapp2_extras.sessions'] = {

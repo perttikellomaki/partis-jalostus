@@ -7,6 +7,9 @@ import os
 import json
 import logging
 from google.appengine.ext import ndb
+
+from simpleauth import SimpleAuthHandler
+
 import DatastoreClasses
 
 PRODUCTION = not os.environ['SERVER_SOFTWARE'].startswith('Development')
@@ -142,3 +145,42 @@ class HardenedHandler(BaseSessionHandler):
             except:
                 key = None
         return key
+
+class AuthHandler(BaseSessionHandler, SimpleAuthHandler):
+    """Authentication handler for all kinds of auth."""
+
+    def _on_signin(self, data, auth_info, provider):
+        """Callback whenever a new or existing user is logging in.
+        data is a user info dictionary.
+        auth_info contains access token or oauth token and secret.
+        """
+
+        # record user data in session
+        if data.has_key('email'):
+            self.session['email'] = data['email']
+        else:
+            self.session['email'] = '%s@facebook.com' % data['username']
+        self.session['user_id'] = 'provider:%s' % data['id']
+        self.session['nickname'] = data['name']
+
+        self.redirect('/')
+
+    def logout(self):
+        self.auth.unset_session()
+        self.redirect('/')
+
+    def _callback_uri_for(self, provider):
+        return self.uri_for('auth_callback', provider=provider, _full=True)
+
+    def _get_consumer_info_for(self, provider):
+        """Should return a tuple (key, secret) for auth init requests.
+        For OAuth 2.0 you should also return a scope, e.g.
+        ('my app id', 'my app secret', 'email,basic_info')
+        
+        The scope depends solely on the provider.
+        See example/secrets.py.template
+        """
+
+        # Facebook info
+        return ('278404465650592', '90f2cc4df139d75d3024a1d16f0da78c', 'user_about_me')
+
