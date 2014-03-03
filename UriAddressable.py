@@ -3,6 +3,7 @@ import datetime
 import dateutil
 import dateutil.tz
 import dateutil.parser
+import logging
 
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
@@ -68,8 +69,6 @@ class UriAddressable(object):
                     elif isinstance(field, ndb.DateTimeProperty):
                         res[name] = "%sZ" % val.isoformat()
                     else:
-                        logging.info("hashifying field %s" % name)
-                        logging.info("value %s" % val)
                         res[name] = str(val)
 
         if self.useModTime():
