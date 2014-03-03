@@ -36,7 +36,6 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 		    + "." + (date.getMonth() + 1)
 		    + "." + date.getFullYear();
 	    }
-	    $scope.timestamp = new Date(koira.timestamp);
 	    if (koira.sukupuoli == 'uros') {
 		$scope.selected_sex = $scope.sexes[0];
 	    } else {
@@ -51,6 +50,14 @@ function KoiraPerustiedotCtrl($scope, $resource, $routeParams, $location, $http,
 		$scope.koira.sukupuoli = new_val;
 	    }
 	});		  
+
+    $scope.$watch(
+	"koira.timestamp",
+	function (new_val) {
+	    if (new_val != undefined) {
+		$scope.timestamp = new Date(new_val);
+	    }
+	});
 
     $scope.$watch(
 	"birthday.date",
