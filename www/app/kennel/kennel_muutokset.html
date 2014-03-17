@@ -1,8 +1,8 @@
 <script type="text/ng-template" id="Koira_change_renderer.html">
-  <div ng-show="change.is_creation == 'false'">
+  <div ng-show="!change.is_creation">
     <a ng-href="#/koira/perustiedot{{change.koira}}">{{koira.virallinen_nimi}}</a>: {{change.author_nick}} muutti koiran perustietoja {{change.timestamp | date:'d.M.yyyy H:mm'}}.
   </div>
-  <div ng-show="change.is_creation == 'true'">
+  <div ng-show="change.is_creation">
     <a ng-href="#/koira/perustiedot{{change.koira}}">{{koira.virallinen_nimi}}</a>: {{change.author_nick}} loi koiran {{change.timestamp | date:'d.M.yyyy H:mm'}}.
   </div>
 </script>
