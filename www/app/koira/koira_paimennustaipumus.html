@@ -23,6 +23,18 @@
     </div>
     <div class="col-xs-6">
       <form role="form">
+	<div class="checkbox">
+	  <label>
+	    <input ng-show="editing"
+		   type="checkbox" 
+		   ng-model="test_hyvaksytty.val"
+		   ng-true-value="true",
+		   ng-false-value="false">
+	    <input ng-show="!editing && test.hyvaksytty" type="checkbox" checked disabled="disabled">
+	    <input ng-show="!editing && !test.hyvaksytty" type="checkbox" disabled="disabled">
+	    Hyväksytty
+	  </label>
+	</div>
 	<div class="form-group">
 	  <label for="paimennus-paikka">Paikka</label>
 	  <input type="text" class="form-control" id="paimennus-paikka" ng-readonly="!editing" ng-model="test.paikka"/>
@@ -76,16 +88,6 @@
 	<div class="form-group">
 	  <label for="paimennus-kommentit">Kommentit</label>
 	  <textarea class="form-control" ng-readonly="!editing" id="paimennus-kommentit" ng-model="test.kommentit"></textarea>
-	</div>
-	<div class="checkbox">
-	  <label>
-	    <input type="checkbox" 
-		   ng-readonly="!editing" 
-		   ng-model="test.hyvaksytty"
-		   ng-true-value="true",
-		   ng-false-value="false">
-	    Hyväksytty
-	  </label>
 	</div>
       </form>
       <div>Tallentaja: {{test.author_nick}} {{test.timestamp | date:'d.M.yyyy H:mm'}}</div>

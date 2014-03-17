@@ -46,5 +46,19 @@ function YhdistysPaimennustaipumusCtrl ($scope, YhdistysPaimennustaipumusService
 	
 	$scope.opened = true;
     };
+
+    if ($scope.test.hyvaksytty) {
+	$scope.test_hyvaksytty = {val: "true"};
+    } else {
+	$scope.test_hyvaksytty = {val: "false"};
+    }	
+
+    $scope.$watch('test_hyvaksytty.val', function (new_value) {
+	if (new_value == 'true') {
+	    $scope.test.hyvaksytty = true;
+	} else if (new_value == 'false') {
+	    $scope.test.hyvaksytty = false;
+	}
+    });
 }
 YhdistysPaimennustaipumusCtrl.$inject = ['$scope', 'YhdistysPaimennustaipumusService'];
