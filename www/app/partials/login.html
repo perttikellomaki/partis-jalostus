@@ -1,21 +1,26 @@
 <div class="well">
   <h3>Kirjaudu jollain seuraavista tunnuksista (turvallisin vaihtoehto)</h3>
-  <span ng-repeat="provider in providers">
-    <a class="btn" ng-href="{{provider.uri}}">{{provider.name}}</a> &nbsp;
-  </span>
   <a class="btn btn-default" href="/auth/facebook">Facebook</a>
+  <span ng-repeat="provider in providers">
+    <a class="btn btn-default" ng-href="{{provider.uri}}">{{provider.name}}</a> &nbsp;
+  </span>
 </div>
 <div class="well">
-  <form>
-    <h3>Tilaa salasana sähköpostiin</h3>
-    <label>Sähköposti</label><input type="text" ng-model="request.email"/>
-    <label>Nimimerkki</label> <input type="text" ng-model="request.nickname"/>
-    <label>Roskapostisuoja</label> <input type="text" ng-model="request.secret"/>
-    <span class="help-inline">Anna tähän rotuyhdistyksen täydellinen nimi isoine kirjaimineen ja välimerkkeineen (voit kopioida sen tämän sivun ylälaidasta).</span>
-    <div ng-show="request.status_message.length > 0">
-      <b>{{request.status_message}}</b>
+  <div class="row">
+    <div class="col-sm-6">
+      <h3>Tilaa salasana sähköpostiin</h3>
+      <form>
+	<label>Sähköposti</label><input type="text" class="form-control" ng-model="request.email"/>
+	<label>Nimimerkki</label> <input type="text" class="form-control" ng-model="request.nickname"/>
+	<label>Roskapostisuoja</label> <input type="text" class="form-control" ng-model="request.secret"/>
+	<span class="help-block">Anna tähän rotuyhdistyksen täydellinen nimi isoine kirjaimineen ja välimerkkeineen (voit kopioida sen tämän sivun ylälaidasta).</span>
+	<div ng-show="request.status_message.length > 0">
+	  <b>{{request.status_message}}</b>
+	</div>
+	<div ng-show="request.status_message.length == 0">
+	  <button class="btn btn-default" ng-click="askPassword()">Tilaa salasana</button>
+	</div>
+      </form>
     </div>
-    <div ng-show="request.status_message.length == 0">
-      <button class="btn" ng-click="askPassword()">Tilaa salasana</button>
-    </div>
-  </form>
+  </div>
+</div>

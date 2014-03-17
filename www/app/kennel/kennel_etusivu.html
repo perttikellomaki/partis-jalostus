@@ -1,7 +1,7 @@
 <div class="pull-right" ng-show="IS_ADMIN">
-  <button class="btn" ng-click="creating=true">Uusi</button> &nbsp;
+  <button class="btn btn-default" ng-click="creating=true">Uusi</button> &nbsp;
   <span ng-show="creating">
-    <input type="text" placeholder="nimi" ng-model="new_kennel.nimi"> <button class="btn" ng-click="create()">Luo kennel</button>
+    <input type="text" class="form-control" placeholder="nimi" ng-model="new_kennel.nimi"> <button class="btn btn-default" ng-click="create()">Luo kennel</button>
   </span>
 </div>
 <h2>Kennelit</h2>
