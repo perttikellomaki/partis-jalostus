@@ -98,7 +98,8 @@
 <script type="text/ng-template" id="kennel_sidepanel.html">
   <h2>Kennel</h2>
   <ul class="nav nav-pills nav-stacked" ng-controller="KennelSidepanelCtrl">
-    <li ng-class="navClass('muutokset') + navClass('')"><a ng-click="gotoSubview('muutokset')">Muutokset</a></li>
+    <li ng-class="navClass('koirat') + navClass('')"><a ng-click="gotoSubview('koirat')">Koirat</a></li>
+    <li ng-class="navClass('muutokset')"><a ng-click="gotoSubview('muutokset')">Muutokset</a></li>
     <li ng-show="IS_ADMIN" ng-class="navClass('admin')"><a ng-click="gotoSubview('admin')">Admin</a></li>
 </script>
 
@@ -162,6 +163,7 @@
   <script src="koira/koira_sukupuu.js"></script>
   <script src="koira/koira_paimennustaipumus.js"></script>
   <script src="kennel/kennel_etusivu.js"></script>
+  <script src="kennel/kennel_koirat.js"></script>
   <script src="kennel/kennel_muutokset.js"></script>
   <script src="kennel/kennel_admin.js"></script>
 </body>
