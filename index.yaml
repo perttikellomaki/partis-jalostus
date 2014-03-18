@@ -1,0 +1,71 @@
+indexes:
+
+- kind: Koira
+  properties:
+  - name: archive_copy_of
+  - name: kennel
+  - name: virallinen_nimi
+
+- kind: ChangeNotification
+  properties:
+  - name: kennel
+  - name: timestamp
+    direction: desc
+
+- kind: Koira
+  properties:
+  - name: archive_copy_of
+  - name: timestamp
+    direction: desc
+
+- kind: Koira
+  properties:
+  - name: archive_copy_of
+  - name: virallinen_nimi
+
+- kind: KoiraAutocomplete
+  properties:
+  - name: uros
+  - name: canonical
+
+- kind: SignedResource
+  properties:
+  - name: archive_copy_of
+  - name: class
+  - name: sukupuoli
+  - name: virallinen_nimi
+
+- kind: SignedResource
+  properties:
+  - name: archive_copy_of
+  - name: class
+  - name: timestamp
+    direction: desc
+
+- kind: SignedResource
+  properties:
+  - name: archive_copy_of
+  - name: class
+  - name: virallinen_nimi
+
+- kind: SignedResource
+  properties:
+  - name: archive_copy_of
+  - name: timestamp
+    direction: desc
+
+- kind: SignedResource
+  properties:
+  - name: class
+  - name: archive_copy_of
+
+- kind: SignedResource
+  properties:
+  - name: class
+  - name: virallinen_nimi
+
+- kind: YhdistysPaimennustaipumus
+  properties:
+  - name: archive_copy_of
+  - name: timestamp
+    direction: desc
