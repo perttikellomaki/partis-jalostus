@@ -138,6 +138,16 @@
 		  rows="4">
 	</textarea>
       </div>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.napatyra">
+	Koiralla on ollut napatyrä.
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.napatyra_leikattu">
+	Napatyrä on leikattu.
+      </label>
     </accordion-group>
     <accordion-group heading="Lähetä">
       <form role="form">
@@ -221,6 +231,8 @@
       Koiralla on todettu syöpä.
       {{kysely.syopa_lisaselvitys}}
     </p>
+
+    <p ng-show="kysely.napatyra">Koiralla on ollut napatyrä. <span ng-show="kysely.napatyra_leikattu">Tyrä on leikattu.</span></p>
 
     </div>
   </accordion-group>
