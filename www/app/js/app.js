@@ -9,6 +9,7 @@ angular.module('myApp', ['ngRoute', 'myApp.filters', 'myApp.services', 'myApp.di
     $routeProvider.when('/koira/perustiedot/Koira/:key', {templateUrl: 'koira/koira.html', controller: KoiraPerustiedotCtrl});
     $routeProvider.when('/koira/sukupuu/Koira/:key', {templateUrl: 'koira/koira_sukupuu.html', controller: KoiraSukupuuCtrl});
     $routeProvider.when('/koira/paimennustaipumus/Koira/:key', {templateUrl: 'koira/koira_paimennustaipumus.html', controller: KoiraPaimennustaipumusCtrl});
+    $routeProvider.when('/koira/terveyskysely/Koira/:key', {templateUrl: 'koira/koira_terveyskysely.html', controller: KoiraTerveyskyselyCtrl});
     $routeProvider.when('/kennel_etusivu', {templateUrl: 'kennel/kennel_etusivu.html', controller: KennelEtusivuCtrl});
     $routeProvider.when('/kennel/koirat/Kennel/:key', {templateUrl: 'kennel/kennel_koirat.html', controller: KennelKoiratCtrl});
     $routeProvider.when('/kennel/muutokset/Kennel/:key', {templateUrl: 'kennel/kennel_muutokset.html', controller: KennelMuutoksetCtrl});

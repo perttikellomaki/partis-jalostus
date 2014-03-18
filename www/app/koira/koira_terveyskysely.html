@@ -1,0 +1,171 @@
+<h3>Terveyskysely -- {{koira.virallinen_nimi}}</h3>
+
+<p>
+  <b>Huom!</b> Tämä lomake näennäisesti toimii, mutta tuloksia ei vielä
+  talleteta mihinkään. Puutteista ja ongelmista voi raportoida Pertti
+  Kellomäelle, osoite etunimi.sukunimi@iki.fi (sukunimi ilman ä:n pisteitä).
+</p>
+<p>
+  Tarkoitus on kerätä koirista tietoa vuosittain. Lomakkeeseen voi
+  antaa sähköpostiosoitteen, johon tietokanta lähettää vuoden päästä
+  linkin uuteen kyselyyn. Uusi kysely on esitäytetty edellisen kyselyn
+  tiedoilla.
+</p>
+<button ng-show="!create_new" class="btn btn-default" ng-click="create_new = true">Vastaa kyselyyn</button>
+
+<div class="well" ng-show="create_new">
+
+  <accordion>
+    <accordion-group heading="Luusto ja nivelet">
+      <form role="form">
+	<div class="form-group">
+	  <label for="kysely-lonkka">Virallinen lonkkalausunto</label>
+	  <input type="text" class="form-control" id="kysely-lonkka" ng-model="kysely.lonkka" style="max-width: 5em"/>
+	  <label for="kysely-lonkka">Virallinen kyynärlausunto</label>
+	  <input type="text" class="form-control" id="kysely-lonkka" ng-model="kysely.kyynar" style="max-width: 5em"/>
+	</div>
+	<label class="checkbox">
+	  <input type="checkbox" 
+		 ng-model="kysely.luusto_nivel_operointi">
+	  Koira on operoitu jonkin luusto- tai nivelsairauden takia
+	</label>
+	Kerro operaatiosta tarkemmin: oireet, diagnoosi, minkä ikäisenä operaatio tehtiin, kuinka koira parani operaation jälkeen.
+	<div>
+	  <textarea ng-model="kysely.luusto_nivel_operointi_lisaselvitys"
+                    class="form-control resizable(@direction: vertical)"
+		    rows="4">
+	  </textarea>
+	</div>
+	<label class="checkbox">
+	  <input type="checkbox" 
+		 ng-model="kysely.selkarankamuutokset">
+	  Koiralla on todettu muutoksia selkärangassa
+	</label>
+	Kerro muutoksista tarkemmin: oireet, diagnoosi, minkä ikäisenä muutokset havaittiin, mahdollinen lääkitys
+	<div>
+	  <textarea ng-model="kysely.selkarankamuutokset_lisaselvitys"
+                    class="form-control resizable(@direction: vertical)"
+		    rows="4">
+	  </textarea>
+	</div>
+
+      </form>
+    </accordion-group>
+    <accordion-group heading="Tulehdussairaudet">
+      Onko koiralla todettu lääkehoidolla hoidettuja tulehdussairauksia useammin kuin kerran?
+      <form role="form">
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.korvatulehdus">Korvatulehdus</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.virtsatietulehdus">Virtsatietulehdus</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.anaalirauhastulehdus">Anaalirauhastulehdus</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.eturauhastulehdus">Eturauhastulehdus</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.silmatulehdus">Silmätulehdus</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.suolistotulehdus">Suolistotulehdus</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.tulehtunut_rasvapatti">Tulehtunut rasvapatti</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.kohtutulehdus">Kohtutulehdus</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.muu_tulehdus">Jokin muu tulehdus</label>
+      </form>
+      Kerro tarkemmin: kuinka usein sairauksia on ollut? Jos jokin listaamaton tulehdus, mikä?
+      <div>
+	<textarea ng-model="kysely.tulehdussairaudet_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
+    </accordion-group>
+    <accordion-group heading="Muut sairaudet">
+      Onko koiralla jokin seuraavista sairauksista:
+      <form role="form">
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.slo">SLO</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.imha">IMHA</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.addison">Addisonin tauti</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.kilpirauhasen_vajaatoiminta">Kilpirauhasen vajaatoiminta</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.munuaisten_vajaatoiminta">Munuaisten vajaatoiminta</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.haiman_vajaatoiminta">Haiman vajaatoiminta</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.sle">SLE</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.itp">ITP</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.epilepsia">Epilepsia</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.sydanvika">Sydänvika</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.virstakivet">Virtsakiviä</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.cushing">Cushingin tauti</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.allergia">Allergia</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.diabetes">Diabetes</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.lihassurkastuma">Jokin lihassurkastumasairaus</label>
+      </form>
+      Kerro tarkemmin: sairastumisikä, allergeenit, lääkitys jne.
+      <div>
+	<textarea ng-model="kysely.muut_sairaudet_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
+    </accordion-group>
+    <accordion-group heading="Lähetä">
+      <form role="form">
+	<label for="terveyskysely-email">Haluan vuoden päästä muistutuspostin osoitteeseen</label>
+	<input id="terveyskysely-email" class="form-control" type="text" placeholder="sähköposti">
+	<button class="btn btn-default" ng-click="send()">Lähetä tiedot</button>
+      </form>
+    </accordion-group>
+  </accordion>
+</div>
+
+<accordion close-others="false">
+  <accordion-group ng-repeat="kysely in kyselyt" heading="{{kysely.timestamp}}">
+    <h4>Luusto ja nivelet</h4>
+    <p>Lonkkalausunto: {{kysely.lonkka}},
+      kyynärlausunto: {{kysely.kyynar}}.
+    </p>
+
+    <p ng-show="kysely.luusto_nivel_operointi">
+      Koira on operoitu jonkin luusto- tai nivelsairauden takia. 
+      {{kysely.luusto_nivel_operointi_lisaselvitys}}
+    </p>
+    
+    <p ng-show="kysely.selkarankamuutokset">
+      Koiralla on todettu muutoksia selkärangassa.
+      {{kysely.selkarankamuutokset_lisaselvitys}}
+    </p>
+    
+    <h4>Tulehdussairaudet</h4>
+
+    <p>
+    Koiralla on ollut toistuvasti: 
+    <span ng-show="kysely.korvatulehdus">korvatulehdus, </span>
+    <span ng-show="kysely.virtsatietulehdus">virtsatietulehdus, </span>
+    <span ng-show="kysely.anaalirauhastulehdus">anaalirauhastulehdus, </span>
+    <span ng-show="kysely.eturauhastulehdus">eturauhastulehdus, </span>
+    <span ng-show="kysely.silmatulehdus">silmätulehdus, </span>
+    <span ng-show="kysely.suolistotulehdus">suolistotulehdus, </span>
+    <span ng-show="kysely.tulehtunut_rasvapatti">tulehtunut rasvapatti, </span>
+    <span ng-show="kysely.kohtutulehdus">kohtutulehdus, </span>
+    <span ng-show="kysely.muu_tulehdus">jokin muu tulehdus </span>
+    <p>
+    <p>{{kysely.tulehdussairaudet_lisaselvitys}}</p>
+
+    <h4>Muut sairaudet</h4>
+
+    <p>
+      Koiralla on: 
+      <span ng-show="kysely.slo">SLO, </span>
+      <span ng-show="kysely.imha">IMHA, </span>
+      <span ng-show="kysely.addison">Addisonin tauti, </span>
+      <span ng-show="kysely.kilpirauhasen_vajaatoiminta">kilpirauhasen vajaatoiminta, </span>
+      <span ng-show="kysely.munuaisten_vajaatoiminta">munuaisten vajaatoiminta, </span>
+      <span ng-show="kysely.haiman_vajaatoiminta">haiman vajaatoiminta, </span>
+      <span ng-show="kysely.sle">SLE, </span>
+      <span ng-show="kysely.itp">ITP, </span>
+      <span ng-show="kysely.epilepsia">epilepsia, </span>
+      <span ng-show="kysely.sydanvika">sydänvika, </span>
+      <span ng-show="kysely.virstakivet">virtsakiviä, </span>
+      <span ng-show="kysely.cushing">Cushingin tauti, </span>
+      <span ng-show="kysely.allergia">allergia, </span>
+      <span ng-show="kysely.diabetes">diabetes, </span>
+      <span ng-show="kysely.lihassurkastuma">jokin lihassurkastumasairaus </span>
+    </p>
+    <p>{{kysely.muut_sairaudet_lisaselvitys}}</p>
+
+    </div>
+  </accordion-group>
+</accordion>
+
+

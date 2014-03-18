@@ -109,24 +109,4 @@
 
 <div>Tallentaja: {{koira.author_nick}} {{timestamp | date:'d.M.yyyy H:mm'}}</div>
 
-<div ng-show="sidepanel.selection == 'terveyskysely'"
-     ng-controller="TerveyskyselyCtrl"
-     >
-  <button class="btn pull-right" ng-click="send()">Lähetä</button>
-  <h3>Terveyskysely -- {{koira.virallinen_nimi}}</h3>
-  <div ng-controller="AutoimmuuniCtrl">
-    <label class="checkbox">
-    <input type="checkbox" class="btn btn-default" ng-model="kysely.autoimmuunisairaus">Koiralla on jokin autoimmuunisairaus
-    </label>
-    <div collapse="!kysely.autoimmuunisairaus">
-      <div class="well well-large">
-	<form>
-	  <label class="checkbox"><input type="checkbox" ng-model="kysely.slo">SLO</label>
-	  <label class="checkbox"><input type="checkbox" ng-model="kysely.imha">IMHA</label>
-	</form>
-      </div> 
-    </div>
-  </div>
-</div>
-
 <div ng-include="'history_renderer'"></div>
