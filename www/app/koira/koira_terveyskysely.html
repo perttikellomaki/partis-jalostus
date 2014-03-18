@@ -33,9 +33,21 @@
 		 ng-model="kysely.luusto_nivel_operointi">
 	  Koira on operoitu jonkin luusto- tai nivelsairauden takia
 	</label>
-	Kerro operaatiosta tarkemmin: oireet, diagnoosi, minkä ikäisenä operaatio tehtiin, kuinka koira parani operaation jälkeen.
+	Kerro leikkauksesta tarkemmin: oireet, diagnoosi, minkä ikäisenä leikkaus tehtiin, kuinka koira parani leikkauksen jälkeen.
 	<div>
 	  <textarea ng-model="kysely.luusto_nivel_operointi_lisaselvitys"
+                    class="form-control resizable(@direction: vertical)"
+		    rows="4">
+	  </textarea>
+	</div>
+	<label class="checkbox">
+	  <input type="checkbox" 
+		 ng-model="kysely.luusto_nivel_tutkimus">
+	  Koiraa on tutkittu jonkin luusto- tai nivelsairauden takia
+	</label>
+	Kerro tarkemmin: oireet, diagnoosi, minkä ikäisenä tutkimus tehtiin.
+	<div>
+	  <textarea ng-model="kysely.luusto_nivel_tutkimus_lisaselvitys"
                     class="form-control resizable(@direction: vertical)"
 		    rows="4">
 	  </textarea>
@@ -126,6 +138,11 @@
     <p ng-show="kysely.luusto_nivel_operointi">
       Koira on operoitu jonkin luusto- tai nivelsairauden takia. 
       {{kysely.luusto_nivel_operointi_lisaselvitys}}
+    </p>
+
+    <p ng-show="kysely.luusto_nivel_tutkimus">
+      Koiraa on tutkittu jonkin luusto- tai nivelsairauden takia. 
+      {{kysely.luusto_nivel_tutkimus_lisaselvitys}}
     </p>
     
     <p ng-show="kysely.selkarankamuutokset">
