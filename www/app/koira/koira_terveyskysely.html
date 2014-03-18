@@ -113,6 +113,8 @@
   </accordion>
 </div>
 
+<h3 ng-show="kyselyt.length > 0">Aikaisemmat kyselyt</h3>
+
 <accordion close-others="false">
   <accordion-group ng-repeat="kysely in kyselyt" heading="{{kysely.vastaaja}} {{kysely.timestamp | date:'d.M.yyyy'}}">
     <h3>{{kysely.koira}}</h3>
