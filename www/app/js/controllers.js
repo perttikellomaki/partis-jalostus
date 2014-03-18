@@ -22,19 +22,22 @@ function NavListController($scope, $location) {
 }
 NavListController.$inject = ['$scope', '$location'];
 
-function LoginStatusCtrl ($scope, $rootScope, $resource) {
+function LoginStatusCtrl ($scope, $rootScope, $resource, LoginService) {
     var resource = $resource("/LoginStatus");
     var status = resource.get();
     status.$promise.then(function (response) {
 	$rootScope.IS_ADMIN = response.is_admin;
 	$rootScope.KENNEL = response.kennel;
+	if (response.logged_in) {
+	    LoginService.set(response.nick, response.kennel);
+	}
     });
     $scope.login_status = status;
     $scope.$on('LoginStatusChanged', function (event, path) {
 	$scope.login_status = resource.get();
     });
 }
-LoginStatusCtrl.$inject = ['$scope', '$rootScope', '$resource']
+LoginStatusCtrl.$inject = ['$scope', '$rootScope', '$resource', 'LoginService']
 
 function LoginCtrl ($scope, $rootScope, $resource) {
     var federated_resource = $resource("/FederatedLogin")

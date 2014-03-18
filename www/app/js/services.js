@@ -30,6 +30,20 @@ function makeCachedResource (resource) {
 };
 
 angular.module('myApp.services', [])
+    .factory('LoginService',
+	     function () {
+		 var nick_;
+		 var kennel_;
+		 return {
+		     set: function (nick, kennel) {
+			 console.log("login service " + nick + " " + kennel)
+			 nick_ = nick;
+			 kennel_ = kennel;
+		     },
+		     nick: function () { console.log("nick " + nick_) ; return nick_; },
+		     kennel: function () { return kennel_; }
+		 };
+	     })
     .factory('KoiraService',
 	     ['$resource', 'CachedResourceService', 'localStorageService',
 	      function ($resource, CachedResourceService, localStorageService) {
