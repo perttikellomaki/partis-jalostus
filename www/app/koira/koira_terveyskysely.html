@@ -114,6 +114,18 @@
 		  rows="4">
 	</textarea>
       </div>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.hyvanlaatuinen_kasvain">
+	Koiralla on ollut hyvänlaatuisia kasvaimia
+      </label>
+      Kerro tarkemmin: missä kasvaimia oli, onko ne poistettu, ovatko ne uusiutuneet?
+      <div>
+	<textarea ng-model="kysely.hyvanlaatuinen_kasvain_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
     </accordion-group>
     <accordion-group heading="Lähetä">
       <form role="form">
@@ -187,6 +199,11 @@
       <span ng-show="kysely.lihassurkastuma">jokin lihassurkastumasairaus </span>
     </p>
     <p>{{kysely.muut_sairaudet_lisaselvitys}}</p>
+
+    <p ng-show="kysely.hyvanlaatuinen_kasvain">
+      Koiralla on ollut hyvänlaatuisia kasvaimia.
+      {{kysely.hyvanlaatuinen_kasvain_lisaselvitys}}
+    </p>
 
     </div>
   </accordion-group>
