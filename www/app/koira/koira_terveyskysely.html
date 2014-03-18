@@ -126,6 +126,18 @@
 		  rows="4">
 	</textarea>
       </div>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.syopa">
+	Koiralla on todettu syöpä
+      </label>
+      Kerro tarkemmin: minkälaatuinen syöpä, minkä ikäisenä? Selvisikö koirasi sairaudesta?
+      <div>
+	<textarea ng-model="kysely.syopa_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
     </accordion-group>
     <accordion-group heading="Lähetä">
       <form role="form">
@@ -203,6 +215,11 @@
     <p ng-show="kysely.hyvanlaatuinen_kasvain">
       Koiralla on ollut hyvänlaatuisia kasvaimia.
       {{kysely.hyvanlaatuinen_kasvain_lisaselvitys}}
+    </p>
+
+    <p ng-show="kysely.syopa">
+      Koiralla on todettu syöpä.
+      {{kysely.syopa_lisaselvitys}}
     </p>
 
     </div>
