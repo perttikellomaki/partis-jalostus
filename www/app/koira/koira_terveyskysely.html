@@ -149,6 +149,36 @@
 	Napatyrä on leikattu.
       </label>
     </accordion-group>
+    <accordion-group heading="Hampaat">
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.hammaspuutos_p1_p4">
+	Hammaspuutos väliposkihampaissa P1-P4
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.hammaspuutos_etuhampaat">
+	Hammaspuutos etuhampaissa
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.hammaspuutos_poskihampaat">
+	Hammaspuutos poskihampaissa
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.liikahampaat">
+	Liikahampaita
+      </label>
+      Kerro tarkemmin: puuttuvien tai liikahampaiden määrä.
+      <div>
+	<textarea ng-model="kysely.hammaspuutos_liikahammas_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
+
+    </accordion-group>
     <accordion-group heading="Lähetä">
       <form role="form">
 	<label for="terveyskysely-email">Haluan vuoden päästä muistutuspostin osoitteeseen</label>
@@ -234,7 +264,14 @@
 
     <p ng-show="kysely.napatyra">Koiralla on ollut napatyrä. <span ng-show="kysely.napatyra_leikattu">Tyrä on leikattu.</span></p>
 
-    </div>
+    <h4>Hampaat</h4>
+
+    <span ng-show="kysely.hammaspuutos_p1_p4">Hammaspuutos väliposkihampaissa P1-P4. </span>
+    <span ng-show="kysely.hammaspuutos_etuhampaat">Hammaspuutos etuhampaissa. </span>
+    <span ng-show="kysely.hammaspuutos_poskihampaat">Hammaspuutos poskihampaissa. </span>
+    <span ng-show="kysely.liikahampaat">Liikahampaita. </span>
+    {{kysely.hammaspuutos_liikahammas_lisaselvitys}}
+
   </accordion-group>
 </accordion>
 
