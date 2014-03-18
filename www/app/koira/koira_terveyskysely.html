@@ -11,9 +11,13 @@
   linkin uuteen kyselyyn. Uusi kysely on esitäytetty edellisen kyselyn
   tiedoilla.
 </p>
-<button ng-show="!create_new" class="btn btn-default" ng-click="create_new = true">Vastaa kyselyyn</button>
+<button ng-show="!create_new" class="btn btn-default" ng-click="createNew()">Vastaa kyselyyn</button>
 
 <div class="well" ng-show="create_new">
+
+  <p>
+    Vastaaja: {{kysely.vastaaja}}
+  </p>
 
   <accordion>
     <accordion-group heading="Luusto ja nivelet">
@@ -110,7 +114,8 @@
 </div>
 
 <accordion close-others="false">
-  <accordion-group ng-repeat="kysely in kyselyt" heading="{{kysely.timestamp}}">
+  <accordion-group ng-repeat="kysely in kyselyt" heading="{{kysely.vastaaja}} {{kysely.timestamp | date:'d.M.yyyy'}}">
+    <h3>{{kysely.koira}}</h3>
     <h4>Luusto ja nivelet</h4>
     <p>Lonkkalausunto: {{kysely.lonkka}},
       kyynärlausunto: {{kysely.kyynar}}.
