@@ -152,6 +152,26 @@
     <accordion-group heading="Hampaat">
       <label class="checkbox">
 	<input type="checkbox" 
+	       ng-model="kysely.leikkaava_purenta">
+	Leikkaava purenta
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.tasapurenta">
+	Tasapurenta
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.alapurenta">
+	Alapurenta
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.ylapurenta">
+	Yläpurenta
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
 	       ng-model="kysely.hammaspuutos_p1_p4">
 	Hammaspuutos väliposkihampaissa P1-P4
       </label>
@@ -177,6 +197,44 @@
 		  rows="4">
 	</textarea>
       </div>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.kitalakeen_painuvat_kulmahampaat_pentuna">
+	Kitalakeen painuvat kulmahampaat pentuna
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.kitalakeen_painuvat_kulmahampaat_aikuisena">
+	Kitalakeen painuvat kulmahampaat aikuisena
+      </label>
+    </accordion-group>
+    <accordion-group heading="Lisääntyminen ja hedelmällisyys">
+      Kivekset
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.kives_normaali">
+	Normaalit kivekset
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.kives_toipuoleinen_puutos">
+	Toispuoleinen kivespuutos
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.kives_molemminpuolinen_puutos">
+	Molemminpuolinen kivespuutos
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.kives_hissikives">
+	Hissikives
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.kives_myohaan_laskeutunut">
+	Myöhään laskeutunut kives (yli 6kk ikäisenä)
+      </label>
 
     </accordion-group>
     <accordion-group heading="Lähetä">
@@ -266,11 +324,27 @@
 
     <h4>Hampaat</h4>
 
+    <span ng-show="kysely.leikkaava_purenta">Leikkaava purenta. </span>
+    <span ng-show="kysely.tasapurenta">Tasapurenta. </span>
+    <span ng-show="kysely.alapurenta">Alapurenta. </span>
+    <span ng-show="kysely.ylapurenta">Yläpurenta. </span>
+
     <span ng-show="kysely.hammaspuutos_p1_p4">Hammaspuutos väliposkihampaissa P1-P4. </span>
     <span ng-show="kysely.hammaspuutos_etuhampaat">Hammaspuutos etuhampaissa. </span>
     <span ng-show="kysely.hammaspuutos_poskihampaat">Hammaspuutos poskihampaissa. </span>
     <span ng-show="kysely.liikahampaat">Liikahampaita. </span>
-    {{kysely.hammaspuutos_liikahammas_lisaselvitys}}
+    <p>{{kysely.hammaspuutos_liikahammas_lisaselvitys}}</p>
+    <span ng-show="kysely.kitalakeen_painuvat_kulmahampaat_pentuna">Kitalakeen painuvat kulmahampaat pentuna. </span>
+    <span ng-show="kysely.kitalakeen_painuvat_kulmahampaat_aikuisena">Kitalakeen painuvat kulmahampaat aikuisena. </span>
+
+    <h4>Lisääntyminen ja hedelmällisyys</h4>
+    
+    Koiralla on 
+    <span ng-show="kysely.kives_normaali">normaalit kivekset </span>
+    <span ng-show="kysely.kives_toipuoleinen_puutos">toispuoleinen kivespuutos </span>
+    <span ng-show="kysely.kives_molemminpuolinen_puutos">molemminpuolinen kivespuutos </span>
+    <span ng-show="kysely.kives_hissikives">hissikives </span>
+    <span ng-show="kysely.kives_myohaan_laskeutunut">myöhään laskeutunut kives (yli 6kk ikäisenä) </span>
 
   </accordion-group>
 </accordion>
