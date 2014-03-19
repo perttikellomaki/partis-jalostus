@@ -209,6 +209,7 @@
       </label>
     </accordion-group>
     <accordion-group heading="Lisääntyminen ja hedelmällisyys">
+      <h5>Uros</h5>
       Kivekset
       <label class="checkbox">
 	<input type="checkbox" 
@@ -235,6 +236,97 @@
 	       ng-model="kysely.kives_myohaan_laskeutunut">
 	Myöhään laskeutunut kives (yli 6kk ikäisenä)
       </label>
+
+      Astuminen
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.uros_astuminen">
+	Uros on astunut nartun
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.uros_astuminen_helppo">
+	Astutustapahtuma oli helppo, eli uros astui innokkaasti ja jäi kiinni
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.uros_astuminen_ongelmia">
+	Astutustapahtumassa oli ongelmia
+      </label>
+      Kerro tarkemmin mahdollisista ongelmista.
+      <div>
+	<textarea ng-model="kysely.uros_astuminen_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.uros_jalkelaisia">
+	Uroksella on jälkeläisiä.
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.uros_jalkelaisissa_sairauksia_vikoja">
+	Uroksen jälkeläisillä on esiintynyt sairauksia
+      tai synnynnäisiä vikoja
+      </label>
+      Kerro tarkemmin: minkälaisia ongelmia, missä yhdistelmässä (nartun
+      virallinen nimi)?
+      <div>
+	<textarea ng-model="kysely.uros_jalkelaiset_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
+
+      <h5>Narttu</h5>
+
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.narttu_valeraskauksia">
+	Nartulla on valeraskauksia
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.narttu_saannollinen_kiima">
+	Nartun kiimakierto on säännöllinen
+      </label>
+      <label for="kysely-kiimakierto">Kiimakierron pituus</label>
+      <input type="text" class="form-control" id="kysely-kiimakierto" ng-model="kysely.narttu_kiimakierron_pituus" style="max-width: 5em"/>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.narttu_kaytetty_jalostukseen">
+	Narttua on käytetty tai yritetty käyttää jalostukseen
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.narttu_ei_anna_astua">
+	Narttu ei anna astua
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.narttu_jaanyt_tyhjaksi">
+	Narttu on onnistuneen astutuksen jälkeen jäänyt tyhjäksi
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.narttu_raskaus_keskeytynyt">
+	Nartun raskaus on keskeytynyt vähintään kerran
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.narttu_ei_hoida_pentuja_hyvin">
+	Narttu ei hoida pentujaan hyvin
+      </label>
+      Kerro ongelmista tarkemmin
+      <div>
+	<textarea ng-model="kysely.narttu_jalostus_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
 
     </accordion-group>
     <accordion-group heading="Lähetä">
@@ -338,14 +430,42 @@
     <span ng-show="kysely.kitalakeen_painuvat_kulmahampaat_aikuisena">Kitalakeen painuvat kulmahampaat aikuisena. </span>
 
     <h4>Lisääntyminen ja hedelmällisyys</h4>
-    
-    Koiralla on 
-    <span ng-show="kysely.kives_normaali">normaalit kivekset </span>
-    <span ng-show="kysely.kives_toipuoleinen_puutos">toispuoleinen kivespuutos </span>
-    <span ng-show="kysely.kives_molemminpuolinen_puutos">molemminpuolinen kivespuutos </span>
-    <span ng-show="kysely.kives_hissikives">hissikives </span>
-    <span ng-show="kysely.kives_myohaan_laskeutunut">myöhään laskeutunut kives (yli 6kk ikäisenä) </span>
 
+    <h5>Uros</h5>
+    <p>
+      Koiralla on 
+      <span ng-show="kysely.kives_normaali">normaalit kivekset </span>
+      <span ng-show="kysely.kives_toipuoleinen_puutos">toispuoleinen kivespuutos </span>
+      <span ng-show="kysely.kives_molemminpuolinen_puutos">molemminpuolinen kivespuutos </span>
+      <span ng-show="kysely.kives_hissikives">hissikives </span>
+      <span ng-show="kysely.kives_myohaan_laskeutunut">myöhään laskeutunut kives (yli 6kk ikäisenä) </span>
+    </p>
+    <p>
+      <span ng-show="kysely.uros_astuminen">Uros on astunut nartun. </span>
+      <span ng-show="kysely.uros_astuminen_helppo">Astutustapahtuma oli helppo, eli uros astui innokkaasti ja jäi kiinni. </span>
+      <span ng-show="kysely.uros_astuminen_ongelmia">Astutustapahtumassa oli ongelmia. </span>
+      {{"kysely.uros_astuminen_lisaselvitys"}}
+    </p>
+    <p>
+      <span ng-show="kysely.uros_jalkelaisia">Uroksella on jälkeläisiä. </span>
+      <span ng-show="kysely.uros_jalkelaisissa_sairauksia_vikoja">
+	Uroksen jälkeläisillä on esiintynyt sairauksia tai synnynnäisiä vikoja.
+      </span>
+      {{kysely.uros_jalkelaiset_lisaselvitys}}
+    </p>
+    <h5>Narttu</h5>
+
+    <p>
+      <span ng-show="kysely.narttu_valeraskauksia">Nartulla on valeraskauksia. </span>
+      <span ng-show="kysely.narttu_saannollinen_kiima">Nartun kiimakierto on säännöllinen. </span>
+      Nartun kiimakierron pituus on {{kysely.narttu_kiimakierron_pituus}}.
+      <span ng-show="kysely.narttu_kaytetty_jalostukseen">Narttua on käytetty tai yritetty käyttää jalostukseen. </span>
+      <span ng-show="kysely.narttu_ei_anna_astua">Narttu ei anna astua. </span>
+      <span ng-show="kysely.narttu_jaanyt_tyhjaksi">Narttu on onnistuneen astutuksen jälkeen jäänyt tyhjäksi. </span>
+      <span ng-show="kysely.narttu_raskaus_keskeytynyt">Nartun raskaus on keskeytynyt vähintään kerran. </span>
+      <span ng-show="kysely.narttu_ei_hoida_pentuja_hyvin">Narttu ei hoida pentujaan hyvin. </span>
+    </p>
+    <p>{{kysely.narttu_jalostus_lisaselvitys}}</p>
   </accordion-group>
 </accordion>
 
