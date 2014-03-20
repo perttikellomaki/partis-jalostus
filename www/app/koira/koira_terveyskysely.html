@@ -11,7 +11,7 @@
   linkin uuteen kyselyyn. Uusi kysely on esitäytetty edellisen kyselyn
   tiedoilla.
 </p>
-<button ng-show="!create_new" class="btn btn-default" ng-click="createNew()">Vastaa kyselyyn</button>
+<button ng-show="logged_in && !create_new" class="btn btn-default" ng-click="createNew()">Vastaa kyselyyn</button>
 
 <div class="well" ng-show="create_new">
 

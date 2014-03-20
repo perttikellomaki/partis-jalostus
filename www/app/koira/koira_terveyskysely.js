@@ -1,5 +1,6 @@
 function KoiraTerveyskyselyCtrl ($scope, $routeParams, KoiraService, TerveyskyselyService, SidepanelService, LoginService) {
     SidepanelService.get().selection = 'terveyskysely';
+    $scope.logged_in = LoginService.loggedIn();
     $scope.koira = KoiraService.get({uri: "/Koira/" + $routeParams.key});
     $scope.kysely = TerveyskyselyService.makeNew();
     $scope.kyselyt = TerveyskyselyService.query({koira: "/Koira/" + $routeParams.key,
