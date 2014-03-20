@@ -12,7 +12,10 @@ function KoiraTerveyskyselyCtrl ($scope, $routeParams, KoiraService, Terveyskyse
 	$scope.create_new = true;
     }
     $scope.send = function () {
-	TerveyskyselyService.save($scope.kysely);
+	TerveyskyselyService.save(
+	    $scope.kysely,
+	    {},
+	    function () { alert("Kiitos vastauksestasi!"); });
 	$scope.create_new = false;
 	$scope.kyselyt.push($scope.kysely);
 	$scope.kysely = TerveyskyselyService.makeNew();
