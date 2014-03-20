@@ -15,7 +15,7 @@ class TerveyskyselyTmpCollectionHandler(HardenedHandler):
 
     def get_(self, user):
         self.genericGetCollection(
-            ndb.gql("SELECT * FROM TerveyskyselyTmp where koira = :1",
+            ndb.gql("SELECT * FROM TerveyskyselyTmp where koira = :1 ORDER BY timestamp",
                     self.lookupKey(param='koira')))
 
 TerveyskyselyTmp.collectionHandler(TerveyskyselyTmpCollectionHandler)
