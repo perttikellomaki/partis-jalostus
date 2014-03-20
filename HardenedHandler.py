@@ -163,7 +163,7 @@ class AuthHandler(BaseSessionHandler, SimpleAuthHandler):
             self.session['email'] = data['email']
         else:
             self.session['email'] = '%s@facebook.com' % data['username']
-        self.session['user_id'] = 'provider:%s' % data['id']
+        self.session['user_id'] = 'facebook:%s' % data['id']
         self.session['nickname'] = data['name']
 
         self.redirect('/')
