@@ -174,7 +174,7 @@ class LoginStatusHandler(HardenedHandler):
 
 class PasswordRequestHandler(HardenedHandler):
     def post_unauthenticated_(self):
-        if self.request.params['secret'] == "Suomen Partacolliet ry.":
+        if self.request.params['secret'] == "Suomen Partacolliet ry":
             email = self.request.params['email']
             entries = LocalUser.gql("WHERE email = :1", email)
             if entries.count() == 0:
