@@ -34,14 +34,19 @@ angular.module('myApp.services', [])
 	     function () {
 		 var nick_;
 		 var kennel_;
+		 var logged_in_ = false;
 		 return {
 		     set: function (nick, kennel) {
 			 console.log("login service " + nick + " " + kennel)
 			 nick_ = nick;
 			 kennel_ = kennel;
+			 if (nick != undefined) {
+			     logged_in_ = true;
+			 }
 		     },
 		     nick: function () { console.log("nick " + nick_) ; return nick_; },
-		     kennel: function () { return kennel_; }
+		     kennel: function () { return kennel_; },
+		     loggedIn: function () { return logged_in_; }
 		 };
 	     })
     .factory('KoiraService',
