@@ -70,8 +70,11 @@ class HardenedHandler(BaseSessionHandler):
             return None
 
     def get(self, *args, **kwargs):
-        self.get_(self.currentUser(),
-                  *args, **kwargs)
+        user = self.currentUser()
+        if user is None and "getUnauthenticated_" in self.__class__.__dict__:
+            self.getUnauthenticated_(*args, **kwargs)
+        else:
+            self.get_(user, *args, **kwargs)
 
     def post(self, *args, **kwargs):
 

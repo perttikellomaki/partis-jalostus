@@ -109,6 +109,9 @@ class LocalLoginHandler(HardenedHandler):
                             'status_message': 'Kirjautuminen ei onnistunut'})
 
 class LocalLoginRedirectHandler(HardenedHandler):
+    def get_(self, user):
+        self.get_unauthenticated_()
+
     def get_unauthenticated_(self):
         entries = LocalUser.gql("WHERE email = :1",
                                 self.request.params['email'])
@@ -118,11 +121,11 @@ class LocalLoginRedirectHandler(HardenedHandler):
             if self.request.params['password'] == local_user.password:
 
                 # record user data in session
-                self.session['email'] = user.email
-                self.session['user_id'] = "local:%s" % user.key().id()
-                self.session['nickname'] = user.nickname
+                self.session['email'] = local_user.email
+                self.session['user_id'] = "local:%s" % local_user.key.id()
+                self.session['nickname'] = local_user.nickname
                 
-                self.redirect(self.request.params['redirect_url'])
+                self.redirect(str(self.request.params['redirect_url']))
 
             else:
                 self.response.out.write("""<html><head><title>Salasanasi on vanhentunut</title></head>
@@ -190,8 +193,8 @@ class PasswordRequestHandler(HardenedHandler):
 Pyysit salasanaa Suomen Partacolliet ry:n jalostustietokantaan. 
 Voit kirjautua tietokantaan tästä linkistä: <https://%s.appspot.com/LocalLoginRedirect?%s"""
                             % (app_identity.get_application_id(),
-                               urllib.urlencode({'email': entry.email, 
-                                                 'password': entry.password,
+                               urllib.urlencode({'email': str(entry.email), 
+                                                 'password': str(entry.password),
                                                  'redirect_url': ('https://%s.appspot.com/' 
                                                                   % app_identity.get_application_id())})))
 
