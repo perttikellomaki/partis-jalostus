@@ -88,6 +88,8 @@ class Koira(ndb.Model, SignedResource):
         copy = Koira()
         return self.archive_fields(copy)
 
+    def useModTime(self):
+        return True
 class Terveyskysely(ndb.Model, SignedResource):
     d = dict(SignedResource.d.items())
     virallinen_nimi    = field(d, 'virallinen_nimi', ndb.StringProperty())

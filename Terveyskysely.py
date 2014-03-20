@@ -8,6 +8,7 @@ class TerveyskyselyTmpCollectionHandler(HardenedHandler):
         survey = TerveyskyselyTmp()
         survey.populateFromRequest(self.request.params)
         survey.Put()
+        survey.koira.get().stampDependentModTime()
         self.jsonReply(survey.hashify())
 
     def get_(self, user):
