@@ -20,34 +20,49 @@
   </p>
 
   <accordion>
-    <accordion-group heading="Luusto ja nivelet">
+    <accordion-group heading="Viralliset tutkimukset">
       <form role="form">
 	<div class="form-group">
 	  <label for="kysely-lonkka">Virallinen lonkkalausunto</label>
-	  <input type="text" class="form-control" id="kysely-lonkka" ng-model="kysely.lonkka" style="max-width: 5em"/>
+	  <input type="text" class="form-control" id="kysely-lonkka" ng-model="kysely.virallinen_lausunto_lonkka" style="max-width: 5em"/>
 	  <label for="kysely-lonkka">Virallinen kyynärlausunto</label>
-	  <input type="text" class="form-control" id="kysely-lonkka" ng-model="kysely.kyynar" style="max-width: 5em"/>
+	  <input type="text" class="form-control" id="kysely-lonkka" ng-model="kysely.virallinen_lausunto_kyynar" style="max-width: 5em"/>
+	  <label for="kysely-silma">Virallinen silmälausunto</label>
+	  <input type="text" class="form-control" id="kysely-lonkka" ng-model="kysely.virallinen_lausunto_silma" style="max-width: 5em"/>
 	</div>
+	Muut viralliset lausunnot
+	<div>
+	  <textarea ng-model="kysely.virallinen_lausunto_muut"
+                    class="form-control resizable(@direction: vertical)"
+		    rows="4">
+	  </textarea>
+	</div>
+
+
+      </form>
+    </accordion-group>
+    <accordion-group heading="Luusto ja nivelet">
+      <form role="form">
 	<label class="checkbox">
 	  <input type="checkbox" 
-		 ng-model="kysely.luusto_nivel_operointi">
+		 ng-model="kysely.luusto_nivel_operoitu">
 	  Koira on operoitu jonkin luusto- tai nivelsairauden takia
 	</label>
 	Kerro leikkauksesta tarkemmin: oireet, diagnoosi, minkä ikäisenä leikkaus tehtiin, kuinka koira parani leikkauksen jälkeen.
 	<div>
-	  <textarea ng-model="kysely.luusto_nivel_operointi_lisaselvitys"
+	  <textarea ng-model="kysely.luusto_nivel_operoitu_lisaselvitys"
                     class="form-control resizable(@direction: vertical)"
 		    rows="4">
 	  </textarea>
 	</div>
 	<label class="checkbox">
 	  <input type="checkbox" 
-		 ng-model="kysely.luusto_nivel_tutkimus">
+		 ng-model="kysely.luusto_nivel_tutkittu">
 	  Koiraa on tutkittu jonkin luusto- tai nivelsairauden takia
 	</label>
 	Kerro tarkemmin: oireet, diagnoosi, minkä ikäisenä tutkimus tehtiin.
 	<div>
-	  <textarea ng-model="kysely.luusto_nivel_tutkimus_lisaselvitys"
+	  <textarea ng-model="kysely.luusto_nivel_tutkittu_lisaselvitys"
                     class="form-control resizable(@direction: vertical)"
 		    rows="4">
 	  </textarea>
@@ -101,7 +116,7 @@
 	<label class="checkbox"><input type="checkbox" ng-model="kysely.itp">ITP</label>
 	<label class="checkbox"><input type="checkbox" ng-model="kysely.epilepsia">Epilepsia</label>
 	<label class="checkbox"><input type="checkbox" ng-model="kysely.sydanvika">Sydänvika</label>
-	<label class="checkbox"><input type="checkbox" ng-model="kysely.virstakivet">Virtsakiviä</label>
+	<label class="checkbox"><input type="checkbox" ng-model="kysely.virtsakivet">Virtsakiviä</label>
 	<label class="checkbox"><input type="checkbox" ng-model="kysely.cushing">Cushingin tauti</label>
 	<label class="checkbox"><input type="checkbox" ng-model="kysely.allergia">Allergia</label>
 	<label class="checkbox"><input type="checkbox" ng-model="kysely.diabetes">Diabetes</label>
@@ -218,7 +233,7 @@
       </label>
       <label class="checkbox">
 	<input type="checkbox" 
-	       ng-model="kysely.kives_toipuoleinen_puutos">
+	       ng-model="kysely.kives_toispuoleinen_puutos">
 	Toispuoleinen kivespuutos
       </label>
       <label class="checkbox">
@@ -329,6 +344,61 @@
       </div>
 
     </accordion-group>
+    <accordion-group heading="Luonne">
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.paukkuarka">
+	Koira on paukkuarka
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.aaniherkka">
+	Koira on muuten ääniherkkä
+      </label>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.stressaa_helposti">
+	Koiralla on yleisesti herkkyyttä stressaamiseen
+      </label>
+      Kerro tarkemmin
+      <div>
+	<textarea ng-model="kysely.aaniherkkyys_stressaus_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
+      <label class="checkbox">
+	<input type="checkbox" 
+	       ng-model="kysely.muut_pelot">
+	Koira pelkää jotain muuta
+      </label>
+      Kerro tarkemmin: mitä se pelkää, miten koira käytäytyy?
+      <div>
+	<textarea ng-model="kysely.muut_pelot_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
+      Onko koirasi luonnetestattu? Jos on, kerro muuttuiko koiran
+      käytös mielestäsi jotenkin testin jälkeen. Oliko testin jokin
+      osa-alue koiralle erityisen vaikea selvittää? Jos niin mikä?
+      <div>
+	<textarea ng-model="kysely.luonnetesti_lisaselvitys"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
+
+    </accordion-group>
+    <accordion-group heading="Muuta huomioitavaa">
+      Muuta kommentoitavaa koirasi terveydestä tai luonteesta:
+      <div>
+	<textarea ng-model="kysely.muuta_huomioitavaa"
+                  class="form-control resizable(@direction: vertical)"
+		  rows="4">
+	</textarea>
+      </div>
+    </accordion-group>
     <accordion-group heading="Lähetä">
       <form role="form">
 	<label for="terveyskysely-email">Haluan vuoden päästä muistutuspostin osoitteeseen</label>
@@ -343,20 +413,29 @@
 
 <accordion close-others="false">
   <accordion-group ng-repeat="kysely in kyselyt" heading="{{kysely.vastaaja}} {{kysely.timestamp | date:'d.M.yyyy'}}">
-    <h3>{{kysely.koira}}</h3>
+    <h3>{{kysely.koira_virallinen_nimi}}</h3>
+    <h4>Viralliset tutkimukset</h4>
+
+    <p>Lonkkalausunto: {{kysely.virallinen_lausunto_lonkka}},
+      kyynärlausunto: {{kysely.virallinen_lausunto_kyynar}}.
+      silmälausunto: {{kysely.virallinen_lausunto_silma}}.
+    </p>
+    <p style="white-space: pre-wrap;">
+      {{kysely.virallinen_lausunto_muut}}
+    </p>
+
     <h4>Luusto ja nivelet</h4>
-    <p>Lonkkalausunto: {{kysely.lonkka}},
-      kyynärlausunto: {{kysely.kyynar}}.
-    </p>
 
-    <p ng-show="kysely.luusto_nivel_operointi">
+    <p ng-show="kysely.luusto_nivel_operoitu">
       Koira on operoitu jonkin luusto- tai nivelsairauden takia. 
-      {{kysely.luusto_nivel_operointi_lisaselvitys}}
+    </p>
+    <p style="white-space: pre-wrap;">
+      {{kysely.luusto_nivel_operoitu_lisaselvitys}}
     </p>
 
-    <p ng-show="kysely.luusto_nivel_tutkimus">
+    <p ng-show="kysely.luusto_nivel_tutkittu">
       Koiraa on tutkittu jonkin luusto- tai nivelsairauden takia. 
-      {{kysely.luusto_nivel_tutkimus_lisaselvitys}}
+      {{kysely.luusto_nivel_tutkittu_lisaselvitys}}
     </p>
     
     <p ng-show="kysely.selkarankamuutokset">
@@ -378,7 +457,7 @@
     <span ng-show="kysely.kohtutulehdus">kohtutulehdus, </span>
     <span ng-show="kysely.muu_tulehdus">jokin muu tulehdus </span>
     <p>
-    <p>{{kysely.tulehdussairaudet_lisaselvitys}}</p>
+    <p style="white-space: pre-wrap;">{{kysely.tulehdussairaudet_lisaselvitys}}</p>
 
     <h4>Muut sairaudet</h4>
 
@@ -394,13 +473,13 @@
       <span ng-show="kysely.itp">ITP, </span>
       <span ng-show="kysely.epilepsia">epilepsia, </span>
       <span ng-show="kysely.sydanvika">sydänvika, </span>
-      <span ng-show="kysely.virstakivet">virtsakiviä, </span>
+      <span ng-show="kysely.virtsakivet">virtsakiviä, </span>
       <span ng-show="kysely.cushing">Cushingin tauti, </span>
       <span ng-show="kysely.allergia">allergia, </span>
       <span ng-show="kysely.diabetes">diabetes, </span>
       <span ng-show="kysely.lihassurkastuma">jokin lihassurkastumasairaus </span>
     </p>
-    <p>{{kysely.muut_sairaudet_lisaselvitys}}</p>
+    <p style="white-space: pre-wrap;">{{kysely.muut_sairaudet_lisaselvitys}}</p>
 
     <p ng-show="kysely.hyvanlaatuinen_kasvain">
       Koiralla on ollut hyvänlaatuisia kasvaimia.
@@ -425,7 +504,7 @@
     <span ng-show="kysely.hammaspuutos_etuhampaat">Hammaspuutos etuhampaissa. </span>
     <span ng-show="kysely.hammaspuutos_poskihampaat">Hammaspuutos poskihampaissa. </span>
     <span ng-show="kysely.liikahampaat">Liikahampaita. </span>
-    <p>{{kysely.hammaspuutos_liikahammas_lisaselvitys}}</p>
+    <p style="white-space: pre-wrap;">{{kysely.hammaspuutos_liikahammas_lisaselvitys}}</p>
     <span ng-show="kysely.kitalakeen_painuvat_kulmahampaat_pentuna">Kitalakeen painuvat kulmahampaat pentuna. </span>
     <span ng-show="kysely.kitalakeen_painuvat_kulmahampaat_aikuisena">Kitalakeen painuvat kulmahampaat aikuisena. </span>
 
@@ -435,7 +514,7 @@
     <p>
       Koiralla on 
       <span ng-show="kysely.kives_normaali">normaalit kivekset </span>
-      <span ng-show="kysely.kives_toipuoleinen_puutos">toispuoleinen kivespuutos </span>
+      <span ng-show="kysely.kives_toispuoleinen_puutos">toispuoleinen kivespuutos </span>
       <span ng-show="kysely.kives_molemminpuolinen_puutos">molemminpuolinen kivespuutos </span>
       <span ng-show="kysely.kives_hissikives">hissikives </span>
       <span ng-show="kysely.kives_myohaan_laskeutunut">myöhään laskeutunut kives (yli 6kk ikäisenä) </span>
@@ -444,7 +523,7 @@
       <span ng-show="kysely.uros_astuminen">Uros on astunut nartun. </span>
       <span ng-show="kysely.uros_astuminen_helppo">Astutustapahtuma oli helppo, eli uros astui innokkaasti ja jäi kiinni. </span>
       <span ng-show="kysely.uros_astuminen_ongelmia">Astutustapahtumassa oli ongelmia. </span>
-      {{"kysely.uros_astuminen_lisaselvitys"}}
+      {{kysely.uros_astuminen_lisaselvitys}}
     </p>
     <p>
       <span ng-show="kysely.uros_jalkelaisia">Uroksella on jälkeläisiä. </span>
@@ -465,7 +544,25 @@
       <span ng-show="kysely.narttu_raskaus_keskeytynyt">Nartun raskaus on keskeytynyt vähintään kerran. </span>
       <span ng-show="kysely.narttu_ei_hoida_pentuja_hyvin">Narttu ei hoida pentujaan hyvin. </span>
     </p>
-    <p>{{kysely.narttu_jalostus_lisaselvitys}}</p>
+    <p style="white-space: pre-wrap;">{{kysely.narttu_jalostus_lisaselvitys}}</p>
+
+    <h4>Luonne</h4>
+
+    <p>
+      <span ng-show="kysely.paukkuarka">Koira on paukkuarka. </span>
+      <span ng-show="kysely.aaniherkka">Koira on muuten ääniherkkä. </span>
+      <span ng-show="kysely.stressaa_helposti">Koiralla on yleisesti herkkyyttä stressaamiseen. </span>
+    </p>
+    <p style="white-space: pre-wrap;">{{kysely.aaniherkkyys_stressaus_lisaselvitys}}</p>
+    <p>
+      <span ng-show="kysely.muut_pelot">Koira pelkää jotain muuta.</span>
+    </p>
+    <p style="white-space: pre-wrap;">{{kysely.muut_pelot_lisaselvitys}}</p>
+    <p style="white-space: pre-wrap;">{{kysely.luonnetesti_lisaselvitys}}</p>
+
+    <h4>Muuta huomioitavaa</h4>
+    <p style="white-space: pre-wrap;">{{kysely.muuta_huomioitavaa}}</p>
+
   </accordion-group>
 </accordion>
 

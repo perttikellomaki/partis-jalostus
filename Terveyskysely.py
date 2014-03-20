@@ -1,24 +1,19 @@
+from google.appengine.ext import ndb
+
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import Terveyskysely
+from DatastoreClasses import TerveyskyselyTmp
 
-class TerveyskyselyHandler(HardenedHandler):
+class TerveyskyselyTmpCollectionHandler(HardenedHandler):
     def post_(self, user):
-        survey = Terveyskysely()
+        survey = TerveyskyselyTmp()
         survey.populateFromRequest(self.request.params)
-        survey.sign(user)
-        survey.put()
-
-        message = mail.EmailMessage()
-        message.sender = user.email()
-        message.to = "pertti.kellomaki@gmail.com"
-        message.subject = "Terveyskysely"
-        message.body = ("Koira: %s\nautoimmuunisairaus: %s\nslo: %s\nimha: %s"
-                        % (survey.virallinen_nimi,
-                           survey.autoimmuunisairaus,
-                           survey.slo,
-                           survey.imha))
-        message.send()
-        
+        survey.Put()
         self.jsonReply(survey.hashify())
 
-Terveyskysely.individualHandler(TerveyskyselyHandler)
+    def get_(self, user):
+        self.genericGetCollection(
+            ndb.gql("SELECT * FROM TerveyskyselyTmp where koira = :1",
+                    self.lookupKey(param='koira')))
+
+TerveyskyselyTmp.collectionHandler(TerveyskyselyTmpCollectionHandler)
+

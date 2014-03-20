@@ -249,7 +249,7 @@ handler_list = (
         [DatastoreClasses.Koira,
          DatastoreClasses.Kennel,
          DatastoreClasses.ChangeNotification,
-         DatastoreClasses.Terveyskysely,
+         DatastoreClasses.TerveyskyselyTmp,
          DatastoreClasses.YhdistysPaimennustaipumus])
     + [("/ModTime/([^/]+)", ModTimeHandler),
        ("/DepModTime/([^/]+)", DepModTimeHandler),
