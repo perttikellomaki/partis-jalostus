@@ -402,7 +402,7 @@
     <accordion-group heading="Lähetä">
       <form role="form">
 	<label for="terveyskysely-email">Haluan vuoden päästä muistutuspostin osoitteeseen</label>
-	<input id="terveyskysely-email" class="form-control" type="text" placeholder="sähköposti">
+	<input id="terveyskysely-email" class="form-control" type="text" placeholder="sähköposti" ng-model="kysely.email">
 	<button class="btn btn-default" ng-click="send()">Lähetä tiedot</button>
       </form>
     </accordion-group>

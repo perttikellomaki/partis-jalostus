@@ -178,7 +178,8 @@ angular.module('myApp.services', [])
 		       muut_pelot: '@muut_pelot',
 		       muut_pelot_lisaselvitys: '@muut_pelot_lisaselvitys',
 		       luonnetesti_lisaselvitys: '@luonnetesti_lisaselvitys',
-		       muuta_huomioitavaa: '@muuta_huomioitavaa'
+		       muuta_huomioitavaa: '@muuta_huomioitavaa',
+		       email: '@email'
 		      },
 		      localStorageService)
 	      }])

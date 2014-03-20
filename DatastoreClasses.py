@@ -236,3 +236,4 @@ class TerveyskyselyTmp (ndb.Model, UriAddressable):
     muut_pelot_lisaselvitys = field(d, 'muut_pelot_lisaselvitys', ndb.StringProperty(indexed=False))
     luonnetesti_lisaselvitys = field(d, 'luonnetesti_lisaselvitys', ndb.StringProperty(indexed=False))
     muuta_huomioitavaa = field(d, 'muuta_huomioitavaa', ndb.StringProperty(indexed=False))
+    email = field(d, 'email', ndb.StringProperty(indexed=False))
