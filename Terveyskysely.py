@@ -7,6 +7,8 @@ class TerveyskyselyTmpCollectionHandler(HardenedHandler):
     def post_(self, user):
         survey = TerveyskyselyTmp()
         survey.populateFromRequest(self.request.params)
+        survey.vastaaja = user.nickname()
+        survey.vastaaja_id = user.user_id()
         survey.Put()
         survey.koira.get().stampDependentModTime()
         self.jsonReply(survey.hashify())

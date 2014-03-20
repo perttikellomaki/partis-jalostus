@@ -154,6 +154,8 @@ class TerveyskyselyTmp (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     koira = field(d, 'koira', ndb.KeyProperty())
     koira_virallinen_nimi = field(d, 'koira_virallinen_nimi', ndb.StringProperty(indexed=False))
+    vastaaja = field(d, 'vastaaja', ndb.StringProperty(indexed=False))
+    vastaaja_id = field(d, 'vastaaja_id', ndb.StringProperty(indexed=False), internal=True)
     virallinen_lausunto_lonkka = field(d, 'virallinen_lausunto_lonkka', ndb.StringProperty(indexed=False))
     virallinen_lausunto_kyynar = field(d, 'virallinen_lausunto_kyynar', ndb.StringProperty(indexed=False))
     virallinen_lausunto_silma = field(d, 'virallinen_lausunto_silma', ndb.StringProperty(indexed=False))
