@@ -72,8 +72,11 @@ class UriAddressable(object):
                         res[name] = str(val)
 
         if self.useModTime():
-            modtime = ndb.Key('ModTime', 'modtime', parent=self.key).get()
-            res['modtime'] = str(time.mktime(modtime.modtime.timetuple()))
+            try:
+                modtime = ndb.Key('ModTime', 'modtime', parent=self.key).get()
+                res['modtime'] = str(time.mktime(modtime.modtime.timetuple()))
+            except:
+                logging.warning("Error getting modtime for %s", self)
 
         return res
 
