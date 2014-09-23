@@ -202,7 +202,7 @@ angular.module('cachedResource', ['LocalStorageModule'])
 					// cached instance validated
 					// before callback
 					// registration
-					f({resource: cached_instance,
+					f({resource: returned_instance,
 					   is_first_notification: true,
 					   is_update: false,
 					   is_validated: true});
@@ -212,7 +212,7 @@ angular.module('cachedResource', ['LocalStorageModule'])
 					// validated, call callback
 					// now, and again once
 					// validity established
-					f({resource: cached_instance,
+					f({resource: returned_instance,
 					   is_first_notification: true,
 					   is_update: false,
 					   is_validated: false});
@@ -311,7 +311,7 @@ angular.module('cachedResource', ['LocalStorageModule'])
 							if (modtime.modtime == cached_instance.modtime) {
 							    cached_instance_validated = true;
 							    for (var i in delayed_Then_successes) {
-								delayed_Then_successes[i]({resource: cached_instance,
+								delayed_Then_successes[i]({resource: returned_instance,
 											   is_first_notification: false,
 											   is_update: false,
 											   is_validated: true});
