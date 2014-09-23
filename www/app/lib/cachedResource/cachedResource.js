@@ -383,12 +383,7 @@ angular.module('cachedResource', ['LocalStorageModule'])
 				    OAuth2TokenService.withAuthorization(
 					function () {
 					    function err (response) {
-						if (response.data == "subscription expired") {
-						    alert("Your subscription has expired, and you are no longer able to post to Training Commons.\n\n"
-							  + "Subscription information can be found in the Personal tab.")
-						} else {
-						    alert("There was an error: " + JSON.stringify(response.data));
-						}
+						alert("There was an error: " + JSON.stringify(response.data));
 					    }
 					    if (save_arguments.length == 3) {
 						instance.$save(params, 
