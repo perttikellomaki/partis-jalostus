@@ -34,6 +34,9 @@ handlers:
 - url: /kennel
   static_dir: www/app/kennel
   auth_fail_action: unauthorized
+- url: /terveyskysely
+  static_dir: www/app/terveyskysely
+  auth_fail_action: unauthorized
 - url: /img
   static_dir: www/app/img
   auth_fail_action: unauthorized

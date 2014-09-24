@@ -43,6 +43,7 @@
 	    <li ng-class="navClass('etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('etusivu')">Etusivu</a></li>
 	    <li ng-class="navClass('koira') + navClass('koira_etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('koira_etusivu')">Koirat</a></li>
 	    <li ng-class="navClass('kennel') + navClass('kennel_etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('kennel_etusivu')">Kennelit</a></li>
+	    <li ng-class="navClass('terveyskysely')"><a ng-click="isCollapsed = !isCollapsed; gotoView('terveyskysely')">Terveyskysely</a></li>
 	    <li ng-class="navClass('kirjaudu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('login')">Kirjaudu</a></li>
 	  </ul>
 	</nav>
@@ -79,6 +80,8 @@
 <script type="text/ng-template" id="etusivu_sidepanel.html">
 </script>
 <script type="text/ng-template" id="koira_etusivu_sidepanel.html">
+</script>
+<script type="text/ng-template" id="terveyskysely_sidepanel.html">
 </script>
 
 <script type="text/ng-template" id="koira_sidepanel.html">
@@ -165,5 +168,6 @@
   <script src="kennel/kennel_koirat.js"></script>
   <script src="kennel/kennel_muutokset.js"></script>
   <script src="kennel/kennel_admin.js"></script>
+  <script src="terveyskysely/terveyskysely.js"></script>
 </body>
 </html>

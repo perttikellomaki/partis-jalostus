@@ -15,6 +15,7 @@ angular.module('myApp', ['ngRoute', 'myApp.filters', 'myApp.services', 'myApp.di
     $routeProvider.when('/kennel/muutokset/Kennel/:key', {templateUrl: 'kennel/kennel_muutokset.html', controller: KennelMuutoksetCtrl});
     $routeProvider.when('/kennel/admin/Kennel/:key', {templateUrl: 'kennel/kennel_admin.html', controller: KennelAdminCtrl});
     $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: LoginCtrl});
+    $routeProvider.when('/terveyskysely', {templateUrl: '/terveyskysely/terveyskysely.html', controller: TerveyskyselyCtrl});
     $routeProvider.otherwise({redirectTo: '/etusivu'});
   }])
     .run(['$rootScope', '$http',
