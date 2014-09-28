@@ -1,1 +1,97 @@
-Terveyskysely.
+<script type="text/ng-template" id="free_text_question_renderer.html">
+  <div class="col-xs-4" style="white-space: pre-wrap">{{question.question}}</div>
+  <div class="col-xs-8"><textarea class="form-control"></textarea></div>
+</script>
+<script type="text/ng-template" id="boolean_question_renderer.html">
+  <div class="col-xs-12">
+    <div class="row">
+      <div class="col-xs-4" style="white-space: pre-wrap">{{question.question}}</div>
+        <div class="col-xs-8">
+          <form role="form" class="form-inline">
+            <label class="checkbox">
+              <input type="checkbox">Kyllä
+            </label>
+            <label class="checkbox">
+              <input type="checkbox">Ei
+            </label>
+          </form>
+        </div>
+        <div class="col-xs-4" style="white-space: pre-wrap">{{question.detail_question}}</div>
+        <div class="col-xs-8">
+          <textarea class="form-control"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<h2>Terveyskysely</h2>
+
+<h3>Uusi kysymys</h3>
+
+<div class="row">
+    <div class="col-xs-3">
+        <form role="form">
+            <div class="form-group">
+                <label for="kysely-kind">Tyyppi</label>
+                <select class="form-control" ng-model="new_question_kind" id="kysely-kind" ng-options="kind.name for kind in kinds"></select>
+            </div>
+        </form>
+    </div>
+    <div class="col-xs-6">
+        <form role="form" class="form-inline">
+            <label class="checkbox">
+                <input type="checkbox">Vain uroksille
+            </label>
+            <label class="checkbox">
+                <input type="checkbox">Vain nartuille
+            </label>
+        </form>
+    </div>
+    <div class="col-xs-12">
+        <form role="form">
+            <div class="form-group">
+                <label for="kysely-input">Kysymys</label>
+                <textarea
+                       ng-model="new_question.question"
+                       class="form-control" 
+                       id="kysely-input" 
+                       placeholder="uusi kysymys">
+                </textarea>
+            </div>
+        </form>
+    </div>
+    <div class="col-xs-12">
+        <form role="form">
+            <div class="form-group"  ng-show="new_question_kind.kind == 'boolean'">
+                <label for="kysely-input-detail">Tarkentava kysymys</label>
+                <input type="text"
+                       ng-model="new_question.detail_question"
+                       class="form-control" 
+                       id="kysely-input-detail" 
+                       placeholder="tarkentava kysymys">
+            </div>
+        </form>
+    </div>
+    <div class="col-xs-12">
+        <form role="form">
+            <div class="form-group">
+                <label for="kysely-btn">&nbsp;</label>
+                <button class="btn btn-default" ng-click="newQuestion()" id="kysely-btn">Luo</button>
+            </div>
+        </form>
+    </div>
+</div>
+<h3>Kysymykset</h3>
+
+<ol>
+    <li ng-repeat="question in questions">
+        <div class="row">
+            <div ng-include="question.kind + '_question_renderer.html'"></div>
+        </div>
+
+    </li>
+</ol>
+
+
+

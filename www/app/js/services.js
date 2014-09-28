@@ -90,6 +90,12 @@ angular.module('myApp.services', [])
 				kommentit: '@kommentit',
 				verified: '@verified'}));
 	     })
+    .factory('SurveyQuestionService',
+	     ['CachedResourceService', 'localStorageService',
+	      function (CachedResourceService, localStorageService) {
+		  return CachedResourceService.make(
+		      "/SurveyQuestion/:key", {}, localStorageService)
+	      }])
     .factory('TerveyskyselyService',
 	     ['CachedResourceService', 'localStorageService',
 	      function (CachedResourceService, localStorageService) {

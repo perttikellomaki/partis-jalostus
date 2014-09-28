@@ -18,6 +18,7 @@ import Terveyskysely
 import Koira
 import Kennel
 import Util
+import Survey
 
 class ModTimeHandler (HardenedHandler):
     def get_(self, user, key):
@@ -253,6 +254,7 @@ handler_list = (
          DatastoreClasses.Kennel,
          DatastoreClasses.ChangeNotification,
          DatastoreClasses.TerveyskyselyTmp,
+         DatastoreClasses.SurveyQuestion,
          DatastoreClasses.YhdistysPaimennustaipumus])
     + [("/ModTime/([^/]+)", ModTimeHandler),
        ("/DepModTime/([^/]+)", DepModTimeHandler),

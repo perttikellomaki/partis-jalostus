@@ -150,6 +150,19 @@ class ChangeNotification (ndb.Model, UriAddressable):
     changed_entity = field(d, 'changed_entity', ndb.KeyProperty())
     author_nick =    field(d, 'author_nick', ndb.StringProperty())
 
+class Survey (ndb.Model, UriAddressable):
+    d = dict(UriAddressable.d.items())
+    title = field(d, 'title', ndb.StringProperty())
+
+class SurveyQuestion (ndb.Model, UriAddressable):
+    d = dict(UriAddressable.d.items())
+    question_id = field(d, 'question_id', ndb.IntegerProperty())
+    survey = field(d, 'survey', ndb.KeyProperty())
+    question = field(d, 'question', ndb.StringProperty())
+    detail_question = field(d, 'detail_question', ndb.StringProperty())
+    position = field(d, 'position', ndb.IntegerProperty(required=True, default=0))
+    kind = field(d, 'kind', ndb.StringProperty())
+
 class TerveyskyselyTmp (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     koira = field(d, 'koira', ndb.KeyProperty())
