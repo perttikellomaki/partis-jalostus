@@ -1,4 +1,4 @@
-function TerveyskyselyCtrl($scope, SurveyQuestionService) {
+function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService) {
     $scope.sortableOptions = {
         stop: function (e, ui) {
             var position = 1;
@@ -36,4 +36,16 @@ function TerveyskyselyCtrl($scope, SurveyQuestionService) {
 	    });
     }
 };
-TerveyskyselyCtrl.$inject = ['$scope', 'SurveyQuestionService'];
+TerveyskyselyKysymyksetCtrl.$inject = ['$scope', 'SurveyQuestionService'];
+
+function TerveyskyselyVastaaCtrl ($scope) {
+    
+}
+TerveyskyselyVastaaCtrl.$inject = ['$scope'];
+
+function TerveyskyselySidepanelCtrl ($scope, $routeParams, $location, SidepanelService) {
+    $scope.gotoSubview = function (subview) {
+            $location.path('/terveyskysely/' + subview)
+    }
+}
+TerveyskyselySidepanelCtrl.$inject = ['$scope', '$routeParams', '$location', 'SidepanelService'];
