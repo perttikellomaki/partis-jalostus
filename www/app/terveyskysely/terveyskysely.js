@@ -1,4 +1,14 @@
 function TerveyskyselyCtrl($scope, SurveyQuestionService) {
+    $scope.sortableOptions = {
+        stop: function (e, ui) {
+            var position = 1;
+            for (var i = 0; i < $scope.questions.length; i++) {
+                var question = $scope.questions[i];
+                question.position = position++;
+                SurveyQuestionService.save(question);
+            }
+        }
+    }
     $scope.questions = SurveyQuestionService.query();
     $scope.questions.thenServer(function (response) {
 	var questions = response.resource;

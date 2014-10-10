@@ -129,6 +129,34 @@ class HardenedHandler(BaseSessionHandler):
         except:
             pass
 
+    def genericIndividualGet(self, user, key):
+        if self.request.Params.has_key('dependent_modtime'):
+            entityKey = ndb.Key(urlsafe=key)
+            modtimeKey = ndb.Key('DependentModTime', 'dependent_modtime', parent=entityKey)
+            modtime = modtimeKey.get()
+            if modtime is None:
+                modtime = DependentModTime(id="dependent_modtime", parent=entityKey)
+                modtime.put()
+            self.jsonReply(modtime.hashify())
+        else:
+            entity = ndb.Key(urlsafe=key).get()
+
+            if entity is None:
+                # indicate that the entity has presumably been deleted
+                self.response.set_status(410)
+                self.response.out.write("No such entity, maybe it has been deleted?")
+                return
+
+            self.jsonReply(entity.hashify())
+
+    def genericIndividualPost(self, user, key, json_reply=True):
+        entity = ndb.Key(urlsafe=key).get()
+        if entity:
+            entity.populateFromRequest(self.request.Params)
+            entity.Put()
+            if json_reply:
+                self.jsonReply(entity.hashify())
+
     def genericGetCollection(self, collection, debug_fmt=None):
         data = []
         if self.request.params.has_key('modtime_only'):

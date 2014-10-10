@@ -1,11 +1,11 @@
 <script type="text/ng-template" id="free_text_question_renderer.html">
-  <div class="col-xs-4" style="white-space: pre-wrap">{{question.question}}</div>
+  <div class="col-xs-4" style="white-space: pre-wrap"><b>{{question.position}}.</b> {{question.question}}</div>
   <div class="col-xs-8"><textarea class="form-control"></textarea></div>
 </script>
 <script type="text/ng-template" id="boolean_question_renderer.html">
   <div class="col-xs-12">
     <div class="row">
-      <div class="col-xs-4" style="white-space: pre-wrap">{{question.question}}</div>
+      <div class="col-xs-4" style="white-space: pre-wrap"><b>{{question.position}}.</b> {{question.question}}</div>
         <div class="col-xs-8">
           <form role="form" class="form-inline">
             <label class="checkbox">
@@ -84,14 +84,13 @@
 </div>
 <h3>Kysymykset</h3>
 
-<ol>
-    <li ng-repeat="question in questions">
-        <div class="row">
+<div ui-sortable="sortableOptions" ng-model="questions">
+    <div ng-repeat="question in questions">
+        <div class="row well">
             <div ng-include="question.kind + '_question_renderer.html'"></div>
         </div>
-
-    </li>
-</ol>
+    </div>
+</div>
 
 
 
