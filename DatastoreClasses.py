@@ -157,11 +157,13 @@ class Survey (ndb.Model, UriAddressable):
 class SurveyQuestion (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     question_id = field(d, 'question_id', ndb.IntegerProperty())
+    male_only = field(d, 'male_only', ndb.BooleanProperty())
+    female_only = field(d, 'female_only', ndb.BooleanProperty())
     survey = field(d, 'survey', ndb.KeyProperty())
     question = field(d, 'question', ndb.StringProperty())
     detail_question = field(d, 'detail_question', ndb.StringProperty())
     position = field(d, 'position', ndb.IntegerProperty(required=True, default=0))
-    kind = field(d, 'kind', ndb.StringProperty())
+    question_kind = field(d, 'question_kind', ndb.StringProperty())
 
 class TerveyskyselyTmp (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())

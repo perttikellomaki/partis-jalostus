@@ -1,6 +1,6 @@
 function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService) {
     $scope.sortableOptions = {
-        stop: function (e, ui) {
+        stop: function(e, ui) {
             var position = 1;
             for (var i = 0; i < $scope.questions.length; i++) {
                 var question = $scope.questions[i];
@@ -10,42 +10,64 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService) {
         }
     }
     $scope.questions = SurveyQuestionService.query();
-    $scope.questions.thenServer(function (response) {
-	var questions = response.resource;
-	$scope.last_index = questions.length;
+    $scope.questions.thenServer(function(response) {
+        var questions = response.resource;
+        $scope.last_index = questions.length + 1;
     });
 
-    $scope.new_question = SurveyQuestionService.makeNew();
+    // new question
+    $scope.question = SurveyQuestionService.makeNew();
 
-    $scope.kinds = [{name: "Vapaa teksti", kind: "free_text"},
-		    {name: "Kyllä/ei", kind: "boolean"}];
+    $scope.question_kinds = [{name: "Vapaa teksti", question_kind: "free_text"},
+        {name: "Kyllä/ei", question_kind: "boolean"}];
 
-    $scope.new_question_kind = $scope.kinds[0];
+    $scope.question_kind = {chosen: $scope.question_kinds[0]};
 
-    $scope.newQuestion = function () {
-	var new_question = $scope.new_question;
-	new_question.position = $scope.last_index;
-	$scope.last_index = $scope.last_index + 1;
-	var kind = $scope.new_question_kind.kind;
-	$scope.new_question = SurveyQuestionService.makeNew();
-	SurveyQuestionService.save(
-	    new_question, 
-	    {kind: kind},
-	    function (question) {
-		$scope.questions.push(new_question);
-	    });
+    $scope.newQuestion = function() {
+        var question = $scope.question;
+        question.position = $scope.last_index;
+        question.question_kind = $scope.question_kind.chosen.question_kind;
+        $scope.last_index = $scope.last_index + 1;
+        $scope.question = SurveyQuestionService.makeNew();
+        SurveyQuestionService.save(question,
+                {},
+                function(question) {
+                    $scope.questions.push(question);
+                });
     }
-};
+}
+;
 TerveyskyselyKysymyksetCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
-function TerveyskyselyVastaaCtrl ($scope) {
-    
+function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
+    $scope.editing = false;
+    $scope.edit = function() {
+        for (i in $scope.question_kinds) {
+            if ($scope.question.question_kind == $scope.question_kinds[i].question_kind) {
+                $scope.question_kind.chosen = $scope.question_kinds[i];
+            }
+        }
+        $scope.editing = true;
+    }
+    $scope.save = function() {
+        var question = $scope.question;
+        console.log("question")
+        console.log(question)
+        $scope.question.question_kind = $scope.question_kind.chosen.question_kind;
+        SurveyQuestionService.save($scope.question);
+        $scope.editing = false;
+    }
+}
+TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
+
+function TerveyskyselyVastaaCtrl($scope) {
+
 }
 TerveyskyselyVastaaCtrl.$inject = ['$scope'];
 
-function TerveyskyselySidepanelCtrl ($scope, $routeParams, $location, SidepanelService) {
-    $scope.gotoSubview = function (subview) {
-            $location.path('/terveyskysely/' + subview)
+function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelService) {
+    $scope.gotoSubview = function(subview) {
+        $location.path('/terveyskysely/' + subview)
     }
 }
 TerveyskyselySidepanelCtrl.$inject = ['$scope', '$routeParams', '$location', 'SidepanelService'];

@@ -1,50 +1,54 @@
 <script type="text/ng-template" id="free_text_question_renderer.html">
+  <div ng-show="question.male_only">(Vain uroksille)</div>
+  <div ng-show="question.female_only">(Vain nartuille)</div>
   <div class="col-xs-4" style="white-space: pre-wrap"><b>{{question.position}}.</b> {{question.question}}</div>
-  <div class="col-xs-8"><textarea class="form-control"></textarea></div>
+  <div class="col-xs-8"><textarea placeholder="Vastaus tulee tähän..." class="form-control"></textarea></div>
 </script>
 <script type="text/ng-template" id="boolean_question_renderer.html">
+   <div ng-show="question.male_only">(Vain uroksille)</div>
+   <div ng-show="question.female_only">(Vain nartuille)</div>
   <div class="col-xs-12">
     <div class="row">
-      <div class="col-xs-4" style="white-space: pre-wrap"><b>{{question.position}}.</b> {{question.question}}</div>
-        <div class="col-xs-8">
-          <form role="form" class="form-inline">
-            <label class="checkbox">
-              <input type="checkbox">Kyllä
-            </label>
-            <label class="checkbox">
-              <input type="checkbox">Ei
-            </label>
-          </form>
-        </div>
-        <div class="col-xs-4" style="white-space: pre-wrap">{{question.detail_question}}</div>
-        <div class="col-xs-8">
-          <textarea class="form-control"></textarea>
-        </div>
+      <div class="col-xs-4" style="white-space: pre-wrap"><b>{{question.position}}.</b> {{question.question}}
+      </div>
+      <div class="col-xs-8">
+        <form role="form" class="form-inline">
+          <label class="checkbox">
+            <input type="checkbox">Kyllä
+          </label>
+          <label class="checkbox">
+            <input type="checkbox">Ei
+          </label>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div ng-show="question.detail_question.length > 0" class="col-xs-4" style="white-space: pre-wrap">{{question.detail_question}}</div>
+      <div ng-show="question.detail_question == undefined || question.detail_question.length == 0" class="col-xs-4" style="white-space: pre-wrap">Lisätietoja:</div>
+      <div class="col-xs-8">
+        <textarea placeholder="Lisätiedot tulevat tähän..." class="form-control"></textarea>
       </div>
     </div>
   </div>
 </script>
 
-<h2>Terveyskysely</h2>
-
-<h3>Uusi kysymys</h3>
-
+<script type="text/ng-template" id="question_editor.html">
 <div class="row">
     <div class="col-xs-3">
         <form role="form">
             <div class="form-group">
                 <label for="kysely-kind">Tyyppi</label>
-                <select class="form-control" ng-model="new_question_kind" id="kysely-kind" ng-options="kind.name for kind in kinds"></select>
+                <select class="form-control" ng-model="question_kind.chosen" id="kysely-kind" ng-options="question_kind.name for question_kind in question_kinds"></select>
             </div>
         </form>
     </div>
     <div class="col-xs-6">
         <form role="form" class="form-inline">
             <label class="checkbox">
-                <input type="checkbox">Vain uroksille
+                <input type="checkbox" ng-model="question.male_only">Vain uroksille
             </label>
             <label class="checkbox">
-                <input type="checkbox">Vain nartuille
+                <input type="checkbox" ng-model="question.female_only">Vain nartuille
             </label>
         </form>
     </div>
@@ -53,7 +57,7 @@
             <div class="form-group">
                 <label for="kysely-input">Kysymys</label>
                 <textarea
-                       ng-model="new_question.question"
+                       ng-model="question.question"
                        class="form-control" 
                        id="kysely-input" 
                        placeholder="uusi kysymys">
@@ -63,10 +67,10 @@
     </div>
     <div class="col-xs-12">
         <form role="form">
-            <div class="form-group"  ng-show="new_question_kind.kind == 'boolean'">
+            <div class="form-group"  ng-show="question_kind.chosen.question_kind == 'boolean'">
                 <label for="kysely-input-detail">Tarkentava kysymys</label>
                 <input type="text"
-                       ng-model="new_question.detail_question"
+                       ng-model="question.detail_question"
                        class="form-control" 
                        id="kysely-input-detail" 
                        placeholder="tarkentava kysymys">
@@ -77,17 +81,31 @@
         <form role="form">
             <div class="form-group">
                 <label for="kysely-btn">&nbsp;</label>
-                <button class="btn btn-default" ng-click="newQuestion()" id="kysely-btn">Luo</button>
+                <button ng-show="question.question_id == undefined" class="btn btn-default" ng-click="newQuestion()" id="kysely-btn">Luo</button>
+                <button ng-show="question.question_id != undefined" class="btn btn-default" ng-click="save()" id="kysely-btn">Talleta</button>
+                <button ng-show="question.question_id != undefined" class='btn btn-default'>Poista</button>
             </div>
         </form>
     </div>
 </div>
+</script>
+
+<h2>Terveyskysely</h2>
+
+<h3>Uusi kysymys</h3>
+
+<div class="well" ng-include="'question_editor.html'"></div>
+
 <h3>Kysymykset</h3>
 
 <div ui-sortable="sortableOptions" ng-model="questions">
     <div ng-repeat="question in questions">
-        <div class="row well">
-            <div ng-include="question.kind + '_question_renderer.html'"></div>
+        <div class="row well" ng-controller="TerveyskyselyQuestionCtrl">
+            <div ng-show='editing' ng-include="'question_editor.html'"></div>
+            <div ng-show="!editing" ng-include="question.question_kind + '_question_renderer.html'"></div>
+            <div class='col-xs-12'>
+                <button ng-show="!editing" class='btn btn-default' ng-click="edit()">Muokkaa</button>
+            </div>
         </div>
     </div>
 </div>
