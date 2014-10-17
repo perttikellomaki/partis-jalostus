@@ -101,12 +101,13 @@ class UriAddressable(object):
                     except:
                         pass
                 elif isinstance(field, ndb.BooleanProperty):
-                    if params[name] == 'true':
+                    if params[name] == 'true' or params[name] is True:
                         field.__set__(self, True)
-                    elif params[name] == 'false':
+                    elif params[name] == 'false' or params[name] is False:
                         field.__set__(self, False)
                     else:
-                        raise "Bad value for boolean field"
+                        logging.error("Bad value for boolean field: %s" % params[name])
+                        raise "Bad value for boolean field: %s" % params[name]
                 elif isinstance(field, ndb.DateProperty):
                     try:
                         field.__set__(self, dateutil.parser.parse(params[name]))
