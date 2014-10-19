@@ -255,6 +255,8 @@ handler_list = (
          DatastoreClasses.ChangeNotification,
          DatastoreClasses.TerveyskyselyTmp,
          DatastoreClasses.SurveyQuestion,
+         DatastoreClasses.SurveyAnswer,
+         DatastoreClasses.SurveyQuestionAnswer,
          DatastoreClasses.YhdistysPaimennustaipumus])
     + [("/ModTime/([^/]+)", ModTimeHandler),
        ("/DepModTime/([^/]+)", DepModTimeHandler),

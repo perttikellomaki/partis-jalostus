@@ -96,6 +96,18 @@ angular.module('myApp.services', [])
 		  return CachedResourceService.make(
 		      "/SurveyQuestion/:key", {}, localStorageService)
 	      }])
+    .factory('SurveyAnswerService',
+	     ['CachedResourceService', 'localStorageService',
+	      function (CachedResourceService, localStorageService) {
+		  return CachedResourceService.make(
+		      "/SurveyAnswer/:key", {}, localStorageService)
+	      }])
+    .factory('SurveyQuestionAnswerService',
+	     ['CachedResourceService', 'localStorageService',
+	      function (CachedResourceService, localStorageService) {
+		  return CachedResourceService.make(
+		      "/SurveyQuestionAnswer/:key", {}, localStorageService)
+	      }])
     .factory('TerveyskyselyService',
 	     ['CachedResourceService', 'localStorageService',
 	      function (CachedResourceService, localStorageService) {

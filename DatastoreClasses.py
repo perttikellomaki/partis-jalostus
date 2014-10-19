@@ -165,6 +165,20 @@ class SurveyQuestion (ndb.Model, UriAddressable):
     position = field(d, 'position', ndb.IntegerProperty(required=True, default=0))
     question_kind = field(d, 'question_kind', ndb.StringProperty())
 
+class SurveyAnswer (ndb.Model, UriAddressable):
+    d = dict(UriAddressable.d.items())
+    survey = field(d, 'survey', ndb.KeyProperty())
+    created = field(d, 'created', ndb.DateTimeProperty(auto_now_add=True))
+
+class SurveyQuestionAnswer (ndb.Model, UriAddressable):
+    d = dict(UriAddressable.d.items())
+    survey_question = field(d, 'survey_question', ndb.KeyProperty())
+    part_of_survey_answer = field(d, 'part_of_survey_answer', ndb.KeyProperty())
+    yesno_answer =  field(d, 'yesno_answer', ndb.BooleanProperty())
+    free_text_answer = field(d, 'free_text_answer', ndb.TextProperty())
+    detail_answer = field(d, 'detail_answer', ndb.TextProperty())
+    created = field(d, 'created', ndb.DateTimeProperty(auto_now_add=True))
+
 class TerveyskyselyTmp (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     koira = field(d, 'koira', ndb.KeyProperty())
