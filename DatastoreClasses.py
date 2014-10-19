@@ -160,8 +160,8 @@ class SurveyQuestion (ndb.Model, UriAddressable):
     male_only = field(d, 'male_only', ndb.BooleanProperty())
     female_only = field(d, 'female_only', ndb.BooleanProperty())
     survey = field(d, 'survey', ndb.KeyProperty())
-    question = field(d, 'question', ndb.StringProperty())
-    detail_question = field(d, 'detail_question', ndb.StringProperty())
+    question = field(d, 'question', ndb.TextProperty())
+    detail_question = field(d, 'detail_question', ndb.TextProperty())
     position = field(d, 'position', ndb.IntegerProperty(required=True, default=0))
     question_kind = field(d, 'question_kind', ndb.StringProperty())
 
