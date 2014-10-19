@@ -1,4 +1,15 @@
-function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService) {
+function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService, TerveyskyselyService) {
+
+    $scope.kyselyt = TerveyskyselyService.query();
+    $scope.kyselyt.thenServer(function(response) {
+        $scope.kysely = response.resource[0];
+        $scope.questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
+        $scope.questions.thenServer(function(response) {
+            var questions = response.resource;
+            $scope.last_index = questions.length + 1;
+        });
+    })
+
     $scope.sortableOptions = {
         stop: function(e, ui) {
             var position = 1;
@@ -9,11 +20,6 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService) {
             }
         }
     }
-    $scope.questions = SurveyQuestionService.query();
-    $scope.questions.thenServer(function(response) {
-        var questions = response.resource;
-        $scope.last_index = questions.length + 1;
-    });
 
     // new question
     $scope.question = SurveyQuestionService.makeNew();
@@ -26,6 +32,7 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService) {
     $scope.newQuestion = function() {
         var question = $scope.question;
         question.position = $scope.last_index;
+        question.survey = $scope.kysely.uri;
         question.question_kind = $scope.question_kind.chosen.question_kind;
         $scope.last_index = $scope.last_index + 1;
         $scope.question = SurveyQuestionService.makeNew();
@@ -37,7 +44,7 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService) {
     }
 }
 ;
-TerveyskyselyKysymyksetCtrl.$inject = ['$scope', 'SurveyQuestionService'];
+TerveyskyselyKysymyksetCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService'];
 
 function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
     $scope.editing = false;

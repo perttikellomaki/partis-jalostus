@@ -100,6 +100,12 @@ angular.module('myApp.services', [])
 	     ['CachedResourceService', 'localStorageService',
 	      function (CachedResourceService, localStorageService) {
 		  return CachedResourceService.make(
+		      "/Terveyskysely/:key", {}, localStorageService)
+	      }])
+    .factory('TerveyskyselyTmpService',
+	     ['CachedResourceService', 'localStorageService',
+	      function (CachedResourceService, localStorageService) {
+		  return CachedResourceService.make(
 		     "/TerveyskyselyTmp/:key",
 		      {koira: '@koira',
 		       koira_virallinen_nimi: '@koira_virallinen_nimi',

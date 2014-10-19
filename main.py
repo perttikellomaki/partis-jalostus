@@ -267,6 +267,7 @@ handler_list = (
        ("/LoginStatus", LoginStatusHandler),
        ("/PasswordRequest", PasswordRequestHandler),
        ("/CompactHistory/([^/]+)", CompactHistoryHandler),
+       ("/Terveyskysely", Terveyskysely.TerveyskyselyCollectionHandler),
        ]
     + [webapp2.Route('/logout', handler='HardenedHandler.AuthHandler:logout', name='logout'),
        webapp2.Route('/auth/<provider>', 
