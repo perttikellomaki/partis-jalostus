@@ -78,6 +78,18 @@ TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'Terveysky
 
 function TerveyskyselyAnswerCtrl($scope, SurveyQuestionAnswerService) {
     $scope.answer = SurveyQuestionAnswerService.makeNew({survey_question: $scope.question.uri});
+    $scope.yesno = {}
+    $scope.changeYesno = function (choice) {
+        if (choice == 'yes') {
+            $scope.yesno.yes = true;
+            $scope.yesno.no = false;
+            $scope.answer.yesno = true;
+        } else {
+            $scope.yesno.yes = false;
+            $scope.yesno.no = true;
+            $scope.answer.yesno = false;            
+        }
+    }
 }
 TerveyskyselyAnswerCtrl.$inject = ['$scope', 'SurveyQuestionAnswerService']
 
