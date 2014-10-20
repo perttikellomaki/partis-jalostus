@@ -173,7 +173,7 @@ class SurveyAnswer (ndb.Model, UriAddressable):
 class SurveyQuestionAnswer (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     survey_question = field(d, 'survey_question', ndb.KeyProperty())
-    part_of_survey_answer = field(d, 'part_of_survey_answer', ndb.KeyProperty())
+    survey_answer = field(d, 'survey_answer', ndb.KeyProperty())
     yesno_answer =  field(d, 'yesno_answer', ndb.BooleanProperty())
     free_text_answer = field(d, 'free_text_answer', ndb.TextProperty())
     detail_answer = field(d, 'detail_answer', ndb.TextProperty())

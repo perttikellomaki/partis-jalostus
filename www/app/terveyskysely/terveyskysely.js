@@ -67,29 +67,41 @@ function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
 }
 TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
-function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselyService) {
+function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselyService, SurveyAnswerService) {
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
         $scope.kysely = response.resource[0];
         $scope.questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
     })
+    $scope.vastaa = function() {
+        var survey_answer = SurveyAnswerService.makeNew({survey: $scope.kysely.uri});
+        SurveyAnswerService.save(survey_answer, {},
+                function(answer) {
+                    $scope.$broadcast('saveAnswer', answer);
+                });
+    }
 }
-TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService'];
+TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService', 'SurveyAnswerService'];
 
 function TerveyskyselyAnswerCtrl($scope, SurveyQuestionAnswerService) {
     $scope.answer = SurveyQuestionAnswerService.makeNew({survey_question: $scope.question.uri});
     $scope.yesno = {}
-    $scope.changeYesno = function (choice) {
+    $scope.changeYesno = function(choice) {
         if (choice == 'yes') {
             $scope.yesno.yes = true;
             $scope.yesno.no = false;
-            $scope.answer.yesno = true;
+            $scope.answer.yesno_answer = true;
         } else {
             $scope.yesno.yes = false;
             $scope.yesno.no = true;
-            $scope.answer.yesno = false;            
+            $scope.answer.yesno_answer = false;
         }
-    }
+    };
+    $scope.$on('saveAnswer', function(event, survey_answer) {
+        SurveyQuestionAnswerService.save($scope.answer,
+                {survey_question: $scope.question.uri,
+                    survey_answer: survey_answer.uri})
+    });
 }
 TerveyskyselyAnswerCtrl.$inject = ['$scope', 'SurveyQuestionAnswerService']
 

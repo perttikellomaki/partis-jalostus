@@ -19,6 +19,7 @@ import Koira
 import Kennel
 import Util
 import Survey
+import SurveyAnswer
 
 class ModTimeHandler (HardenedHandler):
     def get_(self, user, key):
