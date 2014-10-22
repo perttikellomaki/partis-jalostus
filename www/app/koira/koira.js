@@ -201,20 +201,6 @@ function KoiraHistoryCtrl ($scope, KoiraService) {
 }
 KoiraHistoryCtrl.$inject = ['$scope', 'KoiraService'];
 
-function UusiKoiraCtrl ($scope, $location, KoiraService) {
-    $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
-    $scope.selected = $scope.sexes[0];
-    $scope.koira = KoiraService.makeNew();
-    $scope.save = function () { 
-	KoiraService.save($scope.koira, 
-			  {key: '', sukupuoli: $scope.selected.sex},
-			  function (koira) {
-			      $location.path("/koira/perustiedot" + koira.uri);
-			  });
-    }
-}
-UusiKoiraCtrl.$inject = ['$scope', '$location', 'KoiraService'];
-
 function KoiraSidepanelCtrl ($scope, $routeParams, $location, SidepanelService) {
     $scope.gotoSubview = function (subview) {
 	$location.path('/koira/' + subview + '/Koira/' + $routeParams.key);
