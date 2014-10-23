@@ -1,6 +1,9 @@
-function KoiraEtusivuCtrl($scope) {
+function KoiraEtusivuCtrl($scope, $location) {
+    $scope.dogFound = function (dog) {
+        $location.path("/koira/perustiedot" + dog.uri);
+    }
 }
-KoiraEtusivuCtrl.$inject = ['$scope'];
+KoiraEtusivuCtrl.$inject = ['$scope', '$location'];
 
 function SearchKoiraCtrl($scope, $http, $location, $modal, KoiraService, TypeaheadService) {
 
@@ -8,7 +11,7 @@ function SearchKoiraCtrl($scope, $http, $location, $modal, KoiraService, Typeahe
     $scope.typeahead = TypeaheadService.typeahead;
     $scope.typeaheadClear = TypeaheadService.clear;
 
-    $scope.gotoDog = function(name) {
+    $scope.findDog = function(name) {
         var dogs = KoiraService.query({virallinen_nimi: name});
         dogs.thenServer(function(response) {
             var results = response.resource;
@@ -17,11 +20,10 @@ function SearchKoiraCtrl($scope, $http, $location, $modal, KoiraService, Typeahe
             } else if (results.length > 1) {
                 alert("Samannimisiä koiria löytyi useita, ota yhteyttä tietokannan ylläpitäjään.");
             } else {
-                $location.path("/koira/perustiedot" + results[0].uri);
+                $scope.dogFound(results[0]);
             }
         });
     }
-    $scope.items = ['item1', 'item2', 'item3'];
 
     function open(size) {
 
@@ -37,7 +39,7 @@ function SearchKoiraCtrl($scope, $http, $location, $modal, KoiraService, Typeahe
         });
 
         modalInstance.result.then(function(koira) {
-            $location.path("/koira/perustiedot" + koira.uri);
+            $scope.dogFound(koira);
         });
     }
     ;
