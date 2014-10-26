@@ -70,11 +70,6 @@ indexes:
   - name: timestamp
     direction: desc
 
-- kind: TerveyskyselyTmp
-  properties:
-  - name: koira
-  - name: timestamp
-
 - kind: SurveyQuestion
   properties:
   - name: survey

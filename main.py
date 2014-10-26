@@ -254,7 +254,6 @@ handler_list = (
         [DatastoreClasses.Koira,
          DatastoreClasses.Kennel,
          DatastoreClasses.ChangeNotification,
-         DatastoreClasses.TerveyskyselyTmp,
          DatastoreClasses.SurveyQuestion,
          DatastoreClasses.SurveyAnswer,
          DatastoreClasses.SurveyQuestionAnswer,
