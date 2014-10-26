@@ -28,12 +28,18 @@
   </div>
 </script>
 
-<h2>{{kysely.title}}</h2>
+<h2>{{kysely.title}} {{koira.virallinen_nimi}}</h2>
+
+<button class="btn btn-success" ng-click="showDogSearch()">Valitse koira</button>
+
+<div collapse="isCollapsed">
+		<div ng-include="'search_dog.html'"></div> 
+</div>
 
 <div ng-repeat="question in questions">
     <div class="row" ng-controller="TerveyskyselyAnswerCtrl" ng-include="question.question_kind + '_question_renderer.html'"></div>
     <hr>
 </div>
-<button class="btn btn-success" ng-click="vastaa()">Vastaa</button>
+<button class="btn btn-success" ng-click="sendAnswer()">Lähetä vastaus</button>
 
 

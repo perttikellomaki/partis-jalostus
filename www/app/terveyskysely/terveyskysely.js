@@ -72,13 +72,21 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
     $scope.kyselyt.thenServer(function(response) {
         $scope.kysely = response.resource[0];
         $scope.questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
-    })
-    $scope.vastaa = function() {
+    });
+    $scope.isCollapsed = true;
+    $scope.showDogSearch = function () {
+        $scope.isCollapsed = false;
+    }
+    $scope.sendAnswer = function() {
         var survey_answer = SurveyAnswerService.makeNew({survey: $scope.kysely.uri});
         SurveyAnswerService.save(survey_answer, {},
                 function(answer) {
                     $scope.$broadcast('saveAnswer', answer);
                 });
+    }
+    $scope.dogFound = function (dog) {
+        $scope.koira = dog;
+        $scope.isCollapsed = true;
     }
 }
 TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService', 'SurveyAnswerService'];
