@@ -114,9 +114,15 @@ function TerveyskyselyQuestionAnswerCtrl($scope, SurveyQuestionAnswerService) {
 }
 TerveyskyselyQuestionAnswerCtrl.$inject = ['$scope', 'SurveyQuestionAnswerService']
 
-function TerveyskyselyVastauksetCtrl ($scope) {
+function TerveyskyselyVastauksetCtrl ($scope, TerveyskyselyAnswerService) {
+    $scope.answers = TerveyskyselyAnswerService.query();
 }
-TerveyskyselyVastauksetCtrl.$inject = ['$scope'];
+TerveyskyselyVastauksetCtrl.$inject = ['$scope', 'TerveyskyselyAnswerService'];
+
+function TerveyskyselyVastausReadonlyCtrl ($scope, KoiraService) {
+    $scope.koira = KoiraService.get({uri: $scope.answer.koira});
+}
+TerveyskyselyVastausReadonlyCtrl.$inject = ['$scope', 'KoiraService']
 
 function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelService) {
     $scope.gotoSubview = function(subview) {
