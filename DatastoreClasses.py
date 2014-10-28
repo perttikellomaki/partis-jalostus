@@ -90,12 +90,6 @@ class Koira(ndb.Model, SignedResource):
 
     def useModTime(self):
         return True
-class Terveyskysely(ndb.Model, SignedResource):
-    d = dict(SignedResource.d.items())
-    virallinen_nimi    = field(d, 'virallinen_nimi', ndb.StringProperty())
-    autoimmuunisairaus = field(d, 'autoimmuunisairaus', ndb.BooleanProperty())
-    slo                = field(d, 'slo', ndb.BooleanProperty())
-    imha               = field(d, 'imha', ndb.BooleanProperty())
 
 class YhdistysPaimennustaipumus(ndb.Model, SignedResource):
     d = dict(SignedResource.d.items())
@@ -178,6 +172,10 @@ class SurveyQuestionAnswer (ndb.Model, UriAddressable):
     free_text_answer = field(d, 'free_text_answer', ndb.TextProperty())
     detail_answer = field(d, 'detail_answer', ndb.TextProperty())
     created = field(d, 'created', ndb.DateTimeProperty(auto_now_add=True))
+
+class TerveyskyselyAnswer (SurveyAnswer):
+    d = dict(SurveyAnswer.d.items())
+    dog = field(d, 'dog', ndb.KeyProperty())
 
 class TerveyskyselyTmp (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())

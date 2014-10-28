@@ -67,7 +67,7 @@ function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
 }
 TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
-function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselyService, SurveyAnswerService) {
+function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselyService, TerveyskyselyAnswerService) {
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
         $scope.kysely = response.resource[0];
@@ -78,8 +78,9 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
         $scope.isCollapsed = false;
     }
     $scope.sendAnswer = function() {
-        var survey_answer = SurveyAnswerService.makeNew({survey: $scope.kysely.uri});
-        SurveyAnswerService.save(survey_answer, {},
+        var survey_answer = TerveyskyselyAnswerService.makeNew({survey: $scope.kysely.uri});
+        survey_answer.dog = $scope.koira.uri;
+        TerveyskyselyAnswerService.save(survey_answer, {},
                 function(answer) {
                     $scope.$broadcast('saveAnswer', answer);
                 });
@@ -89,7 +90,7 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
         $scope.isCollapsed = true;
     }
 }
-TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService', 'SurveyAnswerService'];
+TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselyAnswerService'];
 
 function TerveyskyselyAnswerCtrl($scope, SurveyQuestionAnswerService) {
     $scope.answer = SurveyQuestionAnswerService.makeNew({survey_question: $scope.question.uri});
