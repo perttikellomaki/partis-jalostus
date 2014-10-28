@@ -114,6 +114,10 @@ function TerveyskyselyAnswerCtrl($scope, SurveyQuestionAnswerService) {
 }
 TerveyskyselyAnswerCtrl.$inject = ['$scope', 'SurveyQuestionAnswerService']
 
+function TerveyskyselyVastauksetCtrl ($scope) {
+}
+TerveyskyselyVastauksetCtrl.$inject = ['$scope'];
+
 function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelService) {
     $scope.gotoSubview = function(subview) {
         $location.path('/terveyskysely/' + subview)
