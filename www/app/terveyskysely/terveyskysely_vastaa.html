@@ -37,7 +37,7 @@
 </div>
 
 <div ng-repeat="question in questions">
-    <div class="row" ng-controller="TerveyskyselyAnswerCtrl" ng-include="question.question_kind + '_question_renderer.html'"></div>
+    <div class="row" ng-controller="TerveyskyselyQuestionAnswerCtrl" ng-include="question.question_kind + '_question_renderer.html'"></div>
     <hr>
 </div>
 <button class="btn btn-success" ng-click="sendAnswer()">Lähetä vastaus</button>

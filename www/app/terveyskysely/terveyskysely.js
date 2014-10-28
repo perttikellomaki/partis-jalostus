@@ -92,7 +92,7 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
 }
 TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselyAnswerService'];
 
-function TerveyskyselyAnswerCtrl($scope, SurveyQuestionAnswerService) {
+function TerveyskyselyQuestionAnswerCtrl($scope, SurveyQuestionAnswerService) {
     $scope.answer = SurveyQuestionAnswerService.makeNew({survey_question: $scope.question.uri});
     $scope.yesno = {}
     $scope.changeYesno = function(choice) {
@@ -112,7 +112,7 @@ function TerveyskyselyAnswerCtrl($scope, SurveyQuestionAnswerService) {
                     survey_answer: survey_answer.uri})
     });
 }
-TerveyskyselyAnswerCtrl.$inject = ['$scope', 'SurveyQuestionAnswerService']
+TerveyskyselyQuestionAnswerCtrl.$inject = ['$scope', 'SurveyQuestionAnswerService']
 
 function TerveyskyselyVastauksetCtrl ($scope) {
 }
