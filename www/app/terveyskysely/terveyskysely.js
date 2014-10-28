@@ -79,7 +79,7 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
     }
     $scope.sendAnswer = function() {
         var survey_answer = TerveyskyselyAnswerService.makeNew({survey: $scope.kysely.uri});
-        survey_answer.dog = $scope.koira.uri;
+        survey_answer.koira = $scope.koira.uri;
         TerveyskyselyAnswerService.save(survey_answer, {},
                 function(answer) {
                     $scope.$broadcast('saveAnswer', answer);

@@ -175,7 +175,7 @@ class SurveyQuestionAnswer (ndb.Model, UriAddressable):
 
 class TerveyskyselyAnswer (SurveyAnswer):
     d = dict(SurveyAnswer.d.items())
-    dog = field(d, 'dog', ndb.KeyProperty())
+    koira = field(d, 'koira', ndb.KeyProperty())
 
 class TerveyskyselyTmp (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
