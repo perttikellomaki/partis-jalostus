@@ -1,7 +1,10 @@
 <h2>Vastaukset</h2>
 
-<div ng-repeat="answer in answers">
-    <div ng-controller="TerveyskyselyVastausReadonlyCtrl">
-        {{answer.created}} {{koira.virallinen_nimi}}
-    </div>
-</div>
+<accordion>
+    <accordion-group 
+        ng-repeat="answer in answers"
+        heading="{{answer.created}} {{koira.virallinen_nimi}}"
+        >
+        Vastauksia...
+    </accordion-group>
+</accordion>
