@@ -39,10 +39,10 @@ SurveyQuestionAnswer.individualHandler(SurveyQuestionAnswerHandler)
 
 class SurveyQuestionAnswerCollectionHandler (HardenedHandler):
     def get_(self, user):
-        survey = self.lookupKey(param='survey')
+        survey_answer = self.lookupKey(param='survey_answer')
         self.genericGetCollection(
-            ndb.gql("SELECT __key__ FROM SurveyQuestionAnswer WHERE survey = :1 ORDER BY position",
-                    survey))
+            ndb.gql("SELECT __key__ FROM SurveyQuestionAnswer WHERE survey_answer = :1 ORDER BY position",
+                    survey_answer))
 
     def post_(self, user):
         answer = SurveyQuestionAnswer()

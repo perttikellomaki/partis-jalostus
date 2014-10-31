@@ -166,8 +166,17 @@ class SurveyAnswer (ndb.Model, UriAddressable):
 
 class SurveyQuestionAnswer (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
-    survey_question = field(d, 'survey_question', ndb.KeyProperty())
+
+    # The SurveyAnswer this answer is part of.
     survey_answer = field(d, 'survey_answer', ndb.KeyProperty())
+
+    # The SurveyQuestion being answered.
+    survey_question = field(d, 'survey_question', ndb.KeyProperty())
+
+    # The position of the question is copied here so we can retrieve
+    # answers in the order the questions were asked.
+    position = field(d, 'position', ndb.IntegerProperty())
+
     yesno_answer =  field(d, 'yesno_answer', ndb.BooleanProperty())
     free_text_answer = field(d, 'free_text_answer', ndb.TextProperty())
     detail_answer = field(d, 'detail_answer', ndb.TextProperty())

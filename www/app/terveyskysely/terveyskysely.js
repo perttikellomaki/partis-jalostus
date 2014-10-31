@@ -74,7 +74,7 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
         $scope.questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
     });
     $scope.isCollapsed = true;
-    $scope.showDogSearch = function () {
+    $scope.showDogSearch = function() {
         $scope.isCollapsed = false;
     }
     $scope.sendAnswer = function() {
@@ -85,7 +85,7 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
                     $scope.$broadcast('saveAnswer', answer);
                 });
     }
-    $scope.dogFound = function (dog) {
+    $scope.dogFound = function(dog) {
         $scope.koira = dog;
         $scope.isCollapsed = true;
     }
@@ -93,7 +93,9 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
 TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselyAnswerService'];
 
 function TerveyskyselyQuestionAnswerCtrl($scope, SurveyQuestionAnswerService) {
-    $scope.answer = SurveyQuestionAnswerService.makeNew({survey_question: $scope.question.uri});
+    $scope.answer = SurveyQuestionAnswerService.makeNew(
+            {survey_question: $scope.question.uri,
+                position: $scope.question.position});
     $scope.yesno = {}
     $scope.changeYesno = function(choice) {
         if (choice == 'yes') {
@@ -114,15 +116,20 @@ function TerveyskyselyQuestionAnswerCtrl($scope, SurveyQuestionAnswerService) {
 }
 TerveyskyselyQuestionAnswerCtrl.$inject = ['$scope', 'SurveyQuestionAnswerService']
 
-function TerveyskyselyVastauksetCtrl ($scope, TerveyskyselyAnswerService) {
+function TerveyskyselyVastauksetCtrl($scope, TerveyskyselyAnswerService) {
     $scope.answers = TerveyskyselyAnswerService.query();
 }
 TerveyskyselyVastauksetCtrl.$inject = ['$scope', 'TerveyskyselyAnswerService'];
 
-function TerveyskyselyVastausReadonlyCtrl ($scope, KoiraService) {
+function TerveyskyselyVastausHeadingReadonlyCtrl($scope, KoiraService, SurveyQuestionAnswerService) {
     $scope.koira = KoiraService.get({uri: $scope.answer.koira});
 }
-TerveyskyselyVastausReadonlyCtrl.$inject = ['$scope', 'KoiraService']
+TerveyskyselyVastausHeadingReadonlyCtrl.$inject = ['$scope', 'KoiraService', 'SurveyQuestionAnswerService']
+
+function TerveyskyselyVastausReadonlyCtrl($scope, KoiraService, SurveyQuestionAnswerService) {
+    $scope.question_answers = SurveyQuestionAnswerService.query({survey_answer: $scope.answer.uri});
+}
+TerveyskyselyVastausReadonlyCtrl.$inject = ['$scope', 'KoiraService', 'SurveyQuestionAnswerService']
 
 function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelService) {
     $scope.gotoSubview = function(subview) {

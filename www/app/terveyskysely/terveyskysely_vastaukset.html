@@ -3,8 +3,11 @@
 <accordion>
     <accordion-group 
         ng-repeat="answer in answers"
+         ng-controller="TerveyskyselyVastausHeadingReadonlyCtrl"
         heading="{{answer.created}} {{koira.virallinen_nimi}}"
         >
-        Vastauksia...
+        <div ng-controller="TerveyskyselyVastausReadonlyCtrl">
+            <div ng-repeat="question_answer in question_answers">{{question_answer}}</div>
+        </div>
     </accordion-group>
 </accordion>
