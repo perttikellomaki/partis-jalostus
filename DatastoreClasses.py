@@ -179,7 +179,6 @@ class SurveyAnswer (ndb.Model, UriAddressable):
 
     yesno_answer =  field(d, 'yesno_answer', ndb.BooleanProperty())
     free_text_answer = field(d, 'free_text_answer', ndb.TextProperty())
-    detail_answer = field(d, 'detail_answer', ndb.TextProperty())
     created = field(d, 'created', ndb.DateTimeProperty(auto_now_add=True))
 
 class TerveyskyselySubmission (SurveySubmission):

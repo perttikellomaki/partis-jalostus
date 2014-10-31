@@ -22,7 +22,7 @@
       <div ng-show="question.detail_question.length > 0" class="col-xs-4" style="white-space: pre-wrap">{{question.detail_question}}</div>
       <div ng-show="question.detail_question == undefined || question.detail_question.length == 0" class="col-xs-4" style="white-space: pre-wrap">Lisätietoja:</div>
       <div class="col-xs-8" ng-show="koira != undefined">
-        <textarea ng-model="answer.detail_answer" placeholder="Kerro lisätietoja tähän..." class="form-control"></textarea>
+        <textarea ng-model="answer.free_text_answer" placeholder="Kerro lisätietoja tähän..." class="form-control"></textarea>
       </div>
     </div>
   </div>
