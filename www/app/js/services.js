@@ -104,17 +104,17 @@ angular.module('myApp.services', [])
                         return CachedResourceService.make(
                                 "/SurveyQuestion/:key", {}, localStorageService)
                     }])
+        .factory('SurveySubmissionService',
+                ['CachedResourceService', 'localStorageService',
+                    function(CachedResourceService, localStorageService) {
+                        return CachedResourceService.make(
+                                "/SurveySubmission/:key", {}, localStorageService)
+                    }])
         .factory('SurveyAnswerService',
                 ['CachedResourceService', 'localStorageService',
                     function(CachedResourceService, localStorageService) {
                         return CachedResourceService.make(
                                 "/SurveyAnswer/:key", {}, localStorageService)
-                    }])
-        .factory('SurveyQuestionAnswerService',
-                ['CachedResourceService', 'localStorageService',
-                    function(CachedResourceService, localStorageService) {
-                        return CachedResourceService.make(
-                                "/SurveyQuestionAnswer/:key", {}, localStorageService)
                     }])
         .factory('TerveyskyselyService',
                 ['CachedResourceService', 'localStorageService',
@@ -122,11 +122,11 @@ angular.module('myApp.services', [])
                         return CachedResourceService.make(
                                 "/Terveyskysely/:key", {}, localStorageService)
                     }])
-        .factory('TerveyskyselyAnswerService',
+        .factory('TerveyskyselySubmissionService',
                 ['CachedResourceService', 'localStorageService',
                     function(CachedResourceService, localStorageService) {
                         return CachedResourceService.make(
-                                "/TerveyskyselyAnswer/:key", {}, localStorageService)
+                                "/TerveyskyselySubmission/:key", {}, localStorageService)
                     }])
         .factory('SidepanelService',
                 function() {

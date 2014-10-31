@@ -2,12 +2,12 @@
 
 <accordion>
     <accordion-group 
-        ng-repeat="answer in answers"
+        ng-repeat="submission in submissions"
          ng-controller="TerveyskyselyVastausHeadingReadonlyCtrl"
         heading="{{answer.created}} {{koira.virallinen_nimi}}"
         >
         <div ng-controller="TerveyskyselyVastausReadonlyCtrl">
-            <div ng-repeat="question_answer in question_answers">{{question_answer}}</div>
+            <div ng-repeat="answer in answers">{{answer}}</div>
         </div>
     </accordion-group>
 </accordion>

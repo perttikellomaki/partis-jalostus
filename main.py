@@ -19,7 +19,7 @@ import Koira
 import Kennel
 import Util
 import Survey
-import SurveyAnswer
+import SurveySubmission
 
 class ModTimeHandler (HardenedHandler):
     def get_(self, user, key):
@@ -255,9 +255,9 @@ handler_list = (
          DatastoreClasses.Kennel,
          DatastoreClasses.ChangeNotification,
          DatastoreClasses.SurveyQuestion,
+         DatastoreClasses.SurveySubmission,
          DatastoreClasses.SurveyAnswer,
-         DatastoreClasses.SurveyQuestionAnswer,
-         DatastoreClasses.TerveyskyselyAnswer,
+         DatastoreClasses.TerveyskyselySubmission,
          DatastoreClasses.YhdistysPaimennustaipumus])
     + [("/ModTime/([^/]+)", ModTimeHandler),
        ("/DepModTime/([^/]+)", DepModTimeHandler),

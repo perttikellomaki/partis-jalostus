@@ -1,7 +1,7 @@
 from google.appengine.ext import ndb
 
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import Survey, TerveyskyselyAnswer
+from DatastoreClasses import Survey, TerveyskyselySubmission
 
 terveyskysely_key = ndb.Key(Survey, 'terveyskysely')
 
@@ -14,24 +14,24 @@ class TerveyskyselyCollectionHandler (HardenedHandler):
         result = [kysely.hashify()]
         self.jsonReply(result)
 
-class TerveyskyselyAnswerCollectionHandler (HardenedHandler):
+class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
     def get_(self, user):
         self.genericGetCollection(
-            ndb.gql("SELECT __key__ FROM TerveyskyselyAnswer"))
+            ndb.gql("SELECT __key__ FROM TerveyskyselySubmission"))
 
     def post_(self, user):
-        answer = TerveyskyselyAnswer()
+        answer = TerveyskyselySubmission()
         answer.populateFromRequest(self.request.Params)
         answer.Put()
         self.jsonReply(answer.hashify())
 
-TerveyskyselyAnswer.collectionHandler(TerveyskyselyAnswerCollectionHandler)
+TerveyskyselySubmission.collectionHandler(TerveyskyselySubmissionCollectionHandler)
 
-class TerveyskyselyAnswerHandler (HardenedHandler):
+class TerveyskyselySubmissionHandler (HardenedHandler):
     def get_(self, user, key):
         self.genericIndividualGet(user, key)
 
     def post_(self, user, key):
         self.genericIndividualPost(user, key)
 
-TerveyskyselyAnswer.individualHandler(TerveyskyselyAnswerHandler)
+TerveyskyselySubmission.individualHandler(TerveyskyselySubmissionHandler)
