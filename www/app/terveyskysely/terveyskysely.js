@@ -121,15 +121,20 @@ function TerveyskyselyVastauksetCtrl($scope, TerveyskyselySubmissionService) {
 }
 TerveyskyselyVastauksetCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService'];
 
-function TerveyskyselyVastausHeadingReadonlyCtrl($scope, KoiraService, SurveyAnswerService) {
+function TerveyskyselySubmissionHeadingReadonlyCtrl($scope, KoiraService, SurveyAnswerService) {
     $scope.koira = KoiraService.get({uri: $scope.submission.koira});
 }
-TerveyskyselyVastausHeadingReadonlyCtrl.$inject = ['$scope', 'KoiraService', 'SurveyAnswerService']
+TerveyskyselySubmissionHeadingReadonlyCtrl.$inject = ['$scope', 'KoiraService', 'SurveyAnswerService']
 
-function TerveyskyselyVastausReadonlyCtrl($scope, KoiraService, SurveyAnswerService) {
+function TerveyskyselySubmissionReadonlyCtrl($scope, KoiraService, SurveyAnswerService) {
     $scope.answers = SurveyAnswerService.query({survey_submission: $scope.submission.uri});
 }
-TerveyskyselyVastausReadonlyCtrl.$inject = ['$scope', 'KoiraService', 'SurveyAnswerService']
+TerveyskyselySubmissionReadonlyCtrl.$inject = ['$scope', 'KoiraService', 'SurveyAnswerService']
+
+function TerveyskyselyAnswerReadonlyCtrl($scope, SurveyQuestionService) {
+    $scope.question = SurveyQuestionService.get({uri: $scope.answer.survey_question});
+}
+TerveyskyselyAnswerReadonlyCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
 function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelService) {
     $scope.gotoSubview = function(subview) {

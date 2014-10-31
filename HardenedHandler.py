@@ -130,7 +130,7 @@ class HardenedHandler(BaseSessionHandler):
             pass
 
     def genericIndividualGet(self, user, key):
-        if self.request.Params.has_key('dependent_modtime'):
+        if self.request.params.has_key('dependent_modtime'):
             entityKey = ndb.Key(urlsafe=key)
             modtimeKey = ndb.Key('DependentModTime', 'dependent_modtime', parent=entityKey)
             modtime = modtimeKey.get()

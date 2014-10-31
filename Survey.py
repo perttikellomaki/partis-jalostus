@@ -21,7 +21,7 @@ def get_next_id():
 class SurveyQuestionHandler (HardenedHandler):
 
     def get_(self, user, key):
-        self.genericIndividualPost(user, key)
+        self.genericIndividualGet(user, key)
 
     def post_(self, user, key):
         self.genericIndividualPost(user, key)

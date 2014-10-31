@@ -3,11 +3,22 @@
 <accordion>
     <accordion-group 
         ng-repeat="submission in submissions"
-         ng-controller="TerveyskyselyVastausHeadingReadonlyCtrl"
+         ng-controller="TerveyskyselySubmissionHeadingReadonlyCtrl"
         heading="{{answer.created}} {{koira.virallinen_nimi}}"
         >
-        <div ng-controller="TerveyskyselyVastausReadonlyCtrl">
-            <div ng-repeat="answer in answers">{{answer}}</div>
+        <div ng-controller="TerveyskyselySubmissionReadonlyCtrl">
+            <div ng-repeat="answer in answers">
+                <div ng-controller="TerveyskyselyAnswerReadonlyCtrl">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{question.question}}
+                        </div>
+                        <div class="col-xs-8">
+                            {{answer.free_text_answer}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </accordion-group>
 </accordion>
