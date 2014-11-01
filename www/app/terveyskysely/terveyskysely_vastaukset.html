@@ -1,23 +1,48 @@
+<script type="text/ng-template" id="free_text_question_answer_readonly_renderer.html">
+    <div class="row">
+        <div class="col-xs-4">
+            {{question.question}}
+        </div>
+        <div class="col-xs-8">
+            {{answer.free_text_answer}}
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="boolean_question_answer_readonly_renderer.html">
+    <div class="row">
+        <div class="col-xs-4">
+            {{question.question}}
+        </div>
+        <div class="col-xs-8">
+            <span ng-show="answer.yesno_answer == undefined"><i>(ei vastausta)</i></span>
+            <span ng-show="answer.yesno_answer == true">Kyllä</span>
+            <span ng-show="answer.yesno_answer == false">Ei</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+            {{question.detail_question}}
+        </div>
+        <div class="col-xs-8">
+            {{answer.free_text_answer}}
+        </div>
+    </div>
+</script>
+
 <h2>Vastaukset</h2>
 
 <accordion>
     <accordion-group 
         ng-repeat="submission in submissions"
-         ng-controller="TerveyskyselySubmissionHeadingReadonlyCtrl"
+        ng-controller="TerveyskyselySubmissionHeadingReadonlyCtrl"
         heading="{{answer.created}} {{koira.virallinen_nimi}}"
         >
         <div ng-controller="TerveyskyselySubmissionReadonlyCtrl">
             <div ng-repeat="answer in answers">
                 <div ng-controller="TerveyskyselyAnswerReadonlyCtrl">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            {{question.question}}
-                        </div>
-                        <div class="col-xs-8">
-                            {{answer.free_text_answer}}
-                        </div>
-                    </div>
+                    <div ng-include="question.question_kind + '_question_answer_readonly_renderer.html'"></div>
                 </div>
+                <hr>
             </div>
         </div>
     </accordion-group>
