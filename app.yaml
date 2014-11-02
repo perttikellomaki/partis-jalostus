@@ -5,6 +5,9 @@ api_version: 1
 threadsafe: yes
 default_expiration: "0d 0h"
 
+builtins:
+- deferred: on
+
 handlers:
 - url: /
   static_files: www/app/index.html
