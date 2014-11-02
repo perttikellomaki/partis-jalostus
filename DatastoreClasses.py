@@ -165,6 +165,12 @@ class SurveySubmission (ndb.Model, UriAddressable):
     created = field(d, 'created', ndb.DateTimeProperty(auto_now_add=True))
     year = field(d, 'year', ndb.IntegerProperty())
 
+class SurveySubmissionSummary (ndb.Model, UriAddressable):
+    d = dict(UriAddressable.d.items())
+    survey = field(d, 'survey', ndb.KeyProperty())
+    year = field(d, 'year', ndb.IntegerProperty())
+    answer_count = field(d, 'answer_count', ndb.IntegerProperty(default=0))
+
 class SurveyAnswer (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
 
@@ -188,9 +194,9 @@ class SurveyAnswerSummary (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     survey_question = field(d, 'survey_question', ndb.KeyProperty())
     year = field(d, 'year', ndb.IntegerProperty())
-    answer_count = field(d, 'answer_count', ndb.IntegerProperty())
-    yes_count = field(d, 'yes_count', ndb.IntegerProperty())
-    no_count = field(d, 'no_count', ndb.IntegerProperty())
+    answer_count = field(d, 'answer_count', ndb.IntegerProperty(default=0))
+    yes_count = field(d, 'yes_count', ndb.IntegerProperty(default=0))
+    no_count = field(d, 'no_count', ndb.IntegerProperty(default=0))
 
 class TerveyskyselySubmission (SurveySubmission):
     d = dict(SurveySubmission.d.items())
