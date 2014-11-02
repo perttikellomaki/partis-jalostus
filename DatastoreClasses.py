@@ -163,6 +163,7 @@ class SurveySubmission (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     survey = field(d, 'survey', ndb.KeyProperty())
     created = field(d, 'created', ndb.DateTimeProperty(auto_now_add=True))
+    year = field(d, 'year', ndb.IntegerProperty())
 
 class SurveyAnswer (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
@@ -179,7 +180,9 @@ class SurveyAnswer (ndb.Model, UriAddressable):
 
     yesno_answer =  field(d, 'yesno_answer', ndb.BooleanProperty())
     free_text_answer = field(d, 'free_text_answer', ndb.TextProperty())
+
     created = field(d, 'created', ndb.DateTimeProperty(auto_now_add=True))
+    year = field(d, 'year', ndb.IntegerProperty())
 
 class TerveyskyselySubmission (SurveySubmission):
     d = dict(SurveySubmission.d.items())

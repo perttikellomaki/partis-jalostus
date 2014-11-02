@@ -79,10 +79,12 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
     }
     $scope.sendAnswer = function() {
         var survey_submission = TerveyskyselySubmissionService.makeNew({survey: $scope.kysely.uri});
+        var year = (new Date()).getFullYear();
         survey_submission.koira = $scope.koira.uri;
+        survey_submission.year = year;
         TerveyskyselySubmissionService.save(survey_submission, {},
                 function(answer) {
-                    $scope.$broadcast('saveAnswer', answer);
+                    $scope.$broadcast('saveAnswer', answer, year);
                 });
     }
     $scope.dogFound = function(dog) {
@@ -108,9 +110,10 @@ function TerveyskyselyQuestionAnswerCtrl($scope, SurveyAnswerService) {
             $scope.answer.yesno_answer = false;
         }
     };
-    $scope.$on('saveAnswer', function(event, survey_submission) {
+    $scope.$on('saveAnswer', function(event, survey_submission, year) {
         SurveyAnswerService.save($scope.answer,
                 {survey_question: $scope.question.uri,
+                    year: year,
                     survey_submission: survey_submission.uri})
     });
 }

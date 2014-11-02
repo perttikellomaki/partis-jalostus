@@ -20,10 +20,10 @@ class SurveySubmissionCollectionHandler (HardenedHandler):
                     survey))
 
     def post_(self, user):
-        answer = SurveySubmission()
-        answer.populateFromRequest(self.request.Params)
-        answer.Put()
-        self.jsonReply(answer.hashify())
+        submission = SurveySubmission()
+        submission.populateFromRequest(self.request.Params)
+        submission.Put()
+        self.jsonReply(submission.hashify())
 
 SurveySubmission.collectionHandler(SurveySubmissionCollectionHandler)
 
