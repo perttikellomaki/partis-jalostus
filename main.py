@@ -257,6 +257,7 @@ handler_list = (
          DatastoreClasses.SurveyQuestion,
          DatastoreClasses.SurveySubmission,
          DatastoreClasses.SurveyAnswer,
+         DatastoreClasses.SurveyAnswerSummary,
          DatastoreClasses.TerveyskyselySubmission,
          DatastoreClasses.YhdistysPaimennustaipumus])
     + [("/ModTime/([^/]+)", ModTimeHandler),

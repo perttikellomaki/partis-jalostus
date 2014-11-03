@@ -1,33 +1,51 @@
 <script type="text/ng-template" id="free_text_question_answer_readonly_renderer.html">
     <div class="row">
-        <div class="col-xs-4">
-            {{question.question}}
-        </div>
-        <div class="col-xs-8">
-            {{answer.free_text_answer}}
-        </div>
+    <div class="col-xs-4">
+    {{question.question}}
+    </div>
+    <div class="col-xs-8">
+    {{answer.free_text_answer}}
+    </div>
     </div>
 </script>
 <script type="text/ng-template" id="boolean_question_answer_readonly_renderer.html">
     <div class="row">
-        <div class="col-xs-4">
-            {{question.question}}
-        </div>
-        <div class="col-xs-8">
-            <span ng-show="answer.yesno_answer == undefined"><i>(ei vastausta)</i></span>
-            <span ng-show="answer.yesno_answer == true">Kyllä</span>
-            <span ng-show="answer.yesno_answer == false">Ei</span>
-        </div>
+    <div class="col-xs-4">
+    {{question.question}}
+    </div>
+    <div class="col-xs-8">
+    <span ng-show="answer.yesno_answer == undefined"><i>(ei vastausta)</i></span>
+    <span ng-show="answer.yesno_answer == true">Kyllä</span>
+    <span ng-show="answer.yesno_answer == false">Ei</span>
+    </div>
     </div>
     <div class="row">
-        <div class="col-xs-4">
-            {{question.detail_question}}
-        </div>
-        <div class="col-xs-8">
-            {{answer.free_text_answer}}
-        </div>
+    <div class="col-xs-4">
+    {{question.detail_question}}
+    </div>
+    <div class="col-xs-8">
+    {{answer.free_text_answer}}
+    </div>
     </div>
 </script>
+
+<h2>Yhteenveto</h2>
+
+<div ng-repeat="question in questions"
+     ng-controller="TerveyskyselyQuestionSummaryCtrl">
+    <div class="row">
+        <div class="col-xs-6">{{question.question}}</div>
+        <div class="col-xs-6">{{question.detail_question}}</div>
+    </div>
+    <div ng-repeat="summary in summaries">
+        <i>
+        {{summary.year}}: Vastauksia {{summary.answer_count}} kpl, 
+        kyllä {{summary.yes_count}} kpl,
+        ei {{summary.no_count}} kpl.
+        </i>
+    </div>
+    <hr>
+</div>
 
 <h2>Vastaukset</h2>
 
@@ -35,7 +53,7 @@
     <accordion-group 
         ng-repeat="submission in submissions"
         ng-controller="TerveyskyselySubmissionHeadingReadonlyCtrl"
-        heading="{{answer.created}} {{koira.virallinen_nimi}}"
+        heading="{{submission.created}} {{koira.virallinen_nimi}}"
         >
         <div ng-controller="TerveyskyselySubmissionReadonlyCtrl">
             <div ng-repeat="answer in answers">

@@ -70,3 +70,13 @@ class SurveyAnswerCollectionHandler (HardenedHandler):
         self.jsonReply(answer.hashify())
 
 SurveyAnswer.collectionHandler(SurveyAnswerCollectionHandler)
+
+class SurveyAnswerSummaryCollectionHandler (HardenedHandler):
+
+    def get_(self, user):
+        self.genericGetCollection(
+            ndb.gql("SELECT __key__ FROM SurveyAnswerSummary WHERE survey_question = :1",
+                    self.lookupKey(param='survey_question')))
+
+
+SurveyAnswerSummary.collectionHandler(SurveyAnswerSummaryCollectionHandler)
