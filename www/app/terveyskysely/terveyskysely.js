@@ -7,7 +7,7 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyService, SurveyQuestionServic
         $scope.surveys.thenServer(function(response) {
             var surveys = response.resource;
             if (surveys.length > 0) {
-                $scope.survey = surveys[0];
+                $scope.working_copy = surveys[0];
                 $scope.working_copy_exists = true;
             } else {
                 $scope.working_copy_exists = false;
@@ -27,6 +27,12 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyService, SurveyQuestionServic
         SurveyService.save($scope.working_copy, {}, function () {
             $scope.working_copy_exists = true;
         });    
+    };
+
+    $scope.deleteWorkingCopy = function () {
+        SurveyService.delete($scope.working_copy, function () {
+            $scope.working_copy_exists = false;
+        });
     };
 
     $scope.sortableOptions = {
