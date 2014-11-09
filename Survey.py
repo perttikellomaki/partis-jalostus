@@ -18,6 +18,33 @@ def get_next_id():
     next_number.put()
     return next_number.num
 
+class SurveyHandler (HardenedHandler):
+    def get_(self, user, key):
+        self.genericIndividualGet(user, key)
+
+    def post_(self, user, key):
+        self.genericIndividualPost(user, key)
+
+Survey.individualHandler(SurveyHandler)
+
+class SurveyCollectionHandler (HardenedHandler):
+    def get_(self, user):
+        if self.request.params.has_key('working_copy_of'):
+            original = self.lookupKey(param='working_copy_of')
+            self.genericGetCollection(
+                ndb.gql("SELECT __key__ FROM Survey WHERE working_copy_of = :1",
+                        original))
+        else:
+            self.genericGetCollection(Survey.query())
+
+    def post_(self, user):
+        survey = Survey()
+        survey.populateFromRequest(self.request.Params)
+        survey.Put()
+        self.jsonReply(survey.hashify())
+
+Survey.collectionHandler(SurveyCollectionHandler)
+
 class SurveyQuestionHandler (HardenedHandler):
 
     def get_(self, user, key):

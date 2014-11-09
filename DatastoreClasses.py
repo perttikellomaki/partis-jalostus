@@ -147,6 +147,7 @@ class ChangeNotification (ndb.Model, UriAddressable):
 class Survey (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     title = field(d, 'title', ndb.StringProperty())
+    working_copy_of = field(d, 'working_copy_of', ndb.KeyProperty())
 
 class SurveyQuestion (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())

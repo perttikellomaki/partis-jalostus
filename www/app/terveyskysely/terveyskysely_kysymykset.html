@@ -91,7 +91,18 @@
 </div>
 </script>
 
-<h2>{{kysely.title}}</h2>
+<div ng-show="working_copy_exists == false">
+<h2>Kysymysten muokkaus</h2>
+
+<p>Voit luoda itsellesi oman työkopion terveyskyselystä.
+    Muutokset tulevat voimaan vasta kun julkaiset ne.
+</p>
+
+<button ng-click="createWorkingCopy()">Muokkaa</button>
+</div>
+
+<div ng-show="working_copy_exists">
+<h2>{{working_copy.title}}</h2>
 
 <h3>Uusi kysymys</h3>
 
@@ -110,6 +121,6 @@
         </div>
     </div>
 </div>
-
+</div>
 
 

@@ -1,14 +1,33 @@
-function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService, TerveyskyselyService) {
+function TerveyskyselyKysymyksetCtrl($scope, SurveyService, SurveyQuestionService, TerveyskyselyService) {
 
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
         $scope.kysely = response.resource[0];
+        $scope.surveys = SurveyService.query({working_copy_of: $scope.kysely.uri});
+        $scope.surveys.thenServer(function(response) {
+            var surveys = response.resource;
+            if (surveys.length > 0) {
+                $scope.survey = surveys[0];
+                $scope.working_copy_exists = true;
+            } else {
+                $scope.working_copy_exists = false;
+            }
+        })
         $scope.questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
         $scope.questions.thenServer(function(response) {
             var questions = response.resource;
             $scope.last_index = questions.length + 1;
         });
-    })
+    });
+
+    $scope.createWorkingCopy = function() {
+        $scope.working_copy =
+                SurveyService.makeNew({working_copy_of: $scope.kysely.uri,
+                    title: $scope.kysely.title + " (työkopio)"});
+        SurveyService.save($scope.working_copy, {}, function () {
+            $scope.working_copy_exists = true;
+        });    
+    };
 
     $scope.sortableOptions = {
         stop: function(e, ui) {
@@ -44,7 +63,7 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyQuestionService, Terveyskysel
     }
 }
 ;
-TerveyskyselyKysymyksetCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService'];
+TerveyskyselyKysymyksetCtrl.$inject = ['$scope', 'SurveyService', 'SurveyQuestionService', 'TerveyskyselyService'];
 
 function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
     $scope.editing = false;

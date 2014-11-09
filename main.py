@@ -255,6 +255,7 @@ handler_list = (
          DatastoreClasses.Kennel,
          DatastoreClasses.ChangeNotification,
          DatastoreClasses.SurveyQuestion,
+         DatastoreClasses.Survey,
          DatastoreClasses.SurveySubmission,
          DatastoreClasses.SurveyAnswer,
          DatastoreClasses.SurveyAnswerSummary,
