@@ -424,7 +424,16 @@ angular.module('cachedResource', ['LocalStorageModule'])
 			    },
 			    drop: function (uri) {
 				localStorageService.remove(uri);
-			    }
+			    },
+                            copy: function (original) {
+                                var copy = new resource();
+                                for (var p in original) {
+                                    if (p[0] != "$") {
+                                        copy[p] = original[p];
+                                    }
+                                }
+                                return copy;
+                            }
 			}
 		    }
 		}
