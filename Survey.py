@@ -57,6 +57,10 @@ class SurveyQuestionHandler (HardenedHandler):
     def post_(self, user, key):
         self.genericIndividualPost(user, key)
 
+    def delete_(self, user, key):
+        entity = self.lookupKey(urlsafe=key)
+        entity.delete()
+
 SurveyQuestion.individualHandler(SurveyQuestionHandler)
 
 class SurveyQuestionCollectionHandler (HardenedHandler):

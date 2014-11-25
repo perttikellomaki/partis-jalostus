@@ -9,30 +9,110 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyService, SurveyQuestionServic
             if (surveys.length > 0) {
                 $scope.working_copy = surveys[0];
                 $scope.working_copy_exists = true;
+                $scope.questions = SurveyQuestionService.query({survey: $scope.working_copy.uri});
+                $scope.questions.thenServer(function(response) {
+                    var questions = response.resource;
+                    $scope.last_index = questions.length + 1;
+                });
             } else {
                 $scope.working_copy_exists = false;
             }
         })
-        $scope.questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
-        $scope.questions.thenServer(function(response) {
-            var questions = response.resource;
-            $scope.last_index = questions.length + 1;
-        });
     });
 
     $scope.createWorkingCopy = function() {
         $scope.working_copy =
                 SurveyService.makeNew({working_copy_of: $scope.kysely.uri,
                     title: $scope.kysely.title + " (työkopio)"});
-        SurveyService.save($scope.working_copy, {}, function () {
+        SurveyService.save($scope.working_copy, {}, function() {
             $scope.working_copy_exists = true;
-        });    
+            var original_questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
+            original_questions.thenServer(function(response) {
+                var original_questions = response.resource;
+                $scope.questions = [];
+                for (var i = 0; i < original_questions.length; i++) {
+                    var original_question = original_questions[i];
+                    var question = SurveyQuestionService.copy(original_question);
+                    question.working_copy_of = original_question.uri;
+                    question.survey = $scope.working_copy.uri;
+                    $scope.questions.push(question)
+                    SurveyQuestionService.save(question)
+                }
+                $scope.last_index = $scope.questions.length + 1;
+            });
+        });
     };
 
-    $scope.deleteWorkingCopy = function () {
-        SurveyService.delete($scope.working_copy, function () {
-            $scope.working_copy_exists = false;
-        });
+    $scope.deleteWorkingCopy = function() {
+        var to_delete = $scope.questions.length;
+
+        function maybeDeleteSurvey() {
+            if (to_delete == 0 || to_delete == 1) {
+                SurveyService.delete($scope.working_copy, function() {
+                    $scope.working_copy_exists = false;
+                });
+                to_delete = -1;
+            } else {
+                to_delete--;
+            }
+        }
+
+        for (var i = 0; i < $scope.questions.length; i++) {
+            SurveyQuestionService.delete($scope.questions[i], maybeDeleteSurvey);
+        }
+        maybeDeleteSurvey();
+    };
+
+    $scope.publishWorkingCopy = function() {
+        var to_save = $scope.questions.length;
+
+        function maybeDeleteSurvey() {
+            if (to_save == 0 || to_save == 1) {
+                $scope.deleteWorkingCopy();
+                to_save = -1;
+            } else {
+                to_save--;
+            }
+        }
+        
+        function publishQuestion(question, position) {
+            question.position = position;
+            if (question.working_copy_of != undefined) {
+                // this is a working copy of an existing question
+                var original = SurveyQuestionService.get({uri: question.working_copy_of});
+                original.Then(function(response) {
+                    if (response.is_validated) {
+                        var resource = response.resource;
+                        for (var p in question) {
+                            if (p[0] != "$"
+                                    && p != "uri"
+                                    && p != "survey"
+                                    && p != "working_copy_of") {
+                                resource[p] = question[p];
+                            }
+                        }
+                        SurveyQuestionService.save(resource, {}, function() {
+                            maybeDeleteSurvey();
+                        })
+                    }
+                });
+            } else {
+                // this is a new question, create a new question and save it
+                // so that this one can be deleted
+                var new_question = SurveyQuestionService.copy(question);
+                new_question.survey = $scope.kysely.uri;
+                console.log("save new question")
+                console.log(new_question)
+                SurveyQuestionService.save(new_question, {}, maybeDeleteSurvey);
+            }
+        }
+
+        for (var i = 0; i < $scope.questions.length; i++) {
+            publishQuestion($scope.questions[i], i)
+        }
+        
+        // in case survey had no questions
+        maybeDeleteSurvey();
     };
 
     $scope.sortableOptions = {
@@ -93,6 +173,7 @@ function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
 TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
 function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService) {
+    console.log("terveyskyselyvastaactrl")
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
         $scope.kysely = response.resource[0];

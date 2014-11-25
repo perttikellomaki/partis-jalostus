@@ -428,7 +428,7 @@ angular.module('cachedResource', ['LocalStorageModule'])
                             copy: function (original) {
                                 var copy = new resource();
                                 for (var p in original) {
-                                    if (p[0] != "$") {
+                                    if (p[0] != "$" && p != "uri") {
                                         copy[p] = original[p];
                                     }
                                 }
