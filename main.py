@@ -20,6 +20,7 @@ import Kennel
 import Util
 import Survey
 import SurveySubmission
+import Roles
 
 class ModTimeHandler (HardenedHandler):
     def get_(self, user, key):
@@ -254,6 +255,7 @@ handler_list = (
         [DatastoreClasses.Koira,
          DatastoreClasses.Kennel,
          DatastoreClasses.ChangeNotification,
+         DatastoreClasses.Role,
          DatastoreClasses.SurveyQuestion,
          DatastoreClasses.Survey,
          DatastoreClasses.SurveySubmission,

@@ -152,7 +152,10 @@ class UriAddressable(object):
         return self.__class__.UriPrefix()
 
     def uri(self):
-        return "%s/%s" % (self.uriPrefix(), self.key.urlsafe())
+        if self.key is None:
+            return None
+        else:
+            return "%s/%s" % (self.uriPrefix(), self.key.urlsafe())
 
     def Put(self):
         """Do .put() and stamp modtime if required."""

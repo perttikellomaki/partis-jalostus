@@ -293,3 +293,11 @@ class TerveyskyselyTmp (ndb.Model, UriAddressable):
     luonnetesti_lisaselvitys = field(d, 'luonnetesti_lisaselvitys', ndb.StringProperty(indexed=False))
     muuta_huomioitavaa = field(d, 'muuta_huomioitavaa', ndb.StringProperty(indexed=False))
     email = field(d, 'email', ndb.StringProperty(indexed=False))
+
+class Role (ndb.Model, UriAddressable):
+    d = dict(UriAddressable.d.items())
+    user_id = field(d, 'user_id', ndb.StringProperty())
+    role = field(d, 'role', ndb.StringProperty())
+    target = field(d, 'target', ndb.KeyProperty())
+
+    
