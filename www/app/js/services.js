@@ -134,6 +134,12 @@ angular.module('myApp.services', [])
                         return CachedResourceService.make(
                                 "/Role/:key", {}, localStorageService)
                     }])
+        .factory('ProfileService',
+                ['CachedResourceService', 'localStorageService',
+                    function(CachedResourceService, localStorageService) {
+                        return CachedResourceService.make(
+                                "/Profile/:key", {}, localStorageService)
+                    }])
         .factory('TerveyskyselyService',
                 ['CachedResourceService', 'localStorageService',
                     function(CachedResourceService, localStorageService) {

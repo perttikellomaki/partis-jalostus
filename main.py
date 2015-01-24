@@ -9,6 +9,7 @@ from google.appengine.api import app_identity
 from google.appengine.api import mail
 from google.appengine.api import users
 from google.appengine.ext import ndb
+from google.appengine.ext import deferred
 import json
 import logging
 from HardenedHandler import HardenedHandler, LocalUser
@@ -21,6 +22,7 @@ import Util
 import Survey
 import SurveySubmission
 import Roles
+import Profile
 
 class ModTimeHandler (HardenedHandler):
     def get_(self, user, key):
@@ -169,11 +171,15 @@ class LoginStatusHandler(HardenedHandler):
             if kennels.count() > 0:
                 info['kennel'] = kennels.get().nimi
             self.jsonReply(info)
+            deferred.defer(ensureProfileExists, user.user_id(), user.nickname())
         else:
             self.jsonReply({
                     'logged_in': False,
                     'nick': None,
                     'email': None})
+
+def ensureProfileExists(user_id, nickname):
+    DatastoreClasses.Profile.get_or_insert(user_id, user_id=user_id, nickname=nickname)
 
 class PasswordRequestHandler(HardenedHandler):
     def post_unauthenticated_(self):
@@ -256,6 +262,7 @@ handler_list = (
          DatastoreClasses.Kennel,
          DatastoreClasses.ChangeNotification,
          DatastoreClasses.Role,
+         DatastoreClasses.Profile,
          DatastoreClasses.SurveyQuestion,
          DatastoreClasses.Survey,
          DatastoreClasses.SurveySubmission,

@@ -300,4 +300,8 @@ class Role (ndb.Model, UriAddressable):
     role = field(d, 'role', ndb.StringProperty())
     target = field(d, 'target', ndb.KeyProperty())
 
-    
+class Profile (ndb.Model, UriAddressable):
+    d = dict(UriAddressable.d.items())
+    user_id = field(d, 'user_id', ndb.StringProperty())
+    nickname = field(d, 'nickname', ndb.StringProperty())
+
