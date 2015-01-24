@@ -40,6 +40,9 @@ handlers:
 - url: /terveyskysely
   static_dir: www/app/terveyskysely
   auth_fail_action: unauthorized
+- url: /admin
+  static_dir: www/app/admin
+  auth_fail_action: unauthorized
 - url: /img
   static_dir: www/app/img
   auth_fail_action: unauthorized

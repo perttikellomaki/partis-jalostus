@@ -45,6 +45,7 @@
 	    <li ng-class="navClass('kennel') + navClass('kennel_etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('kennel_etusivu')">Kennelit</a></li>
 	    <li ng-class="navClass('terveyskysely')"><a ng-click="isCollapsed = !isCollapsed; gotoView('terveyskysely/vastaa')">Terveyskysely</a></li>
 	    <li ng-class="navClass('kirjaudu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('login')">Kirjaudu</a></li>
+	    <li ng-class="navClass('admin')"><a ng-click="isCollapsed = !isCollapsed; gotoView('admin')">Ylläpito</a></li>
 	  </ul>
 	</nav>
       </div>
@@ -107,6 +108,12 @@
     <li ng-class="navClass('koirat') + navClass('')"><a ng-click="gotoSubview('koirat')">Koirat</a></li>
     <li ng-class="navClass('muutokset')"><a ng-click="gotoSubview('muutokset')">Muutokset</a></li>
     <li ng-show="IS_ADMIN" ng-class="navClass('admin')"><a ng-click="gotoSubview('admin')">Admin</a></li>
+</script>
+
+<script type="text/ng-template" id="admin_sidepanel.html">
+  <h2>Ylläpito</h2>
+  <ul class="nav nav-pills nav-stacked" ng-controller="AdminSidepanelCtrl">
+  </ul>
 </script>
 
 <script type="text/ng-template" id="history_renderer">
@@ -175,6 +182,7 @@
   <script src="kennel/kennel_muutokset.js"></script>
   <script src="kennel/kennel_admin.js"></script>
   <script src="terveyskysely/terveyskysely.js"></script>
+  <script src="admin/admin.js"></script>
   
   <script type="text/ng-template" id="search_dog.html">
   <div class="row" ng-controller="SearchKoiraCtrl">
