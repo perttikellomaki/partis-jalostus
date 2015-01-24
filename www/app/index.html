@@ -88,6 +88,7 @@
       <li ng-class="navClass('vastaa')"><a ng-click="gotoSubview('vastaa')">Vastaa</a></li>
       <li ng-class="navClass('kysymykset')"><a ng-click="gotoSubview('kysymykset')">Kysymykset</a></li>
       <li ng-class="navClass('vastaukset')"><a ng-click="gotoSubview('vastaukset')">Vastaukset</a></li>
+    </ul>
 </script>
 
 <script type="text/ng-template" id="koira_sidepanel.html">
@@ -108,6 +109,7 @@
     <li ng-class="navClass('koirat') + navClass('')"><a ng-click="gotoSubview('koirat')">Koirat</a></li>
     <li ng-class="navClass('muutokset')"><a ng-click="gotoSubview('muutokset')">Muutokset</a></li>
     <li ng-show="IS_ADMIN" ng-class="navClass('admin')"><a ng-click="gotoSubview('admin')">Admin</a></li>
+  </ul>
 </script>
 
 <script type="text/ng-template" id="admin_sidepanel.html">
