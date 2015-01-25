@@ -6,11 +6,19 @@ from DatastoreClasses import Role
 
 class RoleCollectionHandler(HardenedHandler):
     def get_(self, user):
-        roles = []
+        if self.request.params.has_key('user_id'):
+            user_id = self.request.params['user_id']
+        else:
+            user_id = user.user_id()
+        self.genericGetCollection(ndb.gql("SELECT __key__ FROM Role WHERE user_id=:1", user_id))
+
+    def post_(self, user):
         if users.is_current_user_admin():
-            roles.append(Role(user_id = user.user_id(),
-                              role = 'application_admin'))
-        self.jsonReply([role.hashify() for role in roles])
+            role = Role()
+            role.populateFromRequest(self.request.Params)
+            role.put()
+        else:
+            self.request.set_status(401)
 
 Role.collectionHandler(RoleCollectionHandler)
 
