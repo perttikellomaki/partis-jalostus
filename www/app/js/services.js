@@ -32,9 +32,10 @@ function makeCachedResource(resource) {
 
 angular.module('myApp.services', [])
         .factory('LoginService',
-                function() {
+                ['RoleService', function(RoleService) {
                     var nick_;
                     var kennel_;
+		    var roles_ = [];
                     var logged_in_ = false;
                     return {
                         set: function(nick, kennel) {
@@ -43,6 +44,7 @@ angular.module('myApp.services', [])
                             kennel_ = kennel;
                             if (nick != undefined) {
                                 logged_in_ = true;
+				roles_ = RoleService.query();
                             }
                         },
                         nick: function() {
@@ -54,9 +56,20 @@ angular.module('myApp.services', [])
                         },
                         loggedIn: function() {
                             return logged_in_;
-                        }
+                        },
+			roles: function () {
+			    return roles_;
+			},
+			hasRole: function (role) {
+			    for (var i = 0; i < roles_.length; i++) {
+				if (roles_[i].role == role) {
+				    return true;
+				}
+			    }
+			    return false;
+			}
                     };
-                })
+                }])
         .factory('KoiraService',
                 ['$resource', 'CachedResourceService', 'localStorageService',
                     function($resource, CachedResourceService, localStorageService) {

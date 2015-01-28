@@ -10,7 +10,7 @@ function uri2key (uri) {
     }
 }
 
-function NavListController($scope, $location) {
+function NavListController($scope, $location, LoginService) {
     $scope.navClass = function (page) {
         var currentRoute = $location.path().split('/')[1];
 	var result = page === currentRoute ? 'active' : '';
@@ -19,10 +19,11 @@ function NavListController($scope, $location) {
     $scope.gotoView = function (path) {
 	$location.path(path);
     }
+    $scope.hasRole = LoginService.hasRole;
 }
-NavListController.$inject = ['$scope', '$location'];
+NavListController.$inject = ['$scope', '$location', 'LoginService'];
 
-function LoginStatusCtrl ($scope, $rootScope, $resource, LoginService, RoleService) {
+function LoginStatusCtrl ($scope, $rootScope, $resource, LoginService) {
     var resource = $resource("/LoginStatus");
     var status = resource.get();
     status.$promise.then(function (response) {
@@ -31,14 +32,14 @@ function LoginStatusCtrl ($scope, $rootScope, $resource, LoginService, RoleServi
 	if (response.logged_in) {
 	    LoginService.set(response.nick, response.kennel);
 	}
+	$scope.roles = LoginService.roles();
     });
     $scope.login_status = status;
     $scope.$on('LoginStatusChanged', function (event, path) {
 	$scope.login_status = resource.get();
     });
-    $scope.roles = RoleService.query();
 }
-LoginStatusCtrl.$inject = ['$scope', '$rootScope', '$resource', 'LoginService', 'RoleService']
+LoginStatusCtrl.$inject = ['$scope', '$rootScope', '$resource', 'LoginService']
 
 function LoginCtrl ($scope, $rootScope, $resource) {
     var federated_resource = $resource("/FederatedLogin")
