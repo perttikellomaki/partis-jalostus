@@ -1,7 +1,8 @@
 from google.appengine.ext import ndb
+from google.appengine.ext import deferred
 
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import Survey, TerveyskyselySubmission, SurveySubmissionSummary
+from DatastoreClasses import Role, Survey, TerveyskyselySubmission, SurveySubmissionSummary
 
 terveyskysely_key = ndb.Key(Survey, 'terveyskysely')
 
@@ -24,6 +25,18 @@ def recordSubmission(summary_key, submission):
     summary.year = submission.year
     summary.put()
 
+def processSubmission (user_id, submission_key):
+    # update summary
+    submission = submission_key.get()
+    summary = SurveySubmissionSummary.get_or_insert("%s" % submission.year, parent=submission.survey)
+    recordSubmission(summary.key, submission)
+
+    # create dog ownership if needed
+    roles = Role.gql("WHERE role = :1 AND target = :2 AND user_id = :3", "dog_owner", submission.koira, user_id)
+    if roles.count() == 0:
+        role = Role(user_id=user_id, role="dog_owner", target=submission.koira, valid=False)
+        role.put()
+
 class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
     def get_(self, user):
         self.genericGetCollection(
@@ -34,8 +47,7 @@ class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
         submission.populateFromRequest(self.request.Params)
         submission.Put()
 
-        summary = SurveySubmissionSummary.get_or_insert("%s" % submission.year, parent=submission.survey)
-        recordSubmission(summary.key, submission)
+        deferred.defer(processSubmission, user.user_id(), submission.key)
 
         self.jsonReply(submission.hashify())
 
