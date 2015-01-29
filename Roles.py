@@ -10,12 +10,13 @@ class RoleCollectionHandler(HardenedHandler):
             user_id = self.request.params['user_id']
         else:
             user_id = user.user_id()
-        self.genericGetCollection(ndb.gql("SELECT __key__ FROM Role WHERE user_id=:1", user_id))
+        self.genericGetCollection(ndb.gql("SELECT __key__ FROM Role WHERE user_id=:1 AND valid=true", user_id))
 
     def post_(self, user):
         if users.is_current_user_admin():
             role = Role()
             role.populateFromRequest(self.request.Params)
+            role.valid = True
             role.put()
         else:
             self.request.set_status(401)

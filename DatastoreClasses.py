@@ -299,6 +299,7 @@ class Role (ndb.Model, UriAddressable):
     user_id = field(d, 'user_id', ndb.StringProperty())
     role = field(d, 'role', ndb.StringProperty())
     target = field(d, 'target', ndb.KeyProperty())
+    valid = field(d, 'valid', ndb.BooleanProperty())
 
 class Profile (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
