@@ -4,6 +4,7 @@ import dateutil.parser
 import logging
 from google.appengine.api import users
 from google.appengine.ext import ndb
+from google.appengine.ext.ndb import polymodel
 import Util
 from UriAddressable import UriAddressable, field
 
@@ -294,12 +295,15 @@ class TerveyskyselyTmp (ndb.Model, UriAddressable):
     muuta_huomioitavaa = field(d, 'muuta_huomioitavaa', ndb.StringProperty(indexed=False))
     email = field(d, 'email', ndb.StringProperty(indexed=False))
 
-class Role (ndb.Model, UriAddressable):
+class Role (polymodel.PolyModel, UriAddressable):
     d = dict(UriAddressable.d.items())
     user_id = field(d, 'user_id', ndb.StringProperty())
     role = field(d, 'role', ndb.StringProperty())
-    target = field(d, 'target', ndb.KeyProperty())
     valid = field(d, 'valid', ndb.BooleanProperty())
+
+class DogOwnerRole (Role):
+    d = dict(Role.d.items())
+    dog = field(d, 'dog', ndb.KeyProperty())
 
 class Profile (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())

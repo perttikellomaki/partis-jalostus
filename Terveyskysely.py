@@ -1,8 +1,10 @@
+import logging
+
 from google.appengine.ext import ndb
 from google.appengine.ext import deferred
 
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import Role, Survey, TerveyskyselySubmission, SurveySubmissionSummary
+from DatastoreClasses import DogOwnerRole, Survey, TerveyskyselySubmission, SurveySubmissionSummary
 
 terveyskysely_key = ndb.Key(Survey, 'terveyskysely')
 
@@ -14,8 +16,6 @@ class TerveyskyselyCollectionHandler (HardenedHandler):
             kysely.Put()
         result = [kysely.hashify()]
         self.jsonReply(result)
-
-
 
 @ndb.transactional
 def recordSubmission(summary_key, submission):
@@ -32,9 +32,9 @@ def processSubmission (user_id, submission_key):
     recordSubmission(summary.key, submission)
 
     # create dog ownership if needed
-    roles = Role.gql("WHERE role = :1 AND target = :2 AND user_id = :3", "dog_owner", submission.koira, user_id)
+    roles = DogOwnerRole.gql("WHERE role = :1 AND dog = :2 AND user_id = :3", "dog_owner", submission.koira, user_id)
     if roles.count() == 0:
-        role = Role(user_id=user_id, role="dog_owner", target=submission.koira, valid=False)
+        role = DogOwnerRole(user_id=user_id, role="dog_owner", dog=submission.koira, valid=False)
         role.put()
 
 class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
