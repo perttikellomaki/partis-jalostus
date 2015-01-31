@@ -303,6 +303,7 @@ class Role (polymodel.PolyModel, UriAddressable):
 
 class DogOwnerRole (Role):
     d = dict(Role.d.items())
+    owner_name = field(d, 'owner_name', ndb.StringProperty())
     dog = field(d, 'dog', ndb.KeyProperty())
 
 class Profile (ndb.Model, UriAddressable):

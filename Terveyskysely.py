@@ -25,7 +25,7 @@ def recordSubmission(summary_key, submission):
     summary.year = submission.year
     summary.put()
 
-def processSubmission (user_id, submission_key):
+def processSubmission (user_id, user_name, submission_key):
     # update summary
     submission = submission_key.get()
     summary = SurveySubmissionSummary.get_or_insert("%s" % submission.year, parent=submission.survey)
@@ -34,7 +34,7 @@ def processSubmission (user_id, submission_key):
     # create dog ownership if needed
     roles = DogOwnerRole.gql("WHERE role = :1 AND dog = :2 AND user_id = :3", "dog_owner", submission.koira, user_id)
     if roles.count() == 0:
-        role = DogOwnerRole(user_id=user_id, role="dog_owner", dog=submission.koira, valid=False)
+        role = DogOwnerRole(user_id=user_id, role="dog_owner", owner_name=user_name, dog=submission.koira, valid=False)
         role.put()
 
 class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
@@ -47,7 +47,7 @@ class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
         submission.populateFromRequest(self.request.Params)
         submission.Put()
 
-        deferred.defer(processSubmission, user.user_id(), submission.key)
+        deferred.defer(processSubmission, user.user_id(), user.nickname(), submission.key)
 
         self.jsonReply(submission.hashify())
 

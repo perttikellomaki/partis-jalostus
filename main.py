@@ -262,6 +262,7 @@ handler_list = (
          DatastoreClasses.Kennel,
          DatastoreClasses.ChangeNotification,
          DatastoreClasses.Role,
+         DatastoreClasses.DogOwnerRole,
          DatastoreClasses.Profile,
          DatastoreClasses.SurveyQuestion,
          DatastoreClasses.Survey,

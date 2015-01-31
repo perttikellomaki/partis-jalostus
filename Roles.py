@@ -2,7 +2,7 @@ import logging
 from google.appengine.ext import ndb
 from google.appengine.api import users
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import Role
+from DatastoreClasses import Role, DogOwnerRole
 
 class RoleCollectionHandler(HardenedHandler):
     def get_(self, user):
@@ -23,4 +23,16 @@ class RoleCollectionHandler(HardenedHandler):
 
 Role.collectionHandler(RoleCollectionHandler)
 
-            
+class DogOwnerRoleCollectionHandler (HardenedHandler):
+    def get_(self, user):
+        if users.is_current_user_admin():
+            if self.request.params.has_key('valid'):
+                self.genericGetCollection(ndb.gql("SELECT __key__ FROM DogOwnerRole WHERE valid=:1", self.request.params['valid'] == 'true'), "==> %s")
+            else:
+                self.genericGetCollection(ndb.gql("SELECT __key__ FROM DogOwnerRole"))
+        else:
+            self.request.set_status(401)
+
+
+DogOwnerRole.collectionHandler(DogOwnerRoleCollectionHandler)
+
