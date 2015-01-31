@@ -1,0 +1,34 @@
+<h2>Käyttäjät</h2>
+
+<input type="text" ng-model="role.user_id" placeholder="id">
+<input type="text" ng-model="role.role" placeholder="rooli">
+<button class="btn btn-default" ng-click="newRole()">Uusi rooli</button>
+
+<table>
+  <tr><th>Nimi</th><th>id</th><th>roles</th></tr>
+  <tbody ng-repeat="profile in profiles">
+    <tr ng-controller="ProfileListRowCtrl">
+      <td>{{profile.nickname}}</td>
+      <td>{{profile.user_id}}</td>
+      <td><span ng-repeat="role in roles">{{role.role}} </span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Vahvistamattomat omistukset</h3>
+
+<table>
+  <tr><th>Nimi</th><th>Koira</th><th></th></tr>
+  <tbody ng-repeat="role in dog_owner_roles">
+    <tr ng-controller="AdminUnconfirmedOwnerRowCtrl">
+      <td>{{role.owner_name}}</td>
+      <td>{{dog.virallinen_nimi}}</td>
+      <td>
+	<button ng-show="!role.valid" class="btn btn-default" ng-click="confirm()">Vahvista</button>
+	<button ng-show="role.valid" class="btn btn-default" ng-click="unconfirm()">Peru vahvistus</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
