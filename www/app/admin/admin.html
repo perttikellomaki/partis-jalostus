@@ -4,7 +4,7 @@
 <input type="text" ng-model="role.role" placeholder="rooli">
 <button class="btn btn-default" ng-click="newRole()">Uusi rooli</button>
 
-<table>
+<table class="table table-bordered">
   <tr><th>Nimi</th><th>id</th><th>roles</th></tr>
   <tbody ng-repeat="profile in profiles">
     <tr ng-controller="ProfileListRowCtrl">
@@ -17,7 +17,7 @@
 
 <h3>Vahvistamattomat omistukset</h3>
 
-<table>
+<table class="table table-bordered">
   <tr><th>Nimi</th><th>Koira</th><th></th></tr>
   <tbody ng-repeat="role in dog_owner_roles">
     <tr ng-controller="AdminUnconfirmedOwnerRowCtrl">
