@@ -36,3 +36,23 @@ class DogOwnerRoleCollectionHandler (HardenedHandler):
 
 DogOwnerRole.collectionHandler(DogOwnerRoleCollectionHandler)
 
+class DogOwnerRoleIndividualHandler (HardenedHandler):
+    def get_(self, user, key):
+        if users.is_current_user_admin():
+            self.genericIndividualGet(user, key)
+        else:
+            self.request.set_status(401)
+
+    def post_(self, user, key):
+        if users.is_current_user_admin():
+            entity = ndb.Key(urlsafe=key).get()
+            if entity:
+                entity.populateFromRequest(self.request.Params)
+                confirmer = ndb.Key('Profile', user.user_id())
+                entity.confirmed_by = confirmer
+                entity.Put()
+                self.jsonReply(entity.hashify())
+        else:
+            self.request.set_status(401)
+
+DogOwnerRole.individualHandler(DogOwnerRoleIndividualHandler)

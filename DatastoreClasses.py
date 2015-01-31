@@ -300,6 +300,7 @@ class Role (polymodel.PolyModel, UriAddressable):
     user_id = field(d, 'user_id', ndb.StringProperty())
     role = field(d, 'role', ndb.StringProperty())
     valid = field(d, 'valid', ndb.BooleanProperty())
+    confirmed_by = field(d, 'confirmed_by', ndb.KeyProperty())
 
 class DogOwnerRole (Role):
     d = dict(Role.d.items())
