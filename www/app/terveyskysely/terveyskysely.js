@@ -172,7 +172,7 @@ function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
 }
 TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
-function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService) {
+function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService, LoginService) {
     console.log("terveyskyselyvastaactrl")
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
@@ -196,9 +196,14 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
     $scope.dogFound = function(dog) {
         $scope.koira = dog;
         $scope.isCollapsed = true;
+	if (!LoginService.hasRole("dog_owner", dog.uri)) {
+	    alert("Sinua ei ole rekisteröity koiran omistajaksi. "
+		  + "Vastauksesi talletetaan, mutta ylläpito varmistaa vielä "
+		  + "että voit antaa koiran terveystietoja.")
+	}
     }
 }
-TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselySubmissionService'];
+TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselySubmissionService', 'LoginService'];
 
 function TerveyskyselyQuestionAnswerCtrl($scope, SurveyAnswerService) {
     $scope.answer = SurveyAnswerService.makeNew(

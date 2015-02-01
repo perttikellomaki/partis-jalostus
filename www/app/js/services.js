@@ -60,10 +60,14 @@ angular.module('myApp.services', [])
 			roles: function () {
 			    return roles_;
 			},
-			hasRole: function (role) {
+			hasRole: function (role, target) {
 			    for (var i = 0; i < roles_.length; i++) {
-				if (roles_[i].role == role) {
-				    return true;
+				if (roles_[i].valid && roles_[i].role == role) {
+				    if (role == "dog_owner") {
+					return roles_[i].dog == target;
+				    } else {
+					return true;
+				    }
 				}
 			    }
 			    return false;

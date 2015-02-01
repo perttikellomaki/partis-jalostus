@@ -6,7 +6,6 @@ function KoiraEtusivuCtrl($scope, $location) {
 KoiraEtusivuCtrl.$inject = ['$scope', '$location'];
 
 function SearchKoiraCtrl($scope, $http, $location, $modal, KoiraService, TypeaheadService) {
-
     $scope.koira = KoiraService.makeNew();
     $scope.typeahead = TypeaheadService.typeahead;
     $scope.typeaheadClear = TypeaheadService.clear;
@@ -20,7 +19,9 @@ function SearchKoiraCtrl($scope, $http, $location, $modal, KoiraService, Typeahe
             } else if (results.length > 1) {
                 alert("Samannimisiä koiria löytyi useita, ota yhteyttä tietokannan ylläpitäjään.");
             } else {
-                $scope.dogFound(results[0]);
+		if ($scope.dogFound != undefined) {
+                    $scope.dogFound(results[0]);
+		}
             }
         });
     }
