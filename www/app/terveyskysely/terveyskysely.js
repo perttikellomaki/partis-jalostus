@@ -172,7 +172,7 @@ function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
 }
 TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
-function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService, LoginService) {
+function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService, LoginService) {
     console.log("terveyskyselyvastaactrl")
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
@@ -190,20 +190,24 @@ function TerveyskyselyVastaaCtrl($scope, SurveyQuestionService, TerveyskyselySer
         survey_submission.year = year;
         TerveyskyselySubmissionService.save(survey_submission, {},
                 function(answer) {
+		    console.log("vastaus")
+		    var message = "Kiitos vastauksestasi! ";
                     $scope.$broadcast('saveAnswer', answer, year);
+		    if (!LoginService.hasRole("dog_owner", $scope.koira.uri)) {
+			message += "\n\nSinua ei ole rekisteröity koiran omistajaksi, "
+			    + "joten vastauksesi on talletettu mutta ylläpito varmistaa vielä "
+			    + "että voit antaa koiran terveystietoja.";
+		    }
+		    alert(message);
+		    $location.path("/terveyskysely/vastaukset");
                 });
     }
     $scope.dogFound = function(dog) {
         $scope.koira = dog;
         $scope.isCollapsed = true;
-	if (!LoginService.hasRole("dog_owner", dog.uri)) {
-	    alert("Sinua ei ole rekisteröity koiran omistajaksi. "
-		  + "Vastauksesi talletetaan, mutta ylläpito varmistaa vielä "
-		  + "että voit antaa koiran terveystietoja.")
-	}
     }
 }
-TerveyskyselyVastaaCtrl.$inject = ['$scope', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselySubmissionService', 'LoginService'];
+TerveyskyselyVastaaCtrl.$inject = ['$scope', '$location', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselySubmissionService', 'LoginService'];
 
 function TerveyskyselyQuestionAnswerCtrl($scope, SurveyAnswerService) {
     $scope.answer = SurveyAnswerService.makeNew(
