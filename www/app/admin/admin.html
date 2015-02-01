@@ -25,7 +25,7 @@
       <td>{{dog.virallinen_nimi}}</td>
       <td>
 	<button ng-show="!role.valid" class="btn btn-default" ng-click="confirm()">Vahvista</button>
-	<button ng-show="role.valid" class="btn btn-default" ng-click="unconfirm()">Peru vahvistus</button>
+	<span ng-show="role.valid">Vahvistettu</span>
       </td>
     </tr>
   </tbody>
