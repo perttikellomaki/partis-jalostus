@@ -204,6 +204,7 @@ class SurveyAnswerSummary (ndb.Model, UriAddressable):
 class TerveyskyselySubmission (SurveySubmission):
     d = dict(SurveySubmission.d.items())
     koira = field(d, 'koira', ndb.KeyProperty())
+    owner_confirmed = field(d, 'owner_confirmed', ndb.BooleanProperty())
 
 class TerveyskyselyTmp (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
@@ -306,6 +307,9 @@ class DogOwnerRole (Role):
     d = dict(Role.d.items())
     owner_name = field(d, 'owner_name', ndb.StringProperty())
     dog = field(d, 'dog', ndb.KeyProperty())
+
+    # set if role created as a side effect of health survey
+    pending_survey = ndb.KeyProperty()
 
 class Profile (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())

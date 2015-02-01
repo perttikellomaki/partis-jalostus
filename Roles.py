@@ -47,9 +47,15 @@ class DogOwnerRoleIndividualHandler (HardenedHandler):
         if users.is_current_user_admin():
             entity = ndb.Key(urlsafe=key).get()
             if entity:
+                was_valid = entity.valid
                 entity.populateFromRequest(self.request.Params)
-                confirmer = ndb.Key('Profile', user.user_id())
-                entity.confirmed_by = confirmer
+                if entity.valid and not was_valid:
+                    confirmer = ndb.Key('Profile', user.user_id())
+                    entity.confirmed_by = confirmer
+                    pending_survey = entity.pending_survey.get()
+                    if pending_survey:
+                        pending_survey.owner_confirmed = True
+                        pending_survey.Put()
                 entity.Put()
                 self.jsonReply(entity.hashify())
         else:

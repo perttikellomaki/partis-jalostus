@@ -34,8 +34,13 @@ def processSubmission (user_id, user_name, submission_key):
     # create dog ownership if needed
     roles = DogOwnerRole.gql("WHERE role = :1 AND dog = :2 AND user_id = :3", "dog_owner", submission.koira, user_id)
     if roles.count() == 0:
-        role = DogOwnerRole(user_id=user_id, role="dog_owner", owner_name=user_name, dog=submission.koira, valid=False)
+        role = DogOwnerRole(user_id=user_id, role="dog_owner", 
+                            owner_name=user_name, dog=submission.koira, valid=False,
+                            pending_survey = submission_key)
         role.put()
+    else:
+        submission.owner_confirmed = True
+        submission.Put()
 
 class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
     def get_(self, user):
