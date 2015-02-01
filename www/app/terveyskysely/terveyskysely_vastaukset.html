@@ -29,7 +29,7 @@
     </div>
 </script>
 
-<h2>Yhteenveto</h2>
+<h2>Terveyskyselyn yhteenveto</h2>
 
 <div ng-repeat="question in questions"
      ng-controller="TerveyskyselyQuestionSummaryCtrl">
@@ -39,9 +39,11 @@
     </div>
     <div ng-repeat="summary in summaries">
         <i>
-        {{summary.year}}: Vastauksia {{summary.answer_count}} kpl, 
-        kyllä {{summary.yes_count}} kpl,
+        {{summary.year}}: Vastauksia {{summary.answer_count}} kpl
+	<span ng-show="question.question_kind == 'boolean'">
+        , kyllä {{summary.yes_count}} kpl,
         ei {{summary.no_count}} kpl.
+	</span>
         </i>
     </div>
     <hr>
