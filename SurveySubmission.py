@@ -44,7 +44,8 @@ def recordAnswer(summary_key, answer):
     summary = summary_key.get()
     summary.survey_question = answer.survey_question
     summary.year = answer.year
-    summary.answer_count = summary.answer_count + 1
+    if answer.yesno_answer is not None or (answer.free_text_answer is not None and len(answer.free_text_answer) > 0):
+        summary.answer_count = summary.answer_count + 1
     if answer.yesno_answer is not None:
         if answer.yesno_answer:
             summary.yes_count = summary.yes_count + 1
