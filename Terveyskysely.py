@@ -44,8 +44,14 @@ def processSubmission (user_id, user_name, submission_key):
 
 class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
     def get_(self, user):
-        self.genericGetCollection(
-            ndb.gql("SELECT __key__ FROM TerveyskyselySubmission"))
+        if self.request.params.has_key('koira'):
+            koira = self.lookupKey(param='koira')
+            self.genericGetCollection(
+                ndb.gql("SELECT __key__ FROM TerveyskyselySubmission WHERE koira = :1 ORDER BY created", koira))
+        else:
+            self.genericGetCollection(
+                ndb.gql("SELECT __key__ FROM TerveyskyselySubmission ORDER BY created"))
+
 
     def post_(self, user):
         submission = TerveyskyselySubmission()

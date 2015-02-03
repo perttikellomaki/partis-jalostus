@@ -1,10 +1,9 @@
-function KoiraTerveyskyselyCtrl ($scope, $routeParams, KoiraService, TerveyskyselyService, SidepanelService, LoginService) {
+function KoiraTerveyskyselyCtrl ($scope, $routeParams, KoiraService, TerveyskyselySubmissionService, SidepanelService, LoginService) {
     SidepanelService.get().selection = 'terveyskysely';
     $scope.logged_in = LoginService.loggedIn();
     $scope.koira = KoiraService.get({uri: "/Koira/" + $routeParams.key});
-    $scope.kysely = TerveyskyselyService.makeNew();
-    $scope.kyselyt = TerveyskyselyService.query({koira: "/Koira/" + $routeParams.key,
-						 modtime_holder: "/Koira/" + $routeParams.key});
+    $scope.submissions = TerveyskyselySubmissionService.query({koira: "/Koira/" + $routeParams.key});
+
     $scope.createNew = function () {
 	$scope.kysely.vastaaja = LoginService.nick();
 	$scope.kysely.koira = $scope.koira.uri;
@@ -21,5 +20,5 @@ function KoiraTerveyskyselyCtrl ($scope, $routeParams, KoiraService, Terveyskyse
 	$scope.kysely = TerveyskyselyService.makeNew();
     }
 }
-KoiraTerveyskyselyCtrl.$inject = ['$scope', '$routeParams', 'KoiraService', 'TerveyskyselyService', 'SidepanelService', 'LoginService'];
+KoiraTerveyskyselyCtrl.$inject = ['$scope', '$routeParams', 'KoiraService', 'TerveyskyselySubmissionService', 'SidepanelService', 'LoginService'];
 

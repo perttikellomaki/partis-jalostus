@@ -89,3 +89,8 @@ indexes:
   properties:
   - name: survey_submission
   - name: position
+
+- kind: TerveyskyselySubmission
+  properties:
+  - name: koira
+  - name: created
