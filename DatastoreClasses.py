@@ -205,6 +205,7 @@ class TerveyskyselySubmission (SurveySubmission):
     d = dict(SurveySubmission.d.items())
     koira = field(d, 'koira', ndb.KeyProperty())
     owner_confirmed = field(d, 'owner_confirmed', ndb.BooleanProperty())
+    answered_by = field(d, 'answered_by', ndb.KeyProperty())
 
 class Role (polymodel.PolyModel, UriAddressable):
     d = dict(UriAddressable.d.items())
@@ -218,11 +219,16 @@ class DogOwnerRole (Role):
     owner_name = field(d, 'owner_name', ndb.StringProperty())
     dog = field(d, 'dog', ndb.KeyProperty())
 
-    # set if role created as a side effect of health survey
-    pending_survey = ndb.KeyProperty()
-
 class Profile (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
     user_id = field(d, 'user_id', ndb.StringProperty())
     nickname = field(d, 'nickname', ndb.StringProperty())
+
+    @staticmethod
+    def byUser (user):
+        return ndb.Key('Profile', user.user_id())
+
+    @staticmethod
+    def byUserId (user_id):
+        return ndb.Key('Profile', user_id)
 

@@ -4,7 +4,7 @@ from google.appengine.ext import ndb
 from google.appengine.ext import deferred
 
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import DogOwnerRole, Survey, TerveyskyselySubmission, SurveySubmissionSummary
+from DatastoreClasses import DogOwnerRole, Survey, TerveyskyselySubmission, SurveySubmissionSummary, Profile
 
 terveyskysely_key = ndb.Key(Survey, 'terveyskysely')
 
@@ -32,12 +32,12 @@ def processSubmission (user_id, user_name, submission_key):
     recordSubmission(summary.key, submission)
 
     # create dog ownership if needed
-    roles = DogOwnerRole.gql("WHERE role = :1 AND dog = :2 AND user_id = :3", "dog_owner", submission.koira, user_id)
+    roles = DogOwnerRole.gql("WHERE role = :1 AND dog = :2 AND user_id = :3 AND valid = true", "dog_owner", submission.koira, user_id)
     if roles.count() == 0:
         role = DogOwnerRole(user_id=user_id, role="dog_owner", 
-                            owner_name=user_name, dog=submission.koira, valid=False,
-                            pending_survey = submission_key)
+                            owner_name=user_name, dog=submission.koira, valid=False)
         role.put()
+        submission.owner_confirmed = False
     else:
         submission.owner_confirmed = True
         submission.Put()
@@ -56,6 +56,8 @@ class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
     def post_(self, user):
         submission = TerveyskyselySubmission()
         submission.populateFromRequest(self.request.Params)
+        submission.answered_by = Profile.byUser(user)
+        submission.owner_confirmed = False
         submission.Put()
 
         deferred.defer(processSubmission, user.user_id(), user.nickname(), submission.key)

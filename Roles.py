@@ -1,8 +1,9 @@
 import logging
 from google.appengine.ext import ndb
+from google.appengine.ext import deferred
 from google.appengine.api import users
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import Role, DogOwnerRole
+from DatastoreClasses import Role, DogOwnerRole, TerveyskyselySubmission, Profile
 
 class RoleCollectionHandler(HardenedHandler):
     def get_(self, user):
@@ -52,13 +53,20 @@ class DogOwnerRoleIndividualHandler (HardenedHandler):
                 if entity.valid and not was_valid:
                     confirmer = ndb.Key('Profile', user.user_id())
                     entity.confirmed_by = confirmer
-                    pending_survey = entity.pending_survey.get()
-                    if pending_survey:
-                        pending_survey.owner_confirmed = True
-                        pending_survey.Put()
+                    deferred.defer(dogOwnerRoleConfirmed, entity.key, entity.user_id)
                 entity.Put()
                 self.jsonReply(entity.hashify())
         else:
             self.request.set_status(401)
 
 DogOwnerRole.individualHandler(DogOwnerRoleIndividualHandler)
+
+def dogOwnerRoleConfirmed (role_key, user_id):
+    role = role_key.get()
+    profile_key = Profile.byUserId(user_id)
+    query = TerveyskyselySubmission.gql("WHERE koira = :1 and answered_by = :2", role.dog, profile_key)
+    for submission in query:
+        logging.info("roleConfirmed: %s" % submission)
+        submission.owner_confirmed = True
+        submission.Put()
+
