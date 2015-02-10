@@ -119,3 +119,17 @@ function HistoryItemCtrl ($scope, KoiraService) {
     }
 }
 HistoryItemCtrl.$inject = ['$scope', 'KoiraService'];
+
+function AddKoiraCtrl ($scope, KennelService) {
+
+    if ($scope.koira.virallinen_nimi.indexOf(' ') > 0) {
+	$scope.koira.kennel = $scope.koira.virallinen_nimi.substring(0, $scope.koira.virallinen_nimi.indexOf(' '));
+    }
+
+    $scope.checkKennel = function () {
+	if ($scope.koira.virallinen_nimi.indexOf(' ') > 0) {
+	    $scope.koira.kennel = $scope.koira.virallinen_nimi.substring(0, $scope.koira.virallinen_nimi.indexOf(' '));
+	}
+    }
+}
+AddKoiraCtrl.$inject = ['$scope', 'KennelService'];
