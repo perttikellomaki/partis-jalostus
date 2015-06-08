@@ -167,6 +167,7 @@ class SurveySubmission (ndb.Model, UriAddressable):
     survey = field(d, 'survey', ndb.KeyProperty())
     created = field(d, 'created', ndb.DateTimeProperty(auto_now_add=True))
     year = field(d, 'year', ndb.IntegerProperty())
+    email = field(d, 'email', ndb.StringProperty())
 
 class SurveySubmissionSummary (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())

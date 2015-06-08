@@ -188,6 +188,7 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
         var year = (new Date()).getFullYear();
         survey_submission.koira = $scope.koira.uri;
         survey_submission.year = year;
+	survey_submission.email = $scope.kysely.email;
         TerveyskyselySubmissionService.save(survey_submission, {},
                 function(answer) {
 		    console.log("vastaus")
