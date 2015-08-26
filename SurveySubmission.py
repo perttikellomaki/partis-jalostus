@@ -53,6 +53,7 @@ def recordAnswer(summary_key, answer):
             summary.no_count = summary.no_count + 1
     summary.put()
 
+
 class SurveyAnswerCollectionHandler (HardenedHandler):
     def get_(self, user):
         survey_submission = self.lookupKey(param='survey_submission')
@@ -60,13 +61,18 @@ class SurveyAnswerCollectionHandler (HardenedHandler):
             ndb.gql("SELECT __key__ FROM SurveyAnswer WHERE survey_submission = :1 ORDER BY position",
                     survey_submission))
 
+    def post_unauthenticated_(self):
+        self.post_(None)
+
     def post_(self, user):
         answer = SurveyAnswer()
         answer.populateFromRequest(self.request.Params)
         answer.Put()
 
         summary = SurveyAnswerSummary.get_or_insert("%s" % answer.year, parent=answer.survey_question)
-        recordAnswer(summary.key, answer)
+
+        if user:
+            recordAnswer(summary.key, answer)
 
         self.jsonReply(answer.hashify())
 

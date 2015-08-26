@@ -1,10 +1,12 @@
-import logging
+import uuid
 
-from google.appengine.ext import ndb
-from google.appengine.ext import deferred
+from google.appengine.ext import deferred, ndb
+from google.appengine.api import mail
 
+from DatastoreClasses import DogOwnerRole, Profile, Survey, \
+    SurveySubmissionSummary, TerveyskyselySubmission
 from HardenedHandler import HardenedHandler
-from DatastoreClasses import DogOwnerRole, Survey, TerveyskyselySubmission, SurveySubmissionSummary, Profile
+
 
 terveyskysely_key = ndb.Key(Survey, 'terveyskysely')
 
@@ -25,7 +27,8 @@ def recordSubmission(summary_key, submission):
     summary.year = submission.year
     summary.put()
 
-def processSubmission (user_id, user_name, submission_key):
+
+def processSubmission(user_id, user_name, submission_key):
     # update summary
     submission = submission_key.get()
     summary = SurveySubmissionSummary.get_or_insert("%s" % submission.year, parent=submission.survey)
@@ -42,6 +45,14 @@ def processSubmission (user_id, user_name, submission_key):
         submission.owner_confirmed = True
         submission.Put()
 
+
+def requestEmailConfirmation(submission_key):
+    submission = submission_key.get()
+    mail.send_mail(sender="Partistietokanta <partistietokanta@example.com",
+                   to=submission.email,
+                   subject="Terveyskyselyn varmistus",
+                   body="Kiitos vastauksestasi. Klikkaatko viela oheista linkkia vahvistukseksi. %s" % submission.confirmation_code)
+
 class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
     def get_(self, user):
         if self.request.params.has_key('koira'):
@@ -52,19 +63,32 @@ class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
             self.genericGetCollection(
                 ndb.gql("SELECT __key__ FROM TerveyskyselySubmission ORDER BY created"))
 
+    def post_unauthenticated_(self):
+        self.post_(None)
 
     def post_(self, user):
         submission = TerveyskyselySubmission()
         submission.populateFromRequest(self.request.Params)
-        submission.answered_by = Profile.byUser(user)
+
+        if user:
+            submission.answered_by = Profile.byUser(user)
+        else:
+            # Used for validating the submission via email link.
+            submission.confirmation_code = uuid.uuid4().hex
+
         submission.owner_confirmed = False
         submission.Put()
 
-        deferred.defer(processSubmission, user.user_id(), user.nickname(), submission.key)
+        if user:
+            deferred.defer(processSubmission, user.user_id(), user.nickname(), submission.key)
+        else:
+            deferred.defer(requestEmailConfirmation, submission.key)
 
         self.jsonReply(submission.hashify())
 
+
 TerveyskyselySubmission.collectionHandler(TerveyskyselySubmissionCollectionHandler)
+
 
 class TerveyskyselySubmissionHandler (HardenedHandler):
     def get_(self, user, key):

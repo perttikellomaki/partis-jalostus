@@ -174,6 +174,18 @@ TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
 function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService, LoginService) {
     console.log("terveyskyselyvastaactrl")
+    $scope.questions_readonly = true;
+    $scope.enableQuestions = function () {
+	$scope.questions_readonly = false;
+    }
+    $scope.questionsDisabled = function() {
+        if (LoginService.loggedIn()) {
+            return $scope.koira == undefined;
+        } else {
+            return $scope.questions_readonly;
+        }
+    }
+    $scope.logged_in = LoginService.loggedIn();
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
         $scope.kysely = response.resource[0];
@@ -186,7 +198,9 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
     $scope.sendAnswer = function() {
         var survey_submission = TerveyskyselySubmissionService.makeNew({survey: $scope.kysely.uri});
         var year = (new Date()).getFullYear();
-        survey_submission.koira = $scope.koira.uri;
+	if ($scope.koira != undefined) {
+            survey_submission.koira = $scope.koira.uri;
+	}
         survey_submission.year = year;
 	survey_submission.email = $scope.kysely.email;
         TerveyskyselySubmissionService.save(survey_submission, {},
@@ -194,7 +208,11 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
 		    console.log("vastaus")
 		    var message = "Kiitos vastauksestasi! ";
                     $scope.$broadcast('saveAnswer', answer, year);
-		    if (!LoginService.hasRole("dog_owner", $scope.koira.uri)) {
+		    if (!LoginService.loggedIn()) {
+			message += "\n\nSaat kohta sähköpostiisi linkin. "
+			    + "Klikkaamalla sitä vahvistat täyttäneesi terveyskyselyn. "
+			    + "Näin saamme karsittua pois spämmirobotit.";
+		    } else if (!LoginService.hasRole("dog_owner", $scope.koira.uri)) {
 			message += "\n\nSinua ei ole rekisteröity koiran omistajaksi, "
 			    + "joten vastauksesi on talletettu mutta ylläpito varmistaa vielä "
 			    + "että voit antaa koiran terveystietoja.";
@@ -246,7 +264,9 @@ function TerveyskyselyVastauksetCtrl($scope, TerveyskyselySubmissionService, Ter
 TerveyskyselyVastauksetCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService', 'TerveyskyselyService', 'SurveyQuestionService'];
 
 function TerveyskyselySubmissionHeadingReadonlyCtrl($scope, KoiraService, SurveyAnswerService) {
-    $scope.koira = KoiraService.get({uri: $scope.submission.koira});
+    if ($scope.submission.koira != undefined) {
+        $scope.koira = KoiraService.get({uri: $scope.submission.koira});
+    }
 }
 TerveyskyselySubmissionHeadingReadonlyCtrl.$inject = ['$scope', 'KoiraService', 'SurveyAnswerService']
 

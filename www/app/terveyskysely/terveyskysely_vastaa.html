@@ -1,19 +1,19 @@
 <script type="text/ng-template" id="free_text_question_renderer.html">
   <div class="col-xs-4" style="white-space: pre-wrap"><b>{{question.position}}.</b> {{question.question}}</div>
-  <div class="col-xs-8" ng-show="koira != undefined"><textarea ng-model="answer.free_text_answer" placeholder="Vastaa tähän..." class="form-control"></textarea></div>
+  <div class="col-xs-8""><textarea ng-disabled="questionsDisabled()" ng-model="answer.free_text_answer" placeholder="Vastaa tähän..." class="form-control"></textarea></div>
 </script>
 <script type="text/ng-template" id="boolean_question_renderer.html">
   <div class="col-xs-12">
     <div class="row">
       <div class="col-xs-4" style="white-space: pre-wrap"><b>{{question.position}}.</b> {{question.question}}
       </div>
-      <div class="col-xs-8" ng-show="koira != undefined">
+      <div class="col-xs-8">
         <form role="form" class="form-inline">
           <label class="checkbox">
-            <input ng-model="yesno.yes" ng-change="changeYesno('yes')" type="checkbox">Kyllä
+            <input ng-model="yesno.yes" ng-change="changeYesno('yes')" ng-disabled="questionsDisabled()" type="checkbox">Kyllä
           </label>
           <label class="checkbox">
-            <input ng-model="yesno.no" ng-change="changeYesno('no')" type="checkbox">Ei
+            <input ng-model="yesno.no" ng-change="changeYesno('no')" ng-disabled="questionsDisabled()" type="checkbox">Ei
           </label>
         </form>
       </div>
@@ -21,8 +21,8 @@
     <div class="row">
       <div ng-show="question.detail_question.length > 0" class="col-xs-4" style="white-space: pre-wrap">{{question.detail_question}}</div>
       <div ng-show="question.detail_question == undefined || question.detail_question.length == 0" class="col-xs-4" style="white-space: pre-wrap">Lisätietoja:</div>
-      <div class="col-xs-8" ng-show="koira != undefined">
-        <textarea ng-model="answer.free_text_answer" placeholder="Kerro lisätietoja tähän..." class="form-control"></textarea>
+      <div class="col-xs-8">
+        <textarea ng-model="answer.free_text_answer" ng-disabled="questionsDisabled()" placeholder="Kerro lisätietoja tähän..." class="form-control"></textarea>
       </div>
     </div>
   </div>
@@ -30,16 +30,46 @@
 
 <h2>{{kysely.title}} {{koira.virallinen_nimi}}</h2>
 
-<button class="btn btn-success" ng-show="koira == undefined" ng-click="showDogSearch()">Valitse koira</button>
+<button class="btn btn-success" ng-show="logged_in && koira == undefined" ng-click="showDogSearch()">Valitse koira</button>
+<div ng-show="!logged_in">
+  <div class="row" ng-controller="SearchKoiraCtrl">
+    <div class="col-xs-4">
+      <form role="form">
+	<div class="form-group">
+	  <label for="search-koira-input">Virallinen nimi /muu tunniste</label>
+	  <input type="text"
+ 		 ng-model="koira.virallinen_nimi"
+		 typeahead="suggestion for suggestion in typeahead($viewValue)"
+		 class="form-control" 
+		 id="search-koira-input" 
+		 placeholder="nimi">
+	</div>
+      </form>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+	<label for="set-dog">&nbsp;</label>
+	<form role="form">
+	  <button class="btn btn-default"
+		  id="set-dog" 
+		  ng-click="enableQuestions()" 
+		  ng-disabled="koira.virallinen_nimi == undefined || koira.virallinen_nimi.length == 0">
+	    Täytä kysely
+	  </button>
+	</form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div collapse="isCollapsed">
   <div ng-include="'search_dog.html'"></div> 
 </div>
 
-<div class="row" ng-show="koira != undefined">
+<div class="row">
   <span class="col-xs-4"><b>Sähköpostiosoitteesi</b></span>
   <form class="col-xs-8">
-    <input type="text" class="form-control" ng-model="kysely.email">
+    <input type="text" class="form-control" ng-disabled="questionsDisabled()" ng-model="kysely.email">
   </form>
 </div>
 
@@ -49,6 +79,6 @@
     <div class="row" ng-controller="TerveyskyselyQuestionAnswerCtrl" ng-include="question.question_kind + '_question_renderer.html'"></div>
     <hr>
 </div>
-<button ng-show="koira != undefined" class="btn btn-success" ng-click="sendAnswer()">Lähetä vastaus</button>
+<button ng-disabled="questionsDisabled()" class="btn btn-success" ng-click="sendAnswer()">Lähetä vastaus</button>
 
 

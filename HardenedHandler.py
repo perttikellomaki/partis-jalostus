@@ -78,13 +78,14 @@ class HardenedHandler(BaseSessionHandler):
 
     def post(self, *args, **kwargs):
 
+        # make json parameters in body available in request.Params
+        try:
+            body_params = json.loads(self.request.body)
+        except:
+            body_params = {}
+        self.request.Params = dict(self.request.params.items() + body_params.items())
+
         if self.currentUser():
-            # make json parameters in body available in request.Params
-            try:
-                body_params = json.loads(self.request.body)
-            except:
-                body_params = {}
-            self.request.Params = dict(self.request.params.items() + body_params.items())
 
             path = self.request.path.split("/")
             if len(path) == 3:

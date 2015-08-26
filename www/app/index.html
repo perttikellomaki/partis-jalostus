@@ -43,7 +43,7 @@
 	    <li ng-class="navClass('etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('etusivu')">Etusivu</a></li>
 	    <li ng-class="navClass('koira') + navClass('koira_etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('koira_etusivu')">Koirat</a></li>
 	    <li ng-class="navClass('kennel') + navClass('kennel_etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('kennel_etusivu')">Kennelit</a></li>
-	    <li ng-show="hasRole('jalostustoimikunta')" ng-class="navClass('terveyskysely')"><a ng-click="isCollapsed = !isCollapsed; gotoView('terveyskysely/vastaa')">Terveyskysely</a></li>
+	    <li ng-class="navClass('terveyskysely')"><a ng-click="isCollapsed = !isCollapsed; gotoView('terveyskysely/vastaa')">Terveyskysely</a></li>
 	    <li ng-class="navClass('kirjaudu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('login')">Kirjaudu</a></li>
 	    <li ng-show="hasRole('admin')" ng-class="navClass('admin')"><a ng-click="isCollapsed = !isCollapsed; gotoView('admin')">Ylläpito</a></li>
 	  </ul>

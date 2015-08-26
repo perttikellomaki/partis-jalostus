@@ -202,11 +202,17 @@ class SurveyAnswerSummary (ndb.Model, UriAddressable):
     yes_count = field(d, 'yes_count', ndb.IntegerProperty(default=0))
     no_count = field(d, 'no_count', ndb.IntegerProperty(default=0))
 
+
 class TerveyskyselySubmission (SurveySubmission):
     d = dict(SurveySubmission.d.items())
     koira = field(d, 'koira', ndb.KeyProperty())
+    dog_name = field(d, 'dog_name', ndb.StringProperty())
     owner_confirmed = field(d, 'owner_confirmed', ndb.BooleanProperty())
     answered_by = field(d, 'answered_by', ndb.KeyProperty())
+
+    # This is set if submitter was not signed in.
+    # It is removed by clicking on emailed link.
+    confirmation_code = ndb.StringProperty()
 
 class Role (polymodel.PolyModel, UriAddressable):
     d = dict(UriAddressable.d.items())
