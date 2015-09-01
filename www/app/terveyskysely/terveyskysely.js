@@ -175,8 +175,11 @@ TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService, LoginService) {
     console.log("terveyskyselyvastaactrl")
     $scope.questions_readonly = true;
-    $scope.enableQuestions = function () {
-	$scope.questions_readonly = false;
+    $scope.enableQuestions = function (dog_name) {
+        $scope.questions_readonly = false;
+        if (dog_name !== undefined) {
+            $scope.dog_name = dog_name;
+        }
     }
     $scope.questionsDisabled = function() {
         if (LoginService.loggedIn()) {
@@ -198,14 +201,16 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
     $scope.sendAnswer = function() {
         var survey_submission = TerveyskyselySubmissionService.makeNew({survey: $scope.kysely.uri});
         var year = (new Date()).getFullYear();
-	if ($scope.koira != undefined) {
+	if ($scope.koira !== undefined) {
             survey_submission.koira = $scope.koira.uri;
-	}
+            survey_submission.dog_name = $scope.koira.virallinen_nimi;
+	} else if ($scope.dog_name !== undefined) {
+            survey_submission.dog_name = $scope.dog_name;
+        }
         survey_submission.year = year;
 	survey_submission.email = $scope.kysely.email;
         TerveyskyselySubmissionService.save(survey_submission, {},
                 function(answer) {
-		    console.log("vastaus")
 		    var message = "Kiitos vastauksestasi! ";
                     $scope.$broadcast('saveAnswer', answer, year);
 		    if (!LoginService.loggedIn()) {
