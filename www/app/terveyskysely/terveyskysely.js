@@ -172,13 +172,21 @@ function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
 }
 TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
-function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService, LoginService) {
+function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService, LoginService, KoiraService) {
     console.log("terveyskyselyvastaactrl")
     $scope.questions_readonly = true;
     $scope.enableQuestions = function (dog_name) {
         $scope.questions_readonly = false;
         if (dog_name !== undefined) {
-            $scope.dog_name = dog_name;
+            $scope.dog_name = dog_name
+            var dogs = KoiraService.query({virallinen_nimi: dog_name});
+            dogs.thenServer(function (response) {
+                var results = response.resource;
+                if (results.length == 1) {
+
+                    $scope.koira = results[0];
+                }
+            });
         }
     }
     $scope.questionsDisabled = function() {
@@ -231,7 +239,7 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
         $scope.isCollapsed = true;
     }
 }
-TerveyskyselyVastaaCtrl.$inject = ['$scope', '$location', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselySubmissionService', 'LoginService'];
+TerveyskyselyVastaaCtrl.$inject = ['$scope', '$location', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselySubmissionService', 'LoginService', 'KoiraService'];
 
 function TerveyskyselyQuestionAnswerCtrl($scope, SurveyAnswerService) {
     $scope.answer = SurveyAnswerService.makeNew(
