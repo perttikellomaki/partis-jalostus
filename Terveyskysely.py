@@ -1,7 +1,9 @@
+import logging
 import uuid
+import webapp2
 
-from google.appengine.ext import deferred, ndb
 from google.appengine.api import mail
+from google.appengine.ext import deferred, ndb
 
 from DatastoreClasses import DogOwnerRole, Profile, Survey, \
     SurveySubmissionSummary, TerveyskyselySubmission
@@ -51,7 +53,7 @@ def requestEmailConfirmation(submission_key):
     mail.send_mail(sender="Partistietokanta <partistietokanta@example.com",
                    to=submission.email,
                    subject="Terveyskyselyn varmistus",
-                   body="Kiitos vastauksestasi. Klikkaatko viela oheista linkkia vahvistukseksi. %s" % submission.confirmation_code)
+                   body="Kiitos vastauksestasi. Klikkaatko viela oheista linkkia vahvistukseksi. /TerveyskyselyConfirmation/%s" % submission.confirmation_code)
 
 class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
     def get_(self, user):
@@ -75,6 +77,7 @@ class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
         else:
             # Used for validating the submission via email link.
             submission.confirmation_code = uuid.uuid4().hex
+            submission.submitter_confirmed = False
 
         submission.owner_confirmed = False
         submission.Put()
@@ -98,3 +101,18 @@ class TerveyskyselySubmissionHandler (HardenedHandler):
         self.genericIndividualPost(user, key)
 
 TerveyskyselySubmission.individualHandler(TerveyskyselySubmissionHandler)
+
+
+class TerveyskyselyConfirmationHandler(webapp2.RequestHandler):
+    def get(self, key):
+        logging.info("Confirmation %s" % key)
+        submissions = TerveyskyselySubmission.gql("WHERE confirmation_code = :1", key)
+
+        # It is theoretically possible that there are multiple submissions with the
+        # same confirmation code, but we simply confirm all of them.
+        for submission in submissions:
+            submission.confirmation_code = None
+            submission.submitter_confirmed = True
+            submission.put()
+
+        self.redirect('/#/terveyskysely/vastaukset')

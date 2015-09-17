@@ -210,9 +210,11 @@ class TerveyskyselySubmission (SurveySubmission):
     owner_confirmed = field(d, 'owner_confirmed', ndb.BooleanProperty())
     answered_by = field(d, 'answered_by', ndb.KeyProperty())
 
-    # This is set if submitter was not signed in.
-    # It is removed by clicking on emailed link.
+    # The confirmation code is set if the user was not signed in.
+    # Boolean submitter_confirmed is also set to false, and
+    # it is set to true once the user clicks on an emailed link.
     confirmation_code = ndb.StringProperty()
+    submitter_confirmed = field(d, 'submitter_confirmed', ndb.BooleanProperty(default=True))
 
 class Role (polymodel.PolyModel, UriAddressable):
     d = dict(UriAddressable.d.items())
