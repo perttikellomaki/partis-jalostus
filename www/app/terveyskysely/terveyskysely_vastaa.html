@@ -39,6 +39,7 @@
 	  <label for="search-koira-input">Virallinen nimi /muu tunniste</label>
 	  <input type="text"
  		 ng-model="koira.virallinen_nimi"
+                 autocomplete="off"
 		 typeahead="suggestion for suggestion in typeahead($viewValue)"
 		 class="form-control" 
 		 id="search-koira-input" 
