@@ -133,3 +133,9 @@ function AddKoiraCtrl ($scope, KennelService) {
     }
 }
 AddKoiraCtrl.$inject = ['$scope', 'KennelService'];
+
+function DogNameCompleteCtrl($scope, TypeaheadService) {
+    $scope.typeahead = TypeaheadService.typeahead;
+    $scope.typeaheadClear = TypeaheadService.clear;
+}
+DogNameCompleteCtrl.$inject = ['$scope','TypeaheadService'];
