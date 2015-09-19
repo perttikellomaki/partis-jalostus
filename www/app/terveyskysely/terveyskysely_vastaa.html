@@ -32,14 +32,14 @@
 
 <button class="btn btn-success" ng-show="logged_in && koira == undefined" ng-click="showDogSearch()">Valitse koira</button>
 <div ng-show="!logged_in">
-  <div class="row" ng-controller="SearchKoiraCtrl">
+  <div class="row" ng-controller="DogNameCompleteCtrl">
     <div class="col-xs-4">
       <form role="form">
 	<div class="form-group">
 	  <label for="search-koira-input">Virallinen nimi /muu tunniste</label>
 	  <input type="text"
- 		 ng-model="koira.virallinen_nimi"
                  autocomplete="off"
+ 		 ng-model="submission.dog_name"
 		 typeahead="suggestion for suggestion in typeahead($viewValue)"
 		 class="form-control" 
 		 id="search-koira-input" 
@@ -53,8 +53,8 @@
 	<form role="form">
 	  <button class="btn btn-default"
 		  id="set-dog" 
-		  ng-click="enableQuestions(koira.virallinen_nimi)" 
-		  ng-disabled="koira.virallinen_nimi == undefined || koira.virallinen_nimi.length == 0">
+		  ng-click="enableQuestions()" 
+		  ng-disabled="submission.dog_name === undefined || submission.dog_name.length === 0">
 	    Täytä kysely
 	  </button>
 	</form>
