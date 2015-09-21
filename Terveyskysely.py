@@ -57,10 +57,14 @@ def requestEmailConfirmation(submission_key):
 
 class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
     def get_(self, user):
+        params = self.request.params
         query = TerveyskyselySubmission.query().order(TerveyskyselySubmission.created)
-        if 'koira' in self.request.params:
+        if 'koira' in params:
             koira = self.lookupKey(param='koira')
             query = query.filter(TerveyskyselySubmission.koira == koira)
+        if 'koira_defined' in params:
+            defined = params['koira_defined'] == 'true'
+            query = query.filter(TerveyskyselySubmission.koira_defined == defined)
         self.genericGetCollection(query)
 
     def post_unauthenticated_(self):

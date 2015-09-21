@@ -206,6 +206,7 @@ class SurveyAnswerSummary (ndb.Model, UriAddressable):
 class TerveyskyselySubmission (SurveySubmission):
     d = dict(SurveySubmission.d.items())
     koira = field(d, 'koira', ndb.KeyProperty())
+    koira_defined = field(d, 'koira_defined', ndb.ComputedProperty(lambda self: self.koira is not None))
     dog_name = field(d, 'dog_name', ndb.StringProperty())
     owner_confirmed = field(d, 'owner_confirmed', ndb.BooleanProperty())
     answered_by = field(d, 'answered_by', ndb.KeyProperty())
