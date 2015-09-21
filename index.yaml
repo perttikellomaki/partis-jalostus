@@ -94,3 +94,8 @@ indexes:
   properties:
   - name: koira
   - name: created
+
+- kind: TerveyskyselySubmission
+  properties:
+  - name: koira_defined
+  - name: created
