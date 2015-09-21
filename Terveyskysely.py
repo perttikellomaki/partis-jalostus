@@ -57,13 +57,11 @@ def requestEmailConfirmation(submission_key):
 
 class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
     def get_(self, user):
-        if self.request.params.has_key('koira'):
+        query = TerveyskyselySubmission.query().order(TerveyskyselySubmission.created)
+        if 'koira' in self.request.params:
             koira = self.lookupKey(param='koira')
-            self.genericGetCollection(
-                ndb.gql("SELECT __key__ FROM TerveyskyselySubmission WHERE koira = :1 ORDER BY created", koira))
-        else:
-            self.genericGetCollection(
-                ndb.gql("SELECT __key__ FROM TerveyskyselySubmission ORDER BY created"))
+            query = query.filter(TerveyskyselySubmission.koira == koira)
+        self.genericGetCollection(query)
 
     def post_unauthenticated_(self):
         self.post_(None)
