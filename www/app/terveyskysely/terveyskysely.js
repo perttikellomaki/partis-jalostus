@@ -293,3 +293,9 @@ function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelSe
     }
 }
 TerveyskyselySidepanelCtrl.$inject = ['$scope', '$routeParams', '$location', 'SidepanelService'];
+
+function TerveyskyselyKasiteltavatCtrl($scope, TerveyskyselySubmissionService) {
+    $scope.confirm_dog_submissions = TerveyskyselySubmissionService.query({koira_defined: false});
+}
+
+TerveyskyselyKasiteltavatCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService'];
