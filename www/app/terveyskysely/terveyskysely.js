@@ -294,8 +294,19 @@ function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelSe
 }
 TerveyskyselySidepanelCtrl.$inject = ['$scope', '$routeParams', '$location', 'SidepanelService'];
 
-function TerveyskyselyKasiteltavatCtrl($scope, TerveyskyselySubmissionService) {
-    $scope.confirm_dog_submissions = TerveyskyselySubmissionService.query({koira_defined: false});
+function TerveyskyselyKasiteltavatCtrl($scope, $modal, TerveyskyselySubmissionService) {
+    $scope.confirm_dog_submissions = TerveyskyselySubmissionService.query({koira_defined: false, submitter_confirmed: true});
 }
+TerveyskyselyKasiteltavatCtrl.$inject = ['$scope', '$modal', 'TerveyskyselySubmissionService'];
 
-TerveyskyselyKasiteltavatCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService'];
+function TerveyskyselyConfirmDogCtrl($scope, KoiraService) {
+    var canonical_name = $scope.submission.dog_name.toLowerCase().match(/\S+/g).join(' ');
+    var query = KoiraService.query({canonical_name: canonical_name});
+    query.thenServer(function (result) {
+        var dogs = result.resource;
+        if (dogs.length == 1) {
+            $scope.koira = dogs[0];
+        }
+    });
+}
+TerveyskyselyConfirmDogCtrl.$inject = ['$scope', 'KoiraService'];

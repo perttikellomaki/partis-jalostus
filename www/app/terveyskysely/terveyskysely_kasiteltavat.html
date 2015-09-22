@@ -47,10 +47,10 @@
 
 <h2>Käsiteltävät terveyskyselyt</h2>
 
-<h3>Koira varmistamatta</h3>
+<h3>Anonyymit vastaukset</h3>
 
 <table class="table table-bordered">
-    <tr><th>Päivämäärä</th><th>Koira</th><th>Vastaaja varmistettu</th><th>Koira</th></tr>
+    <tr><th>Päivämäärä</th><th>Koira</th><th>Vastaaja varmistettu</th><th>Email</th><th>Koira</th></tr>
   <tbody ng-repeat="submission in confirm_dog_submissions"
          ng-controller="TerveyskyselyConfirmDogCtrl">
     <tr>
@@ -60,6 +60,7 @@
       <td><span ng-show="submission.submitter_confirmed">Kyllä</span>
           <span ng-show="!submission.submitter_confirmed">Ei</span>
       </td>
+      <td>{{submission.email}}</td>
       <td><button ng-click="open()">Vahvista</button></td>
     </tr>
   </tbody>
