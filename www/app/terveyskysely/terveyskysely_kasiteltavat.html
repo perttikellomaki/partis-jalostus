@@ -1,0 +1,67 @@
+
+<script type="text/ng-template" id="search_dog_modal.html">
+   <div class="well">
+      <div class="modal-header">
+      <h3 class="modal-title">Etsi koira</h3>
+  </div>
+   <div class="modal-body" ng-controller="SearchKoiraCtrl">
+  <div>
+    <form role="form">
+      <div class="form-group">
+        <label for="search-koira-input">Virallinen nimi /muu tunniste</label>
+        <div class="input-group">
+          <input type="text"
+                 autocomplete="off"
+                 ng-model="koira.virallinen_nimi"
+                 typeahead="suggestion for suggestion in typeahead($viewValue)"
+                 class="form-control" 
+                 id="search-koira-input" 
+                 placeholder="nimi">
+          <span class="input-group-btn">
+            <button class="btn btn-default form-control" 
+                    id="search-koira-clear"
+                    style="max-width: 50px;"
+                    ng-click="typeaheadClear()">
+              <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div>
+    <form role="form">
+      <div class="form-group">
+        <label for="search-koira-clear">&nbsp;</label>
+        <button class="btn btn-default" ng-click="findDog(koira.virallinen_nimi)">Hae</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+   <button class="btn btn-primary" ng-click="ok()">Hyväksy</button>
+   <button class="btn btn-warning" ng-click="cancel()">Peruuta</button>
+</div>
+</div>
+</script>
+
+<h2>Käsiteltävät terveyskyselyt</h2>
+
+<h3>Koira varmistamatta</h3>
+
+<table class="table table-bordered">
+    <tr><th>Päivämäärä</th><th>Koira</th><th>Vastaaja varmistettu</th><th>Koira</th></tr>
+  <tbody ng-repeat="submission in confirm_dog_submissions"
+         ng-controller="TerveyskyselyConfirmDogCtrl">
+    <tr>
+      <td>{{submission.created | date:'dd.MM.yyyy'}}</td>
+      <td ng-show="koira !== undefined"><a ng-href="/#/koira/terveyskysely{{koira.uri}}">{{koira.virallinen_nimi}}</a></td>
+      <td ng-show="koira === undefined">{{submission.dog_name}}</td>
+      <td><span ng-show="submission.submitter_confirmed">Kyllä</span>
+          <span ng-show="!submission.submitter_confirmed">Ei</span>
+      </td>
+      <td><button ng-click="open()">Vahvista</button></td>
+    </tr>
+  </tbody>
+</table>
+

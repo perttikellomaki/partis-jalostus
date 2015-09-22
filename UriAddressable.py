@@ -1,5 +1,4 @@
 import time
-import datetime
 import dateutil
 import dateutil.tz
 import dateutil.parser
@@ -28,8 +27,12 @@ class DependentModTime(ndb.Model):
     def hashify(self):
         return {'depmodtime': str(time.mktime(self.modtime.timetuple()))}
 
-def field(d, name, prop, uri_prefix=None, populate_from_owner=False, internal=False, only_admin_can_change=False, readonly=False, force_ssl=False):
-    d[name] = (prop, uri_prefix, populate_from_owner, internal, only_admin_can_change, readonly, force_ssl)
+
+def field(d, name, prop, 
+          uri_prefix=None, populate_from_owner=False, internal=False, 
+          only_admin_can_change=False, readonly=False, force_ssl=False,
+          restrict_for_roles=None):
+    d[name] = (prop, uri_prefix, populate_from_owner, internal, only_admin_can_change, readonly, force_ssl, restrict_for_roles)
     return prop
 
 class UriAddressable(object):
@@ -43,13 +46,23 @@ class UriAddressable(object):
     def fields(self):
         return self.__class__.d
 
-    def hashify(self):
+    def hashify(self, user_id=None):
         res = {'uri': self.uri()}
         if isinstance(self, polymodel.PolyModel):
             res['class'] = self.__class__.__name__
         for name, info in self.fields().items():
-            field, uri_prefix, _, internal, _, _, force_ssl = info
-            if not internal:
+            field, uri_prefix, _, internal, _, _, force_ssl, restrict_for_roles = info
+            if restrict_for_roles:
+                show = False
+                if user_id is not None:
+                    for role in ndb.gql("SELECT * FROM Role WHERE user_id=:1 AND valid=true", user_id):
+                        if role.role in restrict_for_roles:
+                            show = True
+                            break
+            else:
+                show = True
+
+            if show and not internal:
                 val = field.__get__(self, type(self))
                 if val is not None:
                     if isinstance(field, ndb.StringProperty) and force_ssl:
@@ -83,7 +96,7 @@ class UriAddressable(object):
 
     def populateFromRequest(self, params):
         for name, info in self.fields().items():
-            field, _, populate_from_owner, internal, only_admin_can_change, readonly, _ = info
+            field, _, populate_from_owner, internal, only_admin_can_change, readonly, _, _ = info
             if readonly:
                 pass
             elif only_admin_can_change and not users.is_current_user_admin():

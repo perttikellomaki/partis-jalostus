@@ -158,7 +158,7 @@ class HardenedHandler(BaseSessionHandler):
             if json_reply:
                 self.jsonReply(entity.hashify())
 
-    def genericGetCollection(self, collection, debug_fmt=None):
+    def genericGetCollection(self, collection, debug_fmt=None, user_id=None):
         data = []
         if self.request.params.has_key('modtime_only'):
             coll = [ndb.Key('Modtime', 'modtime', parent=key)
@@ -168,9 +168,9 @@ class HardenedHandler(BaseSessionHandler):
             
         for entity in coll:
             if isinstance(entity, ndb.Key):
-                data.append(entity.get().hashify())
+                data.append(entity.get().hashify(user_id=user_id))
             else:
-                data.append(entity.hashify())
+                data.append(entity.hashify(user_id=user_id))
         self.jsonReply(data, debug_fmt)
 
 
