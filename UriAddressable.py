@@ -5,6 +5,7 @@ import dateutil.tz
 import dateutil.parser
 import logging
 
+from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
 
