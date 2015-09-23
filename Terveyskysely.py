@@ -69,6 +69,9 @@ class TerveyskyselySubmissionCollectionHandler (HardenedHandler):
         if 'koira_defined' in params:
             defined = params['koira_defined'] == 'true'
             query = query.filter(TerveyskyselySubmission.koira_defined == defined)
+        if 'submitter_confirmed' in params:
+            confirmed = params['submitter_confirmed'] == 'true'
+            query = query.filter(TerveyskyselySubmission.submitter_confirmed == confirmed)
         self.genericGetCollection(query, user_id=user_id)
 
     def post_unauthenticated_(self):
