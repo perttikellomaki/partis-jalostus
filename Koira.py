@@ -4,23 +4,19 @@ from HardenedHandler import HardenedHandler
 from DatastoreClasses import Koira, KoiraAutocomplete, ChangeNotification, Kennel
 import Util
 
+
 class KoiraCollectionHandler(HardenedHandler):
     def get_(self, user):
-        if (self.request.params.has_key('sukupuoli')
-            and self.request.params['sukupuoli'] != ''
-            and self.request.params['sukupuoli'] != 'undefined'):
-            query = ndb.gql("SELECT __key__ FROM Koira WHERE archive_copy_of = NULL AND sukupuoli = :1 ORDER BY virallinen_nimi ASC",
-                            self.request.params['sukupuoli'])
-        elif (self.request.params.has_key('kennel')
-            and self.request.params['kennel'] != ''
-            and self.request.params['kennel'] != 'undefined'):
-            query = ndb.gql("SELECT __key__ FROM Koira WHERE archive_copy_of = NULL AND kennel = :1 ORDER BY virallinen_nimi ASC",
-                            self.request.params['kennel'])
-        elif self.request.params.has_key('virallinen_nimi'):
-            query = ndb.gql("SELECT __key__ FROM Koira WHERE archive_copy_of = NULL AND virallinen_nimi = :1",
-                            self.request.params['virallinen_nimi'])
-        else:
-            query = ndb.gql("SELECT __key__ FROM Koira WHERE archive_copy_of = NULL ORDER BY virallinen_nimi ASC")
+        params = self.request.params
+        query = Koira.query().order(Koira.virallinen_nimi).filter(Koira.archive_copy_of == None)
+        if 'sukupuoli' in params:
+            query = query.filter(Koira.sukupuoli == params['sukupuoli'])
+        if 'kennel' in params:
+            query = query.filter(Koira.kennel == params['kennel'])
+        if 'virallinen_nimi' in params:
+            query = query.filter(Koira.virallinen_nimi == params['virallinen_nimi'])
+        if 'canonical_name' in params:
+            query = query.filter(Koira.canonical_name == params['canonical_name'])
 
         self.genericGetCollection(query, "KoiraCollectionHandler ==> %s")
 
