@@ -85,6 +85,12 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: Koira
+  properties:
+  - name: archive_copy_of
+  - name: canonical_name
+  - name: virallinen_nimi
+
 - kind: SurveyAnswer
   properties:
   - name: survey_submission
@@ -98,4 +104,10 @@ indexes:
 - kind: TerveyskyselySubmission
   properties:
   - name: koira_defined
+  - name: created
+
+- kind: TerveyskyselySubmission
+  properties:
+  - name: koira_defined
+  - name: submitter_confirmed
   - name: created
