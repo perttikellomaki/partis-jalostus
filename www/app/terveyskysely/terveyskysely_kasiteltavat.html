@@ -61,7 +61,7 @@
           <span ng-show="!submission.submitter_confirmed">Ei</span>
       </td>
       <td>{{submission.email}}</td>
-      <td><button ng-click="open()">Vahvista</button></td>
+      <td><button ng-click="confirm()" ng-show="submission.koira === undefined">Vahvista</button></td>
     </tr>
   </tbody>
 </table>

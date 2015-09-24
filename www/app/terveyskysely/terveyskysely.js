@@ -299,7 +299,7 @@ function TerveyskyselyKasiteltavatCtrl($scope, $modal, TerveyskyselySubmissionSe
 }
 TerveyskyselyKasiteltavatCtrl.$inject = ['$scope', '$modal', 'TerveyskyselySubmissionService'];
 
-function TerveyskyselyConfirmDogCtrl($scope, KoiraService) {
+function TerveyskyselyConfirmDogCtrl($scope, KoiraService, TerveyskyselySubmissionService) {
     var canonical_name = $scope.submission.dog_name.toLowerCase().match(/\S+/g).join(' ');
     var query = KoiraService.query({canonical_name: canonical_name});
     query.thenServer(function (result) {
@@ -308,5 +308,9 @@ function TerveyskyselyConfirmDogCtrl($scope, KoiraService) {
             $scope.koira = dogs[0];
         }
     });
+    $scope.confirm = function () {
+        $scope.submission.koira = $scope.koira.uri;
+        TerveyskyselySubmissionService.save($scope.submission);
+    };
 }
-TerveyskyselyConfirmDogCtrl.$inject = ['$scope', 'KoiraService'];
+TerveyskyselyConfirmDogCtrl.$inject = ['$scope', 'KoiraService', 'TerveyskyselySubmissionService'];
