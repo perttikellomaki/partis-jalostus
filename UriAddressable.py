@@ -97,7 +97,7 @@ class UriAddressable(object):
     def populateFromRequest(self, params):
         for name, info in self.fields().items():
             field, _, populate_from_owner, internal, only_admin_can_change, readonly, _, _ = info
-            if readonly:
+            if readonly or isinstance(field, ndb.ComputedProperty):
                 pass
             elif only_admin_can_change and not users.is_current_user_admin():
                 pass
