@@ -294,23 +294,69 @@ function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelSe
 }
 TerveyskyselySidepanelCtrl.$inject = ['$scope', '$routeParams', '$location', 'SidepanelService'];
 
-function TerveyskyselyKasiteltavatCtrl($scope, $modal, TerveyskyselySubmissionService) {
+function TerveyskyselyKasiteltavatCtrl($scope, TerveyskyselySubmissionService) {
     $scope.confirm_dog_submissions = TerveyskyselySubmissionService.query({koira_defined: false, submitter_confirmed: true});
 }
-TerveyskyselyKasiteltavatCtrl.$inject = ['$scope', '$modal', 'TerveyskyselySubmissionService'];
+TerveyskyselyKasiteltavatCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService'];
 
-function TerveyskyselyConfirmDogCtrl($scope, KoiraService, TerveyskyselySubmissionService) {
-    var canonical_name = $scope.submission.dog_name.toLowerCase().match(/\S+/g).join(' ');
-    var query = KoiraService.query({canonical_name: canonical_name});
+function canonicalName(name) {
+    return name.toLowerCase().match(/\S+/g).join(' ');
+}
+
+function TerveyskyselyConfirmDogCtrl($scope, $modal, KoiraService, TerveyskyselySubmissionService) {
+    var query = KoiraService.query({canonical_name: canonicalName($scope.submission.dog_name)});
     query.thenServer(function (result) {
         var dogs = result.resource;
         if (dogs.length == 1) {
             $scope.koira = dogs[0];
+            $scope.originally_undefined = false;
+        } else {
+            $scope.originally_undefined = true;
         }
     });
     $scope.confirm = function () {
         $scope.submission.koira = $scope.koira.uri;
         TerveyskyselySubmissionService.save($scope.submission);
     };
+        
+    $scope.open = function(size) {
+
+        var modalInstance = $modal.open({
+            templateUrl: 'search_dog_modal.html',
+            controller: TerveyskyselySelectDogCtrl,
+            size: size,
+            resolve: {
+                candidate: function() {
+                    return {virallinen_nimi: $scope.submission.dog_name};
+                }
+            }
+        });
+
+        modalInstance.result.then(function(koira) {
+          $scope.koira = koira;
+        });
+    }
 }
-TerveyskyselyConfirmDogCtrl.$inject = ['$scope', 'KoiraService', 'TerveyskyselySubmissionService'];
+TerveyskyselyConfirmDogCtrl.$inject = ['$scope', '$modal', 'KoiraService', 'TerveyskyselySubmissionService'];
+
+function TerveyskyselySelectDogCtrl($scope, $modalInstance, KoiraService, TypeaheadService, candidate) {
+    $scope.candidate = candidate;
+    
+    $scope.ok = function() {
+        var query = KoiraService.query({canonical_name: canonicalName(candidate.virallinen_nimi)});
+        query.thenServer(function (result) {
+                        var dogs = result.resource;
+                        if (dogs.length === 1) {
+                            TypeaheadService.clear();
+                            $modalInstance.close(dogs[0]);
+                        } else {
+                            $modalInstance.dismiss('cancel');
+                        }
+        });
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+}
+TerveyskyselySelectDogCtrl.$inject = ['$scope', '$modalInstance', 'KoiraService', 'TypeaheadService', 'candidate'];
