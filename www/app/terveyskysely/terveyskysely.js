@@ -261,7 +261,7 @@ function TerveyskyselyVastauksetCtrl($scope, TerveyskyselySubmissionService, Ter
         $scope.kysely = response.resource[0];
         $scope.questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
     });
-    $scope.submissions = TerveyskyselySubmissionService.query();
+    $scope.submissions = TerveyskyselySubmissionService.query({submitter_confirmed: true});
 }
 TerveyskyselyVastauksetCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService', 'TerveyskyselyService', 'SurveyQuestionService'];
 
