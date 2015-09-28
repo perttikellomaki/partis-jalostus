@@ -111,3 +111,8 @@ indexes:
   - name: koira_defined
   - name: submitter_confirmed
   - name: created
+
+- kind: TerveyskyselySubmission
+  properties:
+  - name: submitter_confirmed
+  - name: created
