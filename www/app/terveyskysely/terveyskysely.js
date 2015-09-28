@@ -311,6 +311,7 @@ function TerveyskyselyConfirmDogCtrl($scope, $modal, KoiraService, Terveyskysely
             $scope.koira = dogs[0];
             $scope.originally_undefined = false;
         } else {
+            $scope.koira = KoiraService.makeNew({virallinen_nimi: $scope.submission.dog_name});
             $scope.originally_undefined = true;
         }
     });
@@ -327,15 +328,14 @@ function TerveyskyselyConfirmDogCtrl($scope, $modal, KoiraService, Terveyskysely
             size: size,
             resolve: {
                 candidate: function() {
-                    return {virallinen_nimi: $scope.submission.dog_name};
+                    return $scope.koira;
                 }
             }
         });
 
         modalInstance.result.then(function (koira) {
             $scope.koira = koira;
-        }, function (koira) {
-            if (koira !== 'cancel') {
+            if ($scope.koira.uri === undefined) {
                 $scope.trigger.fired = true;
                 $scope.submission.dog_name = koira.virallinen_nimi;
             }
@@ -350,7 +350,7 @@ function TerveyskyselyConfirmDogCtrl($scope, $modal, KoiraService, Terveyskysely
             },
             function (new_value, old_value) {
                 if (new_value === true) {
-                    $scope.newDog(KoiraService.makeNew({virallinen_nimi: $scope.submission.dog_name}));
+                    $scope.newDog($scope.koira);
                 }
             }
     );
@@ -379,7 +379,7 @@ function TerveyskyselySelectDogCtrl($scope, $modalInstance, KoiraService, Typeah
                             TypeaheadService.clear();
                             $modalInstance.close(dogs[0]);
                         } else {
-                            $modalInstance.dismiss(KoiraService.makeNew({virallinen_nimi: candidate.virallinen_nimi}));
+                            $modalInstance.close(candidate);
                         }
         });
     };
@@ -395,17 +395,22 @@ function TerveyskyselyUusiKoiraCtrl($scope, $location, $modalInstance, KoiraServ
     $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
     $scope.selected = $scope.sexes[0];
 
+    // Prevent rapid fire clicking from creating multiple dogs.
+    $scope.buttons_disabled = false;
 
-    $scope.ok = function() {
+    $scope.ok = function () {
+        $scope.buttons_disabled = true;
         KoiraService.save($scope.koira,
                 {key: '', sukupuoli: $scope.selected.sex},
-        function(koira) {
-            $modalInstance.close($scope.koira);
-        });
+                function (koira) {
+                   $modalInstance.close($scope.koira);
+                }
+        );
         TypeaheadService.clear();
     };
 
     $scope.cancel = function() {
+        $scope.buttons_disabled = true;
         $modalInstance.dismiss('cancel');
     };
 }
