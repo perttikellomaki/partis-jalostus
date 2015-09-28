@@ -59,10 +59,10 @@ class KoiraHandler(HardenedHandler):
             entry_key = ndb.Key('Modtime', 'modtime', parent=key)
             logging.info("entry_key: %s" % entry_key)
             entry = entry_key.get()
-            self.jsonReply(entry.hashify())
+            self.jsonReplyHashify(entry)
         else:
             dog = key.get()
-            self.jsonReply(dog.hashify())
+            self.jsonReplyHashify(dog)
 
     def post_(self, user, key):
         dog = ndb.Key(urlsafe=key).get()

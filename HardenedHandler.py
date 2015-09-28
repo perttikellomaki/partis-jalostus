@@ -114,6 +114,15 @@ class HardenedHandler(BaseSessionHandler):
             self.delete_(users.get_current_user(),
                          *args, **kwargs)
 
+    def jsonReplyHashify(self, data, debug_fmt=None):
+        if data:
+            self.jsonReply(data.hashify(), debug_fmt)
+        else:
+            # indicate that the entity has presumably been deleted
+            self.response.set_status(410)
+            self.response.out.write("No such entity, maybe it has been deleted?")
+
+
     def jsonReply(self, data, debug_fmt=None):
         if debug_fmt:
             logging.info(debug_fmt % data)
