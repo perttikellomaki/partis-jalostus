@@ -332,10 +332,39 @@ function TerveyskyselyConfirmDogCtrl($scope, $modal, KoiraService, Terveyskysely
             }
         });
 
-        modalInstance.result.then(function(koira) {
-          $scope.koira = koira;
+        modalInstance.result.then(function (koira) {
+            $scope.koira = koira;
+        }, function (koira) {
+            if (koira !== 'cancel') {
+                $scope.trigger.fired = true;
+                $scope.submission.dog_name = koira.virallinen_nimi;
+            }
         });
-    }
+    };
+    
+    $scope.trigger = {fired: false};
+
+    $scope.$watch(
+            function (scope) {
+                return scope.trigger.fired;
+            },
+            function (new_value, old_value) {
+                if (new_value === true) {
+                    $scope.newDog(KoiraService.makeNew({virallinen_nimi: $scope.submission.dog_name}));
+                }
+            }
+    );
+    
+    $scope.newDog = function (koira, size) {
+        var modalInstance = $modal.open({
+                    templateUrl: 'uusi_koira.html',
+                    controller: TerveyskyselyUusiKoiraCtrl,
+                    size: size,
+                    resolve: {
+                        koira: function () { return koira; }
+                    }
+                });
+    };
 }
 TerveyskyselyConfirmDogCtrl.$inject = ['$scope', '$modal', 'KoiraService', 'TerveyskyselySubmissionService'];
 
@@ -350,7 +379,7 @@ function TerveyskyselySelectDogCtrl($scope, $modalInstance, KoiraService, Typeah
                             TypeaheadService.clear();
                             $modalInstance.close(dogs[0]);
                         } else {
-                            $modalInstance.dismiss('cancel');
+                            $modalInstance.dismiss(KoiraService.makeNew({virallinen_nimi: candidate.virallinen_nimi}));
                         }
         });
     };
@@ -360,3 +389,24 @@ function TerveyskyselySelectDogCtrl($scope, $modalInstance, KoiraService, Typeah
     };
 }
 TerveyskyselySelectDogCtrl.$inject = ['$scope', '$modalInstance', 'KoiraService', 'TypeaheadService', 'candidate'];
+
+function TerveyskyselyUusiKoiraCtrl($scope, $location, $modalInstance, KoiraService, TypeaheadService, koira) {
+    $scope.koira = koira;
+    $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
+    $scope.selected = $scope.sexes[0];
+
+
+    $scope.ok = function() {
+        KoiraService.save($scope.koira,
+                {key: '', sukupuoli: $scope.selected.sex},
+        function(koira) {
+            $modalInstance.close($scope.koira);
+        });
+        TypeaheadService.clear();
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+}
+TerveyskyselyUusiKoiraCtrl.$inject = ['$scope', '$location', '$modalInstance', 'KoiraService', 'TypeaheadService', 'koira'];
