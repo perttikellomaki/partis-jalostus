@@ -217,6 +217,8 @@ class TerveyskyselySubmission (SurveySubmission):
     confirmation_code = ndb.StringProperty()
     submitter_confirmed = field(d, 'submitter_confirmed', ndb.BooleanProperty(default=True))
 
+    archived = field(d, 'archived', ndb.BooleanProperty(default=False))
+
 class Role (polymodel.PolyModel, UriAddressable):
     d = dict(UriAddressable.d.items())
     user_id = field(d, 'user_id', ndb.StringProperty())
