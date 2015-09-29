@@ -31,8 +31,8 @@ class DependentModTime(ndb.Model):
 def field(d, name, prop, 
           uri_prefix=None, populate_from_owner=False, internal=False, 
           only_admin_can_change=False, readonly=False, force_ssl=False,
-          restrict_for_roles=None):
-    d[name] = (prop, uri_prefix, populate_from_owner, internal, only_admin_can_change, readonly, force_ssl, restrict_for_roles)
+          read_restrict_for_roles=None):
+    d[name] = (prop, uri_prefix, populate_from_owner, internal, only_admin_can_change, readonly, force_ssl, read_restrict_for_roles)
     return prop
 
 class UriAddressable(object):
@@ -51,12 +51,12 @@ class UriAddressable(object):
         if isinstance(self, polymodel.PolyModel):
             res['class'] = self.__class__.__name__
         for name, info in self.fields().items():
-            field, uri_prefix, _, internal, _, _, force_ssl, restrict_for_roles = info
-            if restrict_for_roles:
+            field, uri_prefix, _, internal, _, _, force_ssl, read_restrict_for_roles = info
+            if read_restrict_for_roles:
                 show = False
                 if user_id is not None:
                     for role in ndb.gql("SELECT * FROM Role WHERE user_id=:1 AND valid=true", user_id):
-                        if role.role in restrict_for_roles:
+                        if role.role in read_restrict_for_roles:
                             show = True
                             break
             else:
