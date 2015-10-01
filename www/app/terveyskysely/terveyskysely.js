@@ -1,5 +1,5 @@
-function TerveyskyselyKysymyksetCtrl($scope, SurveyService, SurveyQuestionService, TerveyskyselyService) {
-
+function TerveyskyselyKysymyksetCtrl($scope, SurveyService, SurveyQuestionService, TerveyskyselyService, SidepanelService) {
+    SidepanelService.get().selection = 'kysymykset';
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
         $scope.kysely = response.resource[0];
@@ -149,7 +149,7 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyService, SurveyQuestionServic
     }
 }
 ;
-TerveyskyselyKysymyksetCtrl.$inject = ['$scope', 'SurveyService', 'SurveyQuestionService', 'TerveyskyselyService'];
+TerveyskyselyKysymyksetCtrl.$inject = ['$scope', 'SurveyService', 'SurveyQuestionService', 'TerveyskyselyService', 'SidepanelService'];
 
 function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
     $scope.editing = false;
@@ -172,8 +172,9 @@ function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
 }
 TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
-function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, TerveyskyselyService, TerveyskyselySubmissionService, LoginService, KoiraService) {
-    console.log("terveyskyselyvastaactrl");
+function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, TerveyskyselyService, 
+                                 TerveyskyselySubmissionService, LoginService, KoiraService, SidepanelService) {
+    SidepanelService.get().selection = 'vastaa';
     $scope.questions_readonly = true;
     $scope.enableQuestions = function () {
         $scope.questions_readonly = false;
@@ -228,7 +229,9 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
         $scope.isCollapsed = true;
     }
 }
-TerveyskyselyVastaaCtrl.$inject = ['$scope', '$location', 'SurveyQuestionService', 'TerveyskyselyService', 'TerveyskyselySubmissionService', 'LoginService', 'KoiraService'];
+TerveyskyselyVastaaCtrl.$inject = ['$scope', '$location', 'SurveyQuestionService', 'TerveyskyselyService', 
+                                   'TerveyskyselySubmissionService', 'LoginService', 'KoiraService',
+                                   'SidepanelService'];
 
 function TerveyskyselyQuestionAnswerCtrl($scope, SurveyAnswerService) {
     $scope.answer = SurveyAnswerService.makeNew(
@@ -255,7 +258,8 @@ function TerveyskyselyQuestionAnswerCtrl($scope, SurveyAnswerService) {
 }
 TerveyskyselyQuestionAnswerCtrl.$inject = ['$scope', 'SurveyAnswerService'];
 
-function TerveyskyselyVastauksetCtrl($scope, TerveyskyselySubmissionService, TerveyskyselyService, SurveyQuestionService) {
+function TerveyskyselyVastauksetCtrl($scope, TerveyskyselySubmissionService, TerveyskyselyService, SurveyQuestionService, SidepanelService) {
+    SidepanelService.get().selection = 'vastaukset';
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
         $scope.kysely = response.resource[0];
@@ -263,7 +267,7 @@ function TerveyskyselyVastauksetCtrl($scope, TerveyskyselySubmissionService, Ter
     });
     $scope.submissions = TerveyskyselySubmissionService.query({submitter_confirmed: true});
 }
-TerveyskyselyVastauksetCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService', 'TerveyskyselyService', 'SurveyQuestionService'];
+TerveyskyselyVastauksetCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService', 'TerveyskyselyService', 'SurveyQuestionService', 'SidepanelService'];
 
 function TerveyskyselySubmissionHeadingReadonlyCtrl($scope, KoiraService, SurveyAnswerService) {
     if ($scope.submission.koira != undefined) {
@@ -294,10 +298,11 @@ function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelSe
 }
 TerveyskyselySidepanelCtrl.$inject = ['$scope', '$routeParams', '$location', 'SidepanelService'];
 
-function TerveyskyselyKasiteltavatCtrl($scope, TerveyskyselySubmissionService) {
+function TerveyskyselyKasiteltavatCtrl($scope, TerveyskyselySubmissionService, SidepanelService) {
+    SidepanelService.get().selection = 'kasiteltavat'
     $scope.confirm_dog_submissions = TerveyskyselySubmissionService.query({koira_defined: false, submitter_confirmed: true});
 }
-TerveyskyselyKasiteltavatCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService'];
+TerveyskyselyKasiteltavatCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService', 'SidepanelService'];
 
 function canonicalName(name) {
     return name.toLowerCase().match(/\S+/g).join(' ');
@@ -415,3 +420,11 @@ function TerveyskyselyUusiKoiraCtrl($scope, $location, $modalInstance, KoiraServ
     };
 }
 TerveyskyselyUusiKoiraCtrl.$inject = ['$scope', '$location', '$modalInstance', 'KoiraService', 'TypeaheadService', 'koira'];
+
+function TerveyskyselyDetailCtrl($scope, $routeParams, TerveyskyselySubmissionService, SurveyAnswerService, SidepanelService) {
+    SidepanelService.get().selection = 'vastaukset';
+    var submission_uri = "/TerveyskyselySubmission/" + $routeParams.key;
+    $scope.submission = TerveyskyselySubmissionService.get({uri: submission_uri});
+    $scope.answers = SurveyAnswerService.query({survey_submission: submission_uri});
+}
+TerveyskyselyDetailCtrl.$inject = ['$scope', '$routeParams', 'TerveyskyselySubmissionService', 'SurveyAnswerService', 'SidepanelService'];

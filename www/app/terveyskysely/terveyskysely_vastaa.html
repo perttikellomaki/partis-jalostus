@@ -1,32 +1,4 @@
-<script type="text/ng-template" id="free_text_question_renderer.html">
-  <div class="col-xs-4" style="white-space: pre-wrap"><b>{{question.position}}.</b> {{question.question}}</div>
-  <div class="col-xs-8""><textarea ng-disabled="questionsDisabled()" ng-model="answer.free_text_answer" placeholder="Vastaa tähän..." class="form-control"></textarea></div>
-</script>
-<script type="text/ng-template" id="boolean_question_renderer.html">
-  <div class="col-xs-12">
-    <div class="row">
-      <div class="col-xs-4" style="white-space: pre-wrap"><b>{{question.position}}.</b> {{question.question}}
-      </div>
-      <div class="col-xs-8">
-        <form role="form" class="form-inline">
-          <label class="checkbox">
-            <input ng-model="yesno.yes" ng-change="changeYesno('yes')" ng-disabled="questionsDisabled()" type="checkbox">Kyllä
-          </label>
-          <label class="checkbox">
-            <input ng-model="yesno.no" ng-change="changeYesno('no')" ng-disabled="questionsDisabled()" type="checkbox">Ei
-          </label>
-        </form>
-      </div>
-    </div>
-    <div class="row">
-      <div ng-show="question.detail_question.length > 0" class="col-xs-4" style="white-space: pre-wrap">{{question.detail_question}}</div>
-      <div ng-show="question.detail_question == undefined || question.detail_question.length == 0" class="col-xs-4" style="white-space: pre-wrap">Lisätietoja:</div>
-      <div class="col-xs-8">
-        <textarea ng-model="answer.free_text_answer" ng-disabled="questionsDisabled()" placeholder="Kerro lisätietoja tähän..." class="form-control"></textarea>
-      </div>
-    </div>
-  </div>
-</script>
+
 
 <h2>{{kysely.title}} {{koira.virallinen_nimi}}</h2>
 

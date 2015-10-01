@@ -46,7 +46,7 @@
   <tbody ng-repeat="submission in confirm_dog_submissions"
          ng-controller="TerveyskyselyConfirmDogCtrl">
     <tr>
-      <td>{{submission.created | date:'dd.MM.yyyy'}}</td>
+      <td><a ng-href="/#/terveyskysely/detail{{submission.uri}}">{{submission.created | date:'dd.MM.yyyy'}}</a></td>
       <td ng-show="koira.uri !== undefined"><a ng-href="/#/koira/terveyskysely{{koira.uri}}">{{koira.virallinen_nimi}}</a></td>
       <td ng-show="koira.uri === undefined">
         {{submission.dog_name}}

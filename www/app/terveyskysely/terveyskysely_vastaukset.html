@@ -25,7 +25,7 @@
   <tbody ng-repeat="submission in submissions"
          ng-controller="TerveyskyselySubmissionHeadingReadonlyCtrl">
     <tr>
-      <td>{{submission.created | date:'dd.MM.yyyy'}}</td>
+      <td><a ng-href="/#/terveyskysely/detail{{submission.uri}}">{{submission.created | date:'dd.MM.yyyy'}}</a></td>
       <td ng-show="koira !== undefined"><a ng-href="/#/koira/terveyskysely{{koira.uri}}">{{koira.virallinen_nimi}}</a></td>
       <td ng-show="koira === undefined">{{submission.dog_name}}</td>
       <td>{{submission.email}}<span ng-show="submission.email === undefined">(piilotettu)</span></td>
