@@ -161,6 +161,7 @@ class SurveyQuestion (ndb.Model, UriAddressable):
     position = field(d, 'position', ndb.IntegerProperty(required=True, default=0))
     question_kind = field(d, 'question_kind', ndb.StringProperty())
     working_copy_of = field(d, 'working_copy_of', ndb.KeyProperty())
+    new_page = field(d, 'new_page', ndb.BooleanProperty())
 
 class SurveySubmission (ndb.Model, UriAddressable):
     d = dict(UriAddressable.d.items())
