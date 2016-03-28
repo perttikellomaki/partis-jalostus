@@ -47,11 +47,9 @@
 </div>
 
 <hr>
-
-<div ng-repeat="question in questions">
+<div dir-paginate="question in questions | itemsPerPage: questions_per_page">
     <div class="row" ng-controller="TerveyskyselyQuestionAnswerCtrl" ng-include="question.question_kind + '_question_renderer.html'"></div>
     <hr>
 </div>
+<dir-pagination-controls></dir-pagination-controls>
 <button ng-disabled="questionsDisabled()" class="btn btn-success" ng-click="sendAnswer()">Lähetä vastaus</button>
-
-

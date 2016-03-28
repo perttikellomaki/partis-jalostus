@@ -175,6 +175,8 @@ TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, TerveyskyselyService, 
                                  TerveyskyselySubmissionService, LoginService, KoiraService, SidepanelService) {
     SidepanelService.get().selection = 'vastaa';
+    $scope.questions_per_page = 1;
+    $scope.questions = [];
     $scope.questions_readonly = true;
     $scope.enableQuestions = function () {
         $scope.questions_readonly = false;
@@ -188,10 +190,38 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
     };
     $scope.logged_in = LoginService.loggedIn();
     $scope.kyselyt = TerveyskyselyService.query();
-    $scope.kyselyt.thenServer(function(response) {
+    $scope.kyselyt.thenServer(function (response) {
         $scope.kysely = response.resource[0];
-        $scope.questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
+        $scope.question_query = SurveyQuestionService.query({survey: $scope.kysely.uri});
         $scope.submission = TerveyskyselySubmissionService.makeNew({survey: $scope.kysely.uri});
+
+        $scope.question_query.thenServer(function (response) {
+            var question_list = response.resource;
+
+            // Determine longest stretch between questions with new_page=true
+            var current_page_length = 0;
+            for (var i = 0; i < question_list.length; i++) {
+                if (question_list[i].new_page) {
+                    $scope.questions_per_page = Math.max($scope.questions_per_page, current_page_length);
+                    current_page_length = 1;
+                } else {
+                    current_page_length++;
+                    $scope.questions_per_page = Math.max($scope.questions_per_page, current_page_length);
+                }
+            }
+            
+            // Insert fillers before questions that should start a new page
+            while (question_list.length > 0) {
+                $scope.questions.push(question_list.shift());
+                for (var i = 0; i < $scope.questions_per_page - 1; i++) {
+                    if (question_list.length > 0 && !question_list[0].new_page) {
+                        $scope.questions.push(question_list.shift());
+                    } else {
+                        $scope.questions.push(false);
+                    }
+                }
+            }
+        });
     });
     $scope.isCollapsed = true;
     $scope.showDogSearch = function() {
