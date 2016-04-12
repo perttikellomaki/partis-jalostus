@@ -217,7 +217,7 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
                     if (question_list.length > 0 && !question_list[0].new_page) {
                         $scope.questions.push(question_list.shift());
                     } else {
-                        $scope.questions.push(false);
+                        $scope.questions.push({});
                     }
                 }
             }
