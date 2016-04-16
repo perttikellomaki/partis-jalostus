@@ -173,10 +173,12 @@ function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
 TerveyskyselyQuestionCtrl.$inject = ['$scope', 'SurveyQuestionService'];
 
 function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, TerveyskyselyService, 
-                                 TerveyskyselySubmissionService, LoginService, KoiraService, SidepanelService) {
+                                 TerveyskyselySubmissionService, LoginService, KoiraService, 
+                                 SidepanelService, SurveyAnswerService) {
     SidepanelService.get().selection = 'vastaa';
     $scope.questions_per_page = 1;
     $scope.questions = [];
+    $scope.answers = {};
     $scope.questions_readonly = true;
     $scope.enableQuestions = function () {
         $scope.questions_readonly = false;
@@ -212,10 +214,22 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
             
             // Insert fillers before questions that should start a new page
             while (question_list.length > 0) {
-                $scope.questions.push(question_list.shift());
+                var question = question_list.shift();
+                $scope.questions.push(question);
+                $scope.answers[question.uri] =
+                        SurveyAnswerService.makeNew(
+                                {survey_question: question.uri,
+                                    position: question.position});
                 for (var i = 0; i < $scope.questions_per_page - 1; i++) {
                     if (question_list.length > 0 && !question_list[0].new_page) {
-                        $scope.questions.push(question_list.shift());
+                        question = question_list.shift();
+                        $scope.questions.push(question);
+                        $scope.answers[question.uri] =
+                                SurveyAnswerService.makeNew(
+                                        {survey_question: question.uri,
+                                            position: question.position});
+                        console.log("answer")
+                        console.log($scope.answers[question.uri])
                     } else {
                         $scope.questions.push({});
                     }
@@ -238,38 +252,49 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
         $scope.submission.year = year;
 	$scope.submission.email = $scope.kysely.email;
         TerveyskyselySubmissionService.save($scope.submission, {},
-                function(answer) {
-		    var message = "Kiitos vastauksestasi! ";
-                    $scope.$broadcast('saveAnswer', answer, year);
-		    if (!LoginService.loggedIn()) {
-			message += "\n\nSaat kohta sähköpostiisi linkin. "
-			    + "Klikkaamalla sitä vahvistat täyttäneesi terveyskyselyn. "
-			    + "Näin saamme karsittua pois spämmirobotit.";
-		    } else if (!LoginService.hasRole("dog_owner", $scope.koira.uri)) {
-			message += "\n\nSinua ei ole rekisteröity koiran omistajaksi, "
-			    + "joten vastauksesi on talletettu mutta ylläpito varmistaa vielä "
-			    + "että voit antaa koiran terveystietoja.";
-		    }
-		    alert(message);
-		    $location.path("/terveyskysely/vastaukset");
+                function (submission) {
+                    for (var question_uri in $scope.answers) {
+                        var answer = $scope.answers[question_uri];
+                        console.log("save answer")
+                        console.log(answer)
+                        SurveyAnswerService.save(answer,
+                                {year: year, survey_submission: submission.uri});
+                    }
+                    var message = "Kiitos vastauksestasi! ";
+                    if (!LoginService.loggedIn()) {
+                        message += "\n\nSaat kohta sähköpostiisi linkin. "
+                                + "Klikkaamalla sitä vahvistat täyttäneesi terveyskyselyn. "
+                                + "Näin saamme karsittua pois spämmirobotit.";
+                    } else if (!LoginService.hasRole("dog_owner", $scope.koira.uri)) {
+                        message += "\n\nSinua ei ole rekisteröity koiran omistajaksi, "
+                                + "joten vastauksesi on talletettu mutta ylläpito varmistaa vielä "
+                                + "että voit antaa koiran terveystietoja.";
+                    }
+                    alert(message);
+                    $location.path("/terveyskysely/vastaukset");
                 });
     }
     $scope.dogFound = function(dog) {
         $scope.koira = dog;
         $scope.isCollapsed = true;
     }
+    $scope.propagateChanges = function(question, value) {
+        $scope.$broadcast('setSubQuestion', question, value);
+    }
 }
 TerveyskyselyVastaaCtrl.$inject = ['$scope', '$location', 'SurveyQuestionService', 'TerveyskyselyService', 
                                    'TerveyskyselySubmissionService', 'LoginService', 'KoiraService',
-                                   'SidepanelService'];
+                                   'SidepanelService', 'SurveyAnswerService'];
 
 function TerveyskyselyQuestionAnswerCtrl($scope, SurveyAnswerService) {
-    $scope.answer = SurveyAnswerService.makeNew(
-            {survey_question: $scope.question.uri,
-                position: $scope.question.position});
-    $scope.yesno = {}
-    $scope.changeYesno = function(choice) {
-        if (choice == 'yes') {
+    $scope.answer = $scope.answers[$scope.question.uri];
+    $scope.yesno = {};
+    if ($scope.answer !== undefined && $scope.answer.yesno_answer !== undefined){
+        $scope.yesno.yes = $scope.answer.yesno_answer;
+        $scope.yesno.no = !$scope.answer.yesno_answer;
+    }
+    $scope.changeYesno = function(choice, index) {
+        if (choice === 'yes') {
             $scope.yesno.yes = true;
             $scope.yesno.no = false;
             $scope.answer.yesno_answer = true;
@@ -278,12 +303,24 @@ function TerveyskyselyQuestionAnswerCtrl($scope, SurveyAnswerService) {
             $scope.yesno.no = true;
             $scope.answer.yesno_answer = false;
         }
+        
+        if (choice === 'no' && $scope.question.indent_level === '0') {
+            for (var i = index + 1; i < $scope.questions.length; i++) {
+                if ($scope.questions[i].indent_level === '0') {
+                    break;
+                }
+                if ($scope.questions[i].question_kind === 'boolean'){
+                    $scope.propagateChanges($scope.questions[i], false);
+                }
+            }
+        }
     };
-    $scope.$on('saveAnswer', function(event, survey_submission, year) {
-        SurveyAnswerService.save($scope.answer,
-                {survey_question: $scope.question.uri,
-                    year: year,
-                    survey_submission: survey_submission.uri});
+    $scope.$on('setSubQuestion', function (event, question, value) {
+        if ($scope.question === question) {
+            $scope.answer.yesno_answer = value;
+            $scope.yesno.yes = value;
+            $scope.yesno.no = !value;
+        }
     });
 }
 TerveyskyselyQuestionAnswerCtrl.$inject = ['$scope', 'SurveyAnswerService'];
