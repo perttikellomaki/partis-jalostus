@@ -177,9 +177,14 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
                                  SidepanelService, SurveyAnswerService) {
     SidepanelService.get().selection = 'vastaa';
     $scope.questions_per_page = 1;
+    $scope.total_pages = 0;
+    $scope.current_page = 1;
     $scope.questions = [];
     $scope.answers = {};
     $scope.questions_readonly = true;
+    $scope.pageChanged = function (newPage) {
+        $scope.current_page = newPage;
+    }
     $scope.enableQuestions = function () {
         $scope.questions_readonly = false;
     };
@@ -214,6 +219,7 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
             
             // Insert fillers before questions that should start a new page
             while (question_list.length > 0) {
+                $scope.total_pages++;
                 var question = question_list.shift();
                 $scope.questions.push(question);
                 $scope.answers[question.uri] =
@@ -228,8 +234,6 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
                                 SurveyAnswerService.makeNew(
                                         {survey_question: question.uri,
                                             position: question.position});
-                        console.log("answer")
-                        console.log($scope.answers[question.uri])
                     } else {
                         $scope.questions.push({});
                     }

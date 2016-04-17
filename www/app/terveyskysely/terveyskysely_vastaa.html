@@ -39,17 +39,24 @@
   <div ng-include="'search_dog.html'"></div> 
 </div>
 
-<div class="row">
-  <span class="col-xs-4"><b>Sähköpostiosoitteesi</b></span>
-  <form class="col-xs-8">
-    <input type="text" class="form-control" ng-disabled="questionsDisabled()" ng-model="kysely.email">
-  </form>
-</div>
 
 <hr>
 <div dir-paginate="question in questions | itemsPerPage: questions_per_page">
     <div class="row" ng-controller="TerveyskyselyQuestionAnswerCtrl" ng-include="question.question_kind + '_question_renderer.html'"></div>
     <hr>
 </div>
-<dir-pagination-controls></dir-pagination-controls>
-<button ng-disabled="questionsDisabled()" class="btn btn-success" ng-click="sendAnswer()">Lähetä vastaus</button>
+
+<div ng-show="current_page == total_pages" class="row">
+  <span class="col-xs-4"><b>Sähköpostiosoitteesi</b></span>
+  <form class="col-xs-8">
+    <input type="text" class="form-control" ng-disabled="questionsDisabled()" ng-model="kysely.email">
+  </form>
+</div>
+
+<dir ng-show="current_page == total_pages" class="row">
+  <button ng-disabled="questionsDisabled()" class="btn btn-success" ng-click="sendAnswer()">Lähetä vastaus</button>
+</dir>
+
+<dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+
+
