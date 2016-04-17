@@ -281,7 +281,7 @@
         </form>
       </div>
     </div>
-    <div class="row">
+    <div ng-show="yesno.yes" class="row">
       <div ng-show="question.detail_question.length > 0" class="col-xs-4" style="white-space: pre-wrap">{{question.detail_question}}</div>
       <div ng-show="question.detail_question == undefined || question.detail_question.length == 0" class="col-xs-4" style="white-space: pre-wrap">Lisätietoja:</div>
       <div class="col-xs-8">
