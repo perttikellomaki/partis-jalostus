@@ -20,6 +20,7 @@ angular.module('myApp', ['ngRoute', 'myApp.filters', 'myApp.services', 'myApp.di
     $routeProvider.when('/terveyskysely/vastaukset', {templateUrl: '/terveyskysely/terveyskysely_vastaukset.html', controller: TerveyskyselyVastauksetCtrl});
     $routeProvider.when('/terveyskysely/kasiteltavat', {templateUrl: '/terveyskysely/terveyskysely_kasiteltavat.html', controller: TerveyskyselyKasiteltavatCtrl});
     $routeProvider.when('/terveyskysely/detail/TerveyskyselySubmission/:key', {templateUrl: '/terveyskysely/terveyskysely_detail.html', controller: TerveyskyselyDetailCtrl});
+    $routeProvider.when('/terveyskysely/kiitos_vastauksesta', {templateUrl: '/terveyskysely/kiitos_vastauksesta.html', controller: TerveyskyselyKiitosCtrl});
     $routeProvider.when('/admin', {redirectTo: '/admin/admin'});
     $routeProvider.when('/admin/admin', {templateUrl: '/admin/admin.html', controller: AdminCtrl});
 

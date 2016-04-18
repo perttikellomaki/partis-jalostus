@@ -124,4 +124,4 @@ class TerveyskyselyConfirmationHandler(webapp2.RequestHandler):
             submission.submitter_confirmed = True
             submission.put()
 
-        self.redirect('/#/terveyskysely/vastaukset')
+        self.redirect('/#/terveyskysely/kiitos_vastauksesta')

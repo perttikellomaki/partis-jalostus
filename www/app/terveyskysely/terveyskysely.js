@@ -499,3 +499,7 @@ function TerveyskyselyDetailCtrl($scope, $routeParams, TerveyskyselySubmissionSe
     $scope.answers = SurveyAnswerService.query({survey_submission: submission_uri});
 }
 TerveyskyselyDetailCtrl.$inject = ['$scope', '$routeParams', 'TerveyskyselySubmissionService', 'SurveyAnswerService', 'SidepanelService'];
+
+function TerveyskyselyKiitosCtrl() {
+}
+TerveyskyselyKiitosCtrl.$inject = [];
