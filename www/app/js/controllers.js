@@ -69,7 +69,7 @@ function LoginCtrl ($scope, $rootScope, $resource) {
 }
 LoginCtrl.$inject = ['$scope', '$rootScope', '$resource']
 
-function LeftcolCtrl ($scope, $location, SidepanelService) {
+function LeftcolCtrl ($scope, $location, SidepanelService, RoleService) {
     $scope.sidepanel = SidepanelService.get();
 
     $scope.path_start = $location.path().split("/")[1];
@@ -86,9 +86,18 @@ function LeftcolCtrl ($scope, $location, SidepanelService) {
     $scope.navClass = function (selection) {
 	return selection === $scope.sidepanel.selection ? 'active' : '';
     }
-
+    
+    RoleService.query().thenServer(function (response) {
+        var roles = response.resource;
+        $scope.roles = [];
+        console.log("roles")
+        console.log(roles)
+        for (var i = 0; i < roles.length; i++) {
+            $scope.roles.push(roles[i].role);
+        }
+    });
 }
-LeftcolCtrl.$inject = ['$scope', '$location', 'SidepanelService'];
+LeftcolCtrl.$inject = ['$scope', '$location', 'SidepanelService', 'RoleService'];
 
 function HistoryCtrl ($scope, $resource) {
     var HistoryService = $resource('/History/:key');
