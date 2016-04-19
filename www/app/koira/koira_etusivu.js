@@ -50,13 +50,10 @@ SearchKoiraCtrl.$inject = ['$scope', '$http', '$location', '$modal', 'KoiraServi
 
 function UusiKoiraCtrl($scope, $location, $modalInstance, KoiraService, TypeaheadService, koira) {
     $scope.koira = koira;
-    $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
-    $scope.selected = $scope.sexes[0];
-
 
     $scope.ok = function() {
         KoiraService.save($scope.koira,
-                {key: '', sukupuoli: $scope.selected.sex},
+                {},
         function(koira) {
             $modalInstance.close($scope.koira);
         });

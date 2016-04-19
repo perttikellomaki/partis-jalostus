@@ -127,6 +127,13 @@ function HistoryItemCtrl ($scope, KoiraService) {
 HistoryItemCtrl.$inject = ['$scope', 'KoiraService'];
 
 function AddKoiraCtrl ($scope, KennelService) {
+    
+    $scope.sexes = [{sex: 'uros'}, {sex: 'narttu'}];
+    $scope.selected = $scope.sexes[0];
+
+    $scope.$watch('selected.sex', function (new_val, old_val) {
+        $scope.koira.sukupuoli = $scope.selected.sex;
+    })
 
     if ($scope.koira.virallinen_nimi.indexOf(' ') > 0) {
 	$scope.koira.kennel = $scope.koira.virallinen_nimi.substring(0, $scope.koira.virallinen_nimi.indexOf(' '));
