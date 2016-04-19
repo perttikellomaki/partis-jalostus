@@ -40,7 +40,6 @@ function YhdistysPaimennustaipumusCtrl ($scope, YhdistysPaimennustaipumusService
     }
 
     $scope.open = function($event) {
-	console.log("open")
 	$event.preventDefault();
 	$event.stopPropagation();
 	

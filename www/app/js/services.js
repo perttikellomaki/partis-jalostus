@@ -39,7 +39,6 @@ angular.module('myApp.services', [])
                     var logged_in_ = false;
                     return {
                         set: function(nick, kennel) {
-                            console.log("login service " + nick + " " + kennel)
                             nick_ = nick;
                             kennel_ = kennel;
                             if (nick != undefined) {
@@ -48,7 +47,6 @@ angular.module('myApp.services', [])
                             }
                         },
                         nick: function() {
-                            console.log("nick " + nick_);
                             return nick_;
                         },
                         kennel: function() {

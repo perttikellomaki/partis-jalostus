@@ -350,7 +350,6 @@ angular.module('cachedResource', ['LocalStorageModule'])
 				}
 				var modified = params.force_write ? true : false;
 				if (instance.uri == undefined) {
-				    console.log("default modified");
 				    modified = true;
 				} else {
 				    var cached_instance = localStorageService.get(instance.uri);
@@ -362,12 +361,6 @@ angular.module('cachedResource', ['LocalStorageModule'])
 						&& p != 'Then' 
 						&& cached_instance[p] != instance[p]) {
 						modified = true;
-						console.log("SAVE modified: " + p
-							    + JSON.stringify(cached_instance[p])
-							    + " " 
-							    + JSON.stringify(instance[p]))
-						console.log(JSON.stringify(cached_instance[p]));
-						console.log(JSON.stringify(instance[p]));
 						break;
 					    }
 					}

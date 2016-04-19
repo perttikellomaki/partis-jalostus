@@ -117,7 +117,6 @@ function HistoryItemCtrl ($scope, KoiraService) {
 			.Then(function (response) {
 			    var dog = response.resource;
 			    entry.value = dog.virallinen_nimi;
-			    console.log(entry);
 			})
 		}
 		$scope.entries.push(entry);

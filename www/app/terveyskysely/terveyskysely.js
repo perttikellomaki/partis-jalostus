@@ -101,8 +101,6 @@ function TerveyskyselyKysymyksetCtrl($scope, SurveyService, SurveyQuestionServic
                 // so that this one can be deleted
                 var new_question = SurveyQuestionService.copy(question);
                 new_question.survey = $scope.kysely.uri;
-                console.log("save new question")
-                console.log(new_question)
                 SurveyQuestionService.save(new_question, {}, maybeDeleteSurvey);
             }
         }
@@ -163,8 +161,6 @@ function TerveyskyselyQuestionCtrl($scope, SurveyQuestionService) {
     }
     $scope.save = function() {
         var question = $scope.question;
-        console.log("question")
-        console.log(question)
         $scope.question.question_kind = $scope.question_kind.chosen.question_kind;
         SurveyQuestionService.save($scope.question);
         $scope.editing = false;
@@ -259,8 +255,6 @@ function TerveyskyselyVastaaCtrl($scope, $location, SurveyQuestionService, Terve
                 function (submission) {
                     for (var question_uri in $scope.answers) {
                         var answer = $scope.answers[question_uri];
-                        console.log("save answer")
-                        console.log(answer)
                         SurveyAnswerService.save(answer,
                                 {year: year, survey_submission: submission.uri});
                     }
