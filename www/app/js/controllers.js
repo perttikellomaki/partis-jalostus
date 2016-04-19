@@ -90,8 +90,6 @@ function LeftcolCtrl ($scope, $location, SidepanelService, RoleService) {
     RoleService.query().thenServer(function (response) {
         var roles = response.resource;
         $scope.roles = [];
-        console.log("roles")
-        console.log(roles)
         for (var i = 0; i < roles.length; i++) {
             $scope.roles.push(roles[i].role);
         }
