@@ -323,16 +323,28 @@ function TerveyskyselyQuestionAnswerCtrl($scope, SurveyAnswerService) {
 }
 TerveyskyselyQuestionAnswerCtrl.$inject = ['$scope', 'SurveyAnswerService'];
 
-function TerveyskyselyVastauksetCtrl($scope, TerveyskyselySubmissionService, TerveyskyselyService, SurveyQuestionService, SidepanelService) {
+function TerveyskyselyVastauksetCtrl($scope, 
+TerveyskyselySubmissionService, TerveyskyselyService, SurveyQuestionService, 
+SurveyAnswerSummaryService, SidepanelService) {
     SidepanelService.get().selection = 'vastaukset';
     $scope.kyselyt = TerveyskyselyService.query();
     $scope.kyselyt.thenServer(function(response) {
         $scope.kysely = response.resource[0];
         $scope.questions = SurveyQuestionService.query({survey: $scope.kysely.uri});
+        $scope.summaries = {};
+        $scope.questions.thenServer(function (response) {
+            var questions = response.resource;
+            for (var i = 0; i < questions.length; i++) {
+                $scope.summaries[questions[i].uri] =
+                        SurveyAnswerSummaryService.query({survey_question: questions[i].uri});
+            }
+        });
     });
     $scope.submissions = TerveyskyselySubmissionService.query({submitter_confirmed: true});
 }
-TerveyskyselyVastauksetCtrl.$inject = ['$scope', 'TerveyskyselySubmissionService', 'TerveyskyselyService', 'SurveyQuestionService', 'SidepanelService'];
+TerveyskyselyVastauksetCtrl.$inject = ['$scope', 
+    'TerveyskyselySubmissionService', 'TerveyskyselyService', 'SurveyQuestionService', 
+    'SurveyAnswerSummaryService', 'SidepanelService'];
 
 function TerveyskyselySubmissionHeadingReadonlyCtrl($scope, KoiraService, SurveyAnswerService) {
     if ($scope.submission.koira != undefined) {
@@ -350,11 +362,6 @@ function TerveyskyselyAnswerReadonlyCtrl($scope, SurveyQuestionService) {
     $scope.question = SurveyQuestionService.get({uri: $scope.answer.survey_question});
 }
 TerveyskyselyAnswerReadonlyCtrl.$inject = ['$scope', 'SurveyQuestionService'];
-
-function TerveyskyselyQuestionSummaryCtrl($scope, SurveyAnswerSummaryService) {
-    $scope.summaries = SurveyAnswerSummaryService.query({survey_question: $scope.question.uri});
-}
-TerveyskyselyQuestionSummaryCtrl.$inject = ['$scope', 'SurveyAnswerSummaryService'];
 
 function TerveyskyselySidepanelCtrl($scope, $routeParams, $location, SidepanelService) {
     $scope.gotoSubview = function(subview) {

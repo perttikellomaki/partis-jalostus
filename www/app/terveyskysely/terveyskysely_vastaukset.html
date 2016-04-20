@@ -1,22 +1,19 @@
 <h2>Terveyskyselyn yhteenveto</h2>
 
-<div ng-repeat="question in questions"
-     ng-controller="TerveyskyselyQuestionSummaryCtrl">
-    <div class="row">
-        <div class="col-xs-6">{{question.question}}</div>
-        <div class="col-xs-6">{{question.detail_question}}</div>
-    </div>
-    <div ng-repeat="summary in summaries">
-        <i>
-        {{summary.year}}: Vastauksia {{summary.answer_count}} kpl
-	<span ng-show="question.question_kind == 'boolean'">
-        , kyllä {{summary.yes_count}} kpl,
-        ei {{summary.no_count}} kpl.
-	</span>
-        </i>
-    </div>
-    <hr>
-</div>
+<table class="table table-bordered">
+    <tr><th>Kysymys</th><th>Vuosi</th><th>Vastauksia</th><th>Kyllä</th><th>Ei</th></tr>
+    <tbody ng-repeat="question in questions">
+        <tr ng-repeat="summary in summaries[question.uri]">
+            <td ng-show="$index === 0"
+                rowspan="{{summaries[question.uri].length}}">
+                {{question.question}}
+            </td>
+            <td>{{summary.year}}</td>
+            <td>{{summary.answer_count}}</td>
+            <td>{{summary.yes_count}}</td>
+            <td>{{summary.no_count}}</td></tr>
+    </tbody>
+</table>
 
 <h2>Vastaukset</h2>
 
