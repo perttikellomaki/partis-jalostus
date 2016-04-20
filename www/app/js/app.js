@@ -15,6 +15,7 @@ angular.module('myApp', ['ngRoute', 'myApp.filters', 'myApp.services', 'myApp.di
     $routeProvider.when('/kennel/muutokset/Kennel/:key', {templateUrl: 'kennel/kennel_muutokset.html', controller: KennelMuutoksetCtrl});
     $routeProvider.when('/kennel/admin/Kennel/:key', {templateUrl: 'kennel/kennel_admin.html', controller: KennelAdminCtrl});
     $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: LoginCtrl});
+    $routeProvider.when('/terveyskysely/yhteenveto', {templateUrl: '/terveyskysely/terveyskysely_yhteenveto.html', controller: TerveyskyselyYhteenvetoCtrl});
     $routeProvider.when('/terveyskysely/kysymykset', {templateUrl: '/terveyskysely/terveyskysely_kysymykset.html', controller: TerveyskyselyKysymyksetCtrl});
     $routeProvider.when('/terveyskysely/vastaa', {templateUrl: '/terveyskysely/terveyskysely_vastaa.html', controller: TerveyskyselyVastaaCtrl});
     $routeProvider.when('/terveyskysely/vastaukset', {templateUrl: '/terveyskysely/terveyskysely_vastaukset.html', controller: TerveyskyselyVastauksetCtrl});

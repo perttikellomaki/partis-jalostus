@@ -43,7 +43,7 @@
 	    <li ng-class="navClass('etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('etusivu')">Etusivu</a></li>
 	    <li ng-class="navClass('koira') + navClass('koira_etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('koira_etusivu')">Koirat</a></li>
 	    <li ng-class="navClass('kennel') + navClass('kennel_etusivu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('kennel_etusivu')">Kennelit</a></li>
-	    <li ng-class="navClass('terveyskysely')"><a ng-click="isCollapsed = !isCollapsed; gotoView('terveyskysely/vastaa')">Terveyskysely</a></li>
+	    <li ng-class="navClass('terveyskysely')"><a ng-click="isCollapsed = !isCollapsed; gotoView('terveyskysely/yhteenveto')">Terveyskysely</a></li>
 	    <li ng-class="navClass('kirjaudu')"><a ng-click="isCollapsed = !isCollapsed; gotoView('login')">Kirjaudu</a></li>
 	    <li ng-show="hasRole('admin')" ng-class="navClass('admin')"><a ng-click="isCollapsed = !isCollapsed; gotoView('admin')">Ylläpito</a></li>
 	  </ul>
@@ -85,6 +85,7 @@
 <script type="text/ng-template" id="terveyskysely_sidepanel.html">
     <h2>Kysely</h2>
     <ul class="nav nav-pills nav-stacked" ng-controller="TerveyskyselySidepanelCtrl">
+      <li ng-class="navClass('yhteenveto')"><a ng-click="gotoSubview('yhteenveto')">Yhteenveto</a></li>
       <li ng-class="navClass('vastaa')"><a ng-click="gotoSubview('vastaa')">Vastaa</a></li>
       <li ng-class="navClass('vastaukset')"><a ng-click="gotoSubview('vastaukset')">Vastaukset</a></li>
       <li ng-show="roles.indexOf('admin') >= 0" ng-class="navClass('kysymykset')"><a ng-click="gotoSubview('kysymykset')">Kysymykset</a></li>
